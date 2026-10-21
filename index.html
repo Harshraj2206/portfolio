@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Portfolio & Engineering Case Studies — [Your Name]</title>
+    <meta name="description" content="College student, software engineer & product designer building high-performance systems and human-centric software. Open to Software Engineering internships." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://portfolio.example.com/" />
+    <meta property="og:title" content="Portfolio & Engineering Case Studies — [Your Name]" />
+    <meta property="og:description" content="College student, software engineer & product designer building high-performance systems and human-centric software. Open to Software Engineering internships." />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Portfolio & Engineering Case Studies — [Your Name]" />
+    <meta name="twitter:description" content="College student, software engineer & product designer building high-performance systems and human-centric software. Open to Software Engineering internships." />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161618" media="(prefers-color-scheme: dark)" />
+
+    <!-- Self-hosted Inter font fallback for non-Apple OS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+
+    <!-- JSON-LD Structured Data for Person Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "[Your Name]",
+      "jobTitle": "Software Engineer & Designer",
+      "description": "Undergraduate student building human-centered AI tools and distributed systems.",
+      "url": "https://portfolio.example.com",
+      "sameAs": [
+        "https://github.com/example",
+        "https://linkedin.com/in/example"
+      ],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "[Your University]"
+      },
+      "knowsAbout": ["Computer Science", "React", "TypeScript", "Distributed Systems", "Human-Computer Interaction"]
+    }
+    </script>
+  </head>
+  <body class="bg-apple-gray-100 dark:bg-[#0B0D12] text-apple-gray-900 dark:text-apple-gray-100 font-apple antialiased transition-colors duration-300 selection:bg-apple-blue/20 selection:text-apple-blue overflow-x-hidden min-h-screen">
+    <!-- Accessible Skip Link -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-apple-blue focus:text-white focus:rounded-pill focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white">
+      Skip to main content
+    </a>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

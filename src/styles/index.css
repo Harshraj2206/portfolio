@@ -1,0 +1,88 @@
+@import './glass.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-mesh-1: rgba(224, 236, 255, 0.85);
+    --bg-mesh-2: rgba(237, 233, 254, 0.85);
+    --bg-mesh-3: rgba(252, 231, 243, 0.70);
+    --bg-mesh-4: rgba(230, 255, 250, 0.70);
+  }
+
+  .dark {
+    --bg-mesh-1: rgba(14, 21, 38, 0.90);
+    --bg-mesh-2: rgba(30, 27, 75, 0.85);
+    --bg-mesh-3: rgba(15, 23, 42, 0.90);
+    --bg-mesh-4: rgba(19, 31, 36, 0.80);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Shifting Mesh Gradient Background */
+.mesh-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-blob {
+  position: absolute;
+  filter: blur(80px);
+  border-radius: 9999px;
+  opacity: 0.65;
+  transition: opacity 500ms ease;
+}
+
+.dark .mesh-blob {
+  opacity: 0.45;
+  filter: blur(100px);
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 142, 147, 0.35);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 142, 147, 0.55);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Visible 2px Apple Blue Focus Ring with Offset */
+*:focus-visible {
+  outline: 2px solid #0A84FF !important;
+  outline-offset: 2px !important;
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
