@@ -55,7 +55,7 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({
     <section
       id="projects"
       aria-label="Featured Projects and Case Studies"
-      className={`max-w-6xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="Proof of Work"
@@ -151,13 +151,21 @@ export const ProjectsGrid: React.FC<ProjectsGridProps> = ({
 
                   {/* Card Action Buttons */}
                   <div className="mt-6 pt-5 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
-                    <button
-                      onClick={() => onSelectProject(project.id)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-apple-blue hover:text-blue-700 dark:hover:text-blue-400 group/btn transition-colors"
-                    >
-                      <span>Read Case Study</span>
-                      <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <a
+                        href={`/projects/${project.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-apple-blue hover:text-blue-700 dark:hover:text-blue-400 group/btn transition-colors"
+                      >
+                        <span>Read Case Study</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                      </a>
+                      <button
+                        onClick={() => onSelectProject(project.id)}
+                        className="text-xs text-apple-gray-500 hover:text-apple-gray-800 dark:hover:text-apple-gray-200 underline underline-offset-4 decoration-dotted transition-colors"
+                      >
+                        Quick Preview
+                      </button>
+                    </div>
 
                     <div className="flex items-center gap-2">
                       {project.liveDemoUrl && (

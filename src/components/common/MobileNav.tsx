@@ -21,6 +21,7 @@ interface MobileNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
+  writingEnabled?: boolean;
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({
@@ -31,6 +32,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
+  writingEnabled = false,
 }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -48,6 +50,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     { label: 'The Record (Education & Experience)', href: '#timeline' },
     { label: 'Skills & Capabilities', href: '#skills' },
     { label: 'About & Engineering Ethos', href: '#about' },
+    ...(writingEnabled ? [{ label: 'Writing & Learning Notes', href: '#writing' }] : []),
     { label: 'Recommendations & Praise', href: '#recommendations' },
     { label: 'Contact & Let\'s Talk', href: '#contact' },
   ];
@@ -85,7 +88,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       {/* Bottom Floating Glass Dock for Mobile */}
       <nav
         aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-4 left-4 right-4 z-40 md:hidden flex items-center justify-around py-2 px-3 rounded-pill glass-nav shadow-lg"
+        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-40 md:hidden flex items-center justify-around py-1.5 px-1 sm:px-3 rounded-pill glass-nav shadow-lg"
       >
         {mainItems.map((item) => {
           const Icon = item.icon;
@@ -94,7 +97,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             <a
               key={item.id}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 px-3 rounded-pill transition-colors ${
+              className={`flex flex-col items-center justify-center py-1 px-1.5 sm:px-3 rounded-pill transition-colors ${
                 isActive
                   ? 'text-apple-blue font-semibold scale-105'
                   : 'text-apple-gray-500 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white'

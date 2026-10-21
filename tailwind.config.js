@@ -7,6 +7,7 @@ export default {
       colors: {
         apple: {
           blue: '#0A84FF',
+          blueText: '#0071E3', // High-contrast Apple Blue for text on light backgrounds (4.6:1+ WCAG AA)
           purple: '#AF52DE',
           teal: '#30B0C7',
           pink: '#FF375F',
@@ -18,9 +19,9 @@ export default {
             200: '#E5E5EA',
             300: '#D1D1D6',
             400: '#A1A1A6',
-            500: '#86868B',
-            600: '#6E6E73',
-            700: '#48484A',
+            500: '#6E6E73', // High-contrast secondary text
+            600: '#515154', // High-contrast body text
+            700: '#3A3A3C',
             800: '#2C2C2E',
             900: '#1D1D1F',
             950: '#000000',

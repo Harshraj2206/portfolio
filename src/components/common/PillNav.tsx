@@ -18,16 +18,8 @@ interface PillNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
+  writingEnabled?: boolean;
 }
-
-const navItems: NavItem[] = [
-  { id: 'hero', label: 'Home', href: '#hero' },
-  { id: 'projects', label: 'Work', href: '#projects' },
-  { id: 'timeline', label: 'The Record', href: '#timeline' },
-  { id: 'skills', label: 'Skills', href: '#skills' },
-  { id: 'about', label: 'About', href: '#about' },
-  { id: 'contact', label: 'Contact', href: '#contact' },
-];
 
 export const PillNav: React.FC<PillNavProps> = ({
   activeSection,
@@ -37,8 +29,19 @@ export const PillNav: React.FC<PillNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
+  writingEnabled = false,
 }) => {
   const [scrolled, setScrolled] = useState(false);
+
+  const navItems: NavItem[] = [
+    { id: 'hero', label: 'Home', href: '#hero' },
+    { id: 'projects', label: 'Work', href: '#projects' },
+    { id: 'timeline', label: 'The Record', href: '#timeline' },
+    { id: 'skills', label: 'Skills', href: '#skills' },
+    { id: 'about', label: 'About', href: '#about' },
+    ...(writingEnabled ? [{ id: 'writing', label: 'Writing', href: '#writing' }] : []),
+    { id: 'contact', label: 'Contact', href: '#contact' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {

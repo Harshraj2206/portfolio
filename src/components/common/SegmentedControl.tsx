@@ -23,7 +23,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="tablist"
       aria-label="Category Filter"
-      className={`inline-flex items-center p-1 rounded-pill glass-surface bg-black/5 dark:bg-white/5 shadow-inner ${className}`}
+      className={`inline-flex items-center p-1 rounded-pill glass-surface bg-black/5 dark:bg-white/5 shadow-inner max-w-full overflow-x-auto scrollbar-none ${className}`}
     >
       {options.map((option) => {
         const isSelected = selected === option.id;

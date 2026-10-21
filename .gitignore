@@ -27,3 +27,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Audit reports
+lh-*.json
+lighthouse-report.json

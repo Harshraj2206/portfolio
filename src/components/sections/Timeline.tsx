@@ -42,7 +42,7 @@ export const Timeline: React.FC<TimelineProps> = ({
     <section
       id="timeline"
       aria-label="Experience and Education Timeline"
-      className={`max-w-4xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-4xl mx-auto px-3 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="The Record"
@@ -50,16 +50,16 @@ export const Timeline: React.FC<TimelineProps> = ({
         subtitle="A chronological record of engineering internships, lab research, hackathon breakthroughs, and academic milestones."
       />
 
-      <div className="relative border-l border-apple-gray-300 dark:border-apple-gray-700 ml-4 md:ml-8 space-y-10">
+      <div className="relative border-l border-apple-gray-300 dark:border-apple-gray-700 ml-2 sm:ml-4 md:ml-8 space-y-10">
         {milestones.map((item, index) => {
           const badge = getTypeBadge(item.type);
           const Icon = badge.icon;
           const numberLabel = String(index + 1).padStart(2, '0');
 
           return (
-            <div key={item.id} className="relative pl-6 md:pl-10">
+            <div key={item.id} className="relative pl-4 sm:pl-6 md:pl-10">
               {/* Numbered Chronological Milestone Marker */}
-              <div className="absolute -left-[18px] top-1.5 w-9 h-9 rounded-full glass-surface border border-apple-blue/40 flex items-center justify-center text-xs font-mono font-bold text-apple-blue shadow-md z-10">
+              <div className="absolute -left-[15px] sm:-left-[18px] top-1.5 w-7 h-7 sm:w-9 sm:h-9 rounded-full glass-surface border border-apple-blue/40 flex items-center justify-center text-[10px] sm:text-xs font-mono font-bold text-apple-blue shadow-md z-10">
                 {numberLabel}
               </div>
 

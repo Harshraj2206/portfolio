@@ -14,7 +14,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ about, className = '
     <section
       id="about"
       aria-label="About and How I Work"
-      className={`max-w-6xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="Background & Philosophy"

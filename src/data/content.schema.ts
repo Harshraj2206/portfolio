@@ -178,6 +178,7 @@ export interface PortfolioContent {
     graduationYear: string;
     degreeMajor: string;
     gpa?: string;
+    githubUsername?: string;
   };
   seo: {
     siteTitle: string;

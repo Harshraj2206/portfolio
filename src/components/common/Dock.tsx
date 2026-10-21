@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { DockTool } from '../../data/content.schema';
-import * as Icons from 'lucide-react';
+import { getSkillOrToolIconComponent } from './IconResolver';
 
 interface DockProps {
   tools: DockTool[];
@@ -24,9 +24,7 @@ const DockItem: React.FC<DockItemProps> = ({ tool, mouseX }) => {
   const widthSync = useTransform(distance, [-120, 0, 120], [44, 68, 44]);
   const width = useSpring(widthSync, { mass: 0.1, stiffness: 200, damping: 15 });
 
-  // Dynamically resolve icon from lucide-react
-  // @ts-expect-error dynamic Lucide icon index
-  const IconComponent = Icons[tool.iconName] || Icons.Code;
+  const IconComponent = getSkillOrToolIconComponent(tool.iconName);
 
   return (
     <motion.div
@@ -53,7 +51,7 @@ export const Dock: React.FC<DockProps> = ({ tools, className }) => {
     <div
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
-      className={`flex items-end justify-center gap-3 p-3 rounded-panel glass-nav max-w-fit mx-auto ${className}`}
+      className={`flex items-end justify-start sm:justify-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-panel glass-nav max-w-full overflow-x-auto mx-auto scrollbar-none ${className}`}
     >
       {tools.map((tool) => (
         <DockItem key={tool.name} tool={tool} mouseX={mouseX} />

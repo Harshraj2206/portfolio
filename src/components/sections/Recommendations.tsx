@@ -17,7 +17,7 @@ export const Recommendations: React.FC<RecommendationsProps> = ({
     <section
       id="recommendations"
       aria-label="Recommendations and Testimonials"
-      className={`max-w-6xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="Social Proof"

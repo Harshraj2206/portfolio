@@ -19,6 +19,7 @@ export const portfolioContent: PortfolioContent = {
     graduationYear: "May 2027",
     degreeMajor: "B.S. in Computer Science & Minor in Human-Computer Interaction",
     gpa: "3.92 / 4.00",
+    githubUsername: "torvalds", // Replace with your GitHub username (e.g. "octocat") to display recent public repos
   },
 
   seo: {

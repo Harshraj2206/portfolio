@@ -147,6 +147,13 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
                     View Source Code
                   </GlassButton>
                 )}
+                <a
+                  href={`/projects/${project.id}`}
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-pill text-xs sm:text-sm font-semibold bg-apple-blue/15 text-apple-blue hover:bg-apple-blue/25 border border-apple-blue/30 transition-all shadow-sm"
+                >
+                  <span>Open Full Case Study Page</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
               </div>
             </div>
 
@@ -311,7 +318,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
             </div>
 
             {/* Bottom Footer Navigation */}
-            <div className="pt-8 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
+            <div className="pt-8 border-t border-black/5 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
               <GlassButton
                 variant="secondary"
                 size="md"
@@ -320,6 +327,14 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
               >
                 Previous Project
               </GlassButton>
+
+              <a
+                href={`/projects/${project.id}`}
+                className="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-pill text-xs sm:text-sm font-semibold bg-apple-blue text-white hover:bg-blue-600 transition-all shadow-md active:scale-95"
+              >
+                <span>Read Full Dedicated Case Study</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
 
               <GlassButton
                 variant="secondary"

@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { GlassButton } from '../common/GlassButton';
 import { AvailabilityBadge } from '../common/AvailabilityBadge';
 import { PortfolioContent } from '../../data/content.schema';
@@ -24,15 +23,10 @@ export const Hero: React.FC<HeroProps> = ({
       aria-label="Hero Section"
       className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-6 w-full">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Positioning Headline & CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-7 flex flex-col items-start"
-          >
+          <div className="lg:col-span-7 flex flex-col items-start">
             {/* Live Availability Badge */}
             <div className="mb-6">
               <AvailabilityBadge config={availability} />
@@ -78,15 +72,10 @@ export const Hero: React.FC<HeroProps> = ({
                 Based in {personal.location}. Ready for {availability.season} roles.
               </span>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Column: Modern Portrait Frame with Glass Depth */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5 flex justify-center lg:justify-end"
-          >
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
             <div className="relative group w-full max-w-sm sm:max-w-md">
               {/* Ambient Glow Behind Frame */}
               <div className="absolute -inset-4 bg-gradient-to-tr from-apple-blue/20 via-apple-purple/20 to-apple-teal/20 rounded-panel blur-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -163,7 +152,7 @@ export const Hero: React.FC<HeroProps> = ({
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

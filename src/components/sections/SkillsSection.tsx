@@ -3,8 +3,8 @@ import { SkillCategory, DockTool } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
 import { GlassCard } from '../common/GlassCard';
 import { Dock } from '../common/Dock';
-import * as Icons from 'lucide-react';
 import { ArrowUpRight } from 'lucide-react';
+import { getSkillOrToolIconComponent } from '../common/IconResolver';
 
 interface SkillsSectionProps {
   categories: SkillCategory[];
@@ -23,7 +23,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
     <section
       id="skills"
       aria-label="Technical Skills and Tools"
-      className={`max-w-6xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="Capabilities & Tooling"
@@ -46,8 +46,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
 
             <div className="space-y-4">
               {cat.skills.map((skill) => {
-                // @ts-expect-error dynamic Lucide icon index
-                const IconComponent = Icons[skill.iconName] || Icons.Code;
+                const IconComponent = getSkillOrToolIconComponent(skill.iconName);
 
                 return (
                   <div

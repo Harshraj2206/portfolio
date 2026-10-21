@@ -16,7 +16,7 @@ export const StatsRow: React.FC<StatsRowProps> = ({ stats, className = '' }) => 
   return (
     <section
       aria-label="Impact and Achievements Stats"
-      className={`max-w-6xl mx-auto px-6 mb-24 md:mb-32 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-24 md:mb-32 ${className}`}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {activeStats.map((stat) => (

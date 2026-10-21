@@ -138,7 +138,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     <section
       id="contact"
       aria-label="Contact and Connect"
-      className={`max-w-6xl mx-auto px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
     >
       <SectionHeading
         eyebrow="Let's Talk"

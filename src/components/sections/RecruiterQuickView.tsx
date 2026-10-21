@@ -48,10 +48,10 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
   };
 
   return (
-    <div className={`max-w-6xl mx-auto px-6 mb-16 ${className}`}>
+    <div className={`max-w-6xl mx-auto px-4 sm:px-6 mb-16 ${className}`}>
       <GlassCard
         variant="panel"
-        className="p-6 md:p-8 border-apple-blue/30 shadow-glass-light dark:shadow-glass-dark"
+        className="p-4 sm:p-6 md:p-8 border-apple-blue/30 shadow-glass-light dark:shadow-glass-dark"
       >
         {/* Top Header Banner */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-black/5 dark:border-white/10">

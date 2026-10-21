@@ -3,14 +3,19 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    watch: {
+      ignored: ['**/design/**', '**/scripts/**', '**/.git/**'],
+    },
+  },
   build: {
     target: 'esnext',
     sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
-          'icons': ['lucide-react']
+          'vendor': ['react', 'react-dom', 'react-router-dom'],
+          'motion': ['framer-motion'],
         }
       }
     }
