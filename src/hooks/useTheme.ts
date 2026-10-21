@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 
 export type Theme = 'light' | 'dark' | 'system';
 
-export function useTheme(defaultTheme: Theme = 'light') {
+export function useTheme(defaultTheme: Theme = 'dark') {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('portfolio-theme') as Theme | null;
     return saved || defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark');
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');

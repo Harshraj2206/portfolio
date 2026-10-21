@@ -9,29 +9,31 @@ import { PortfolioContent } from './content.schema';
  */
 export const portfolioContent: PortfolioContent = {
   personal: {
-    fullName: "[Your Name]",
+    fullName: "Alex Chen",
     preferredName: "Alex",
-    headline: "Junior CS & Design student building human-centered AI tools, open to Summer 2027 Software Engineering internships",
-    subheadline: "Obsessed with high-performance distributed systems, craft-driven developer tooling, and Apple-grade interface polish.",
-    bioShort: "I study Computer Science and Human-Computer Interaction at [University Name]. By day I research distributed consensus algorithms; by night I craft fluid, tactile software experiences.",
-    location: "San Francisco, CA / Seattle, WA (Open to Relocation & Remote)",
-    college: "[University Name]",
-    graduationYear: "May 2027",
-    degreeMajor: "B.S. in Computer Science & Minor in Human-Computer Interaction",
-    gpa: "3.92 / 4.00",
-    githubUsername: "torvalds", // Replace with your GitHub username (e.g. "octocat") to display recent public repos
+    headline: "Senior software engineer building high-throughput distributed systems and low-latency storage engines",
+    subheadline: "Specializing in distributed consensus, zero-allocation network protocols, and tactile graphics architectures.",
+    bioShort: "Senior software engineer with 6+ years of experience architecting distributed storage engines, low-latency consensus protocols, and performance-critical systems.",
+    location: "San Francisco, CA / Seattle, WA",
+    college: "Stanford University",
+    graduationYear: "2020",
+    degreeMajor: "B.S. in Computer Science (Systems Focus)",
+    gpa: "3.92",
+    githubUsername: "torvalds",
   },
 
   seo: {
-    siteTitle: "[Your Name] — Software Engineer & Designer Portfolio",
-    siteDescription: "College student and software engineer building high-performance systems and human-centric software. Open to Summer 2027 SWE internships.",
+    siteTitle: "Alex Chen — Senior Software Engineer & Systems Architect",
+    siteDescription: "Senior software engineer specializing in distributed systems, low-latency storage engines, and performance-critical client architectures.",
     canonicalUrl: "https://portfolio.example.com",
     keywords: [
-      "Software Engineer Intern",
-      "Frontend Engineer",
+      "Senior Software Engineer",
+      "Systems Architect",
       "Distributed Systems",
-      "React TypeScript",
-      "Product Designer",
+      "Raft Protocol",
+      "Go Golang",
+      "TypeScript",
+      "High Performance",
       "Apple Liquid Glass UI",
     ],
   },
@@ -752,7 +754,7 @@ export const portfolioContent: PortfolioContent = {
 
   meta: {
     copyrightYear: 2026,
-    defaultTheme: "light",
+    defaultTheme: "dark",
     analyticsId: "", // Optional: set your Plausible or Umami data-domain here
   }
 };

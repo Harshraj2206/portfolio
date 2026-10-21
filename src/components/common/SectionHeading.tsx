@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SectionHeadingProps {
-  eyebrow?: string;
+  eyebrow?: string; // Kept in interface for backward compatibility, but intentionally not rendered per design specs
   title: string;
   subtitle?: string;
   align?: 'left' | 'center';
@@ -9,7 +9,6 @@ interface SectionHeadingProps {
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
-  eyebrow,
   title,
   subtitle,
   align = 'center',
@@ -19,16 +18,12 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
   return (
     <div className={`max-w-3xl mb-12 md:mb-16 ${alignClass} ${className}`}>
-      {eyebrow && (
-        <div className="inline-block px-3 py-1 mb-3 rounded-pill glass-surface text-xs font-semibold text-apple-blue tracking-tight">
-          {eyebrow}
-        </div>
-      )}
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-apple-gray-900 dark:text-white leading-[1.12]">
+      {/* No small uppercase pill labels per Apple Liquid Glass design specifications */}
+      <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7] leading-[1.12]">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-base sm:text-lg text-apple-gray-600 dark:text-apple-gray-400 font-normal leading-relaxed max-w-2xl mx-auto">
+        <p className="mt-4 text-[16px] sm:text-[17px] text-apple-gray-600 dark:text-[#A1A1A6] font-normal leading-relaxed max-w-2xl mx-auto">
           {subtitle}
         </p>
       )}

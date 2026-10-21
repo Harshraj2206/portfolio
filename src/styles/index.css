@@ -5,53 +5,77 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --bg-mesh-1: rgba(224, 236, 255, 0.85);
-    --bg-mesh-2: rgba(237, 233, 254, 0.85);
-    --bg-mesh-3: rgba(252, 231, 243, 0.70);
-    --bg-mesh-4: rgba(230, 255, 250, 0.70);
-  }
-
-  .dark {
-    --bg-mesh-1: rgba(14, 21, 38, 0.90);
-    --bg-mesh-2: rgba(30, 27, 75, 0.85);
-    --bg-mesh-3: rgba(15, 23, 42, 0.90);
-    --bg-mesh-4: rgba(19, 31, 36, 0.80);
-  }
-
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 }
 
-/* Shifting Mesh Gradient Background */
-.mesh-background {
+/* Ambient Single Soft Blue Lighting (No multi-color blobs) */
+.ambient-lighting {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
 
-.mesh-blob {
+/* Primary Top Soft Blue Glow (18-25% opacity, large radius) */
+.top-blue-glow {
   position: absolute;
+  top: -240px;
+  left: 50%;
+  width: 900px;
+  height: 700px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(10, 132, 255, 0.22) 0%, rgba(10, 132, 255, 0.06) 45%, transparent 72%);
   filter: blur(80px);
   border-radius: 9999px;
-  opacity: 0.65;
-  transition: opacity 500ms ease;
+  pointer-events: none;
+  animation: glowSubtleDrift 30s ease-in-out infinite alternate;
 }
 
-.dark .mesh-blob {
-  opacity: 0.45;
+/* Optional Fainter Lower Glow (Same Hue, ~10% opacity) */
+.lower-blue-glow {
+  position: absolute;
+  top: 55%;
+  right: -100px;
+  width: 700px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(10, 132, 255, 0.10) 0%, transparent 70%);
   filter: blur(100px);
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: glowSubtleDrift 36s ease-in-out infinite alternate-reverse;
+}
+
+/* Light Mode Soft Top Glow */
+:root:not(.dark) .top-blue-glow {
+  background: radial-gradient(ellipse at center, rgba(10, 132, 255, 0.12) 0%, transparent 70%);
+  opacity: 0.8;
+}
+
+:root:not(.dark) .lower-blue-glow {
+  background: radial-gradient(circle at center, rgba(10, 132, 255, 0.06) 0%, transparent 70%);
+}
+
+@keyframes glowSubtleDrift {
+  0% {
+    transform: translateX(-50%) translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateX(-48%) translateY(16px) scale(1.04);
+  }
+  100% {
+    transform: translateX(-52%) translateY(-10px) scale(0.98);
+  }
 }
 
 /* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -59,14 +83,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(142, 142, 147, 0.35);
+  background: rgba(161, 161, 166, 0.28);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(142, 142, 147, 0.55);
+  background: rgba(161, 161, 166, 0.50);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
@@ -79,6 +103,10 @@
 
 /* Accessibility: Respect Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+  .top-blue-glow,
+  .lower-blue-glow {
+    animation: none !important;
+  }
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

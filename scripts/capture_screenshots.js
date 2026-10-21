@@ -20,6 +20,10 @@ async function capture() {
     colorScheme: 'light',
   });
   await pageDesktopLight.goto('http://localhost:5173/', { waitUntil: 'networkidle' });
+  await pageDesktopLight.evaluate(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  });
   await pageDesktopLight.waitForTimeout(1000);
   const pathDesktopLight = path.join(screenshotsDir, 'desktop_light.png');
   await pageDesktopLight.screenshot({ path: pathDesktopLight, fullPage: false });

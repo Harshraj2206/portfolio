@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeToggle } from './ThemeToggle';
 import { GlassButton } from './GlassButton';
 import {
-  Home,
   Briefcase,
   GitCommit,
   Layers,
+  User,
   Mail,
   Menu,
   X,
@@ -21,7 +21,6 @@ interface MobileNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
-  writingEnabled?: boolean;
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({
@@ -32,44 +31,33 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
-  writingEnabled = false,
 }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  // Exactly 5 main items
   const mainItems = [
-    { id: 'hero', label: 'Home', href: '#hero', icon: Home },
-    { id: 'projects', label: 'Work', href: '#projects', icon: Briefcase },
-    { id: 'timeline', label: 'Record', href: '#timeline', icon: GitCommit },
+    { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
+    { id: 'experience', label: 'Experience', href: '#experience', icon: GitCommit },
     { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
+    { id: 'about', label: 'About', href: '#about', icon: User },
     { id: 'contact', label: 'Contact', href: '#contact', icon: Mail },
-  ];
-
-  const fullNavLinks = [
-    { label: 'Home', href: '#hero' },
-    { label: 'Featured Projects & Case Studies', href: '#projects' },
-    { label: 'The Record (Education & Experience)', href: '#timeline' },
-    { label: 'Skills & Capabilities', href: '#skills' },
-    { label: 'About & Engineering Ethos', href: '#about' },
-    ...(writingEnabled ? [{ label: 'Writing & Learning Notes', href: '#writing' }] : []),
-    { label: 'Recommendations & Praise', href: '#recommendations' },
-    { label: 'Contact & Let\'s Talk', href: '#contact' },
   ];
 
   return (
     <>
       {/* Top Compact Mobile Bar */}
-      <header className="fixed top-3 left-3 right-3 z-40 md:hidden flex items-center justify-between px-4 py-2.5 rounded-pill glass-nav shadow-sm">
+      <header className="fixed top-3 left-3 right-3 z-40 md:hidden flex items-center justify-between px-4 py-2 rounded-pill glass-nav shadow-md">
         <a
           href="#hero"
-          className="flex items-center gap-2 text-xs font-semibold text-apple-gray-900 dark:text-white"
+          className="flex items-center gap-2 text-[13px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]"
         >
-          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-apple-blue to-apple-purple flex items-center justify-center text-white text-[11px] font-bold">
+          <div className="w-6 h-6 rounded-full bg-[#0A84FF] flex items-center justify-center text-white text-[12px] font-bold">
             {preferredName[0] || 'A'}
           </div>
           <span className="font-semibold tracking-tight">{preferredName}</span>
         </a>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <ThemeToggle
             theme={theme}
             resolvedTheme={resolvedTheme}
@@ -78,7 +66,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           <button
             onClick={() => setSheetOpen(true)}
             aria-label="Open navigation menu"
-            className="p-2 rounded-full text-apple-gray-600 dark:text-apple-gray-300 hover:text-apple-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+            className="p-1.5 rounded-full text-apple-gray-600 dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-white"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -88,7 +76,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       {/* Bottom Floating Glass Dock for Mobile */}
       <nav
         aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-40 md:hidden flex items-center justify-around py-1.5 px-1 sm:px-3 rounded-pill glass-nav shadow-lg"
+        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-40 md:hidden flex items-center justify-around py-2 px-2 rounded-pill glass-nav shadow-lg"
       >
         {mainItems.map((item) => {
           const Icon = item.icon;
@@ -97,14 +85,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             <a
               key={item.id}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 px-1.5 sm:px-3 rounded-pill transition-colors ${
+              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-pill transition-colors ${
                 isActive
-                  ? 'text-apple-blue font-semibold scale-105'
-                  : 'text-apple-gray-500 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white'
+                  ? 'text-[#0A84FF] dark:text-[#409CFF] font-semibold scale-105'
+                  : 'text-apple-gray-500 dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-white'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] mt-0.5">{item.label}</span>
+              <Icon className="w-4 h-4" />
+              <span className="text-[11px] mt-0.5">{item.label}</span>
             </a>
           );
         })}
@@ -117,7 +105,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 md:hidden bg-black/40 backdrop-blur-md flex flex-col justify-end"
+            className="fixed inset-0 z-50 md:hidden bg-black/50 backdrop-blur-md flex flex-col justify-end"
             onClick={() => setSheetOpen(false)}
           >
             <motion.div
@@ -125,11 +113,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="bg-white/90 dark:bg-[#1C1C1E]/95 backdrop-blur-2xl p-6 rounded-t-panel border-t border-white/30 dark:border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto"
+              className="bg-[#FFFFFF]/95 dark:bg-[#16171D]/95 backdrop-blur-2xl p-6 rounded-t-[28px] border-t border-black/10 dark:border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between pb-4 border-b border-black/5 dark:border-white/10">
-                <span className="text-sm font-semibold text-apple-gray-900 dark:text-white">
+                <span className="text-[15px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
                   Navigation
                 </span>
                 <button
@@ -142,12 +130,12 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               </div>
 
               <div className="py-4 space-y-1">
-                {fullNavLinks.map((link) => (
+                {mainItems.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
                     onClick={() => setSheetOpen(false)}
-                    className="block px-4 py-3 rounded-card text-sm font-medium text-apple-gray-800 dark:text-apple-gray-200 hover:bg-apple-blue/10 hover:text-apple-blue transition-colors"
+                    className="block px-4 py-3 rounded-card text-[15px] font-medium text-apple-gray-800 dark:text-[#D1D1D6] hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#0A84FF] transition-colors"
                   >
                     {link.label}
                   </a>
@@ -167,7 +155,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                   icon={<FileDown className="w-4 h-4" />}
                   className="w-full justify-center"
                 >
-                  Download Résumé (PDF)
+                  Résumé
                 </GlassButton>
               </div>
             </motion.div>

@@ -18,7 +18,6 @@ interface PillNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
-  writingEnabled?: boolean;
 }
 
 export const PillNav: React.FC<PillNavProps> = ({
@@ -29,17 +28,15 @@ export const PillNav: React.FC<PillNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
-  writingEnabled = false,
 }) => {
   const [scrolled, setScrolled] = useState(false);
 
+  // Exactly 5 links per user specification
   const navItems: NavItem[] = [
-    { id: 'hero', label: 'Home', href: '#hero' },
-    { id: 'projects', label: 'Work', href: '#projects' },
-    { id: 'timeline', label: 'The Record', href: '#timeline' },
+    { id: 'projects', label: 'Projects', href: '#projects' },
+    { id: 'experience', label: 'Experience', href: '#experience' },
     { id: 'skills', label: 'Skills', href: '#skills' },
     { id: 'about', label: 'About', href: '#about' },
-    ...(writingEnabled ? [{ id: 'writing', label: 'Writing', href: '#writing' }] : []),
     { id: 'contact', label: 'Contact', href: '#contact' },
   ];
 
@@ -56,26 +53,26 @@ export const PillNav: React.FC<PillNavProps> = ({
       <nav
         aria-label="Primary Navigation"
         className={`pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-pill glass-nav transition-all duration-300 ${
-          scrolled ? 'py-1.5 px-3 shadow-lg scale-95' : 'py-2 px-4 shadow-md'
+          scrolled ? 'py-1.5 px-3 shadow-glass-dark scale-95' : 'py-2 px-4 shadow-md'
         }`}
       >
-        {/* Monogram / Brand mark */}
+        {/* Monogram Brandmark */}
         <a
           href="#hero"
-          className="flex items-center gap-2 pl-3 pr-2 py-1 text-xs font-semibold text-apple-gray-900 dark:text-white rounded-pill hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 pl-2 pr-2 py-1 text-[13px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] rounded-pill hover:opacity-80 transition-opacity"
           aria-label={`${preferredName} home`}
         >
-          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-apple-blue to-apple-purple flex items-center justify-center text-white text-[11px] font-bold shadow-sm">
+          <div className="w-6 h-6 rounded-full bg-[#0A84FF] flex items-center justify-center text-white text-[12px] font-bold shadow-sm">
             {preferredName[0] || 'A'}
           </div>
-          <span className="hidden lg:inline text-xs font-medium tracking-tight">
+          <span className="hidden lg:inline text-[13px] font-medium tracking-tight">
             {preferredName}
           </span>
         </a>
 
-        <div className="h-4 w-px bg-black/10 dark:bg-white/15 mx-1" />
+        <div className="h-4 w-px bg-black/10 dark:bg-white/12 mx-1" />
 
-        {/* Links with Sliding Active Indicator */}
+        {/* 5 Links with Sliding Active Indicator */}
         <div className="flex items-center gap-1 relative">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
@@ -83,16 +80,16 @@ export const PillNav: React.FC<PillNavProps> = ({
               <a
                 key={item.id}
                 href={item.href}
-                className={`relative px-3.5 py-1.5 text-xs font-medium rounded-pill transition-colors duration-200 ${
+                className={`relative px-3.5 py-1.5 text-[13px] font-medium rounded-pill transition-colors duration-200 ${
                   isActive
-                    ? 'text-apple-gray-900 dark:text-white font-semibold'
-                    : 'text-apple-gray-600 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white'
+                    ? 'text-[#1D1D1F] dark:text-[#F5F5F7] font-semibold'
+                    : 'text-apple-gray-600 dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]'
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="activePillIndicator"
-                    className="absolute inset-0 bg-white/70 dark:bg-white/15 rounded-pill shadow-sm"
+                    className="absolute inset-0 bg-black/5 dark:bg-white/12 rounded-pill shadow-xs"
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -102,9 +99,9 @@ export const PillNav: React.FC<PillNavProps> = ({
           })}
         </div>
 
-        <div className="h-4 w-px bg-black/10 dark:bg-white/15 mx-1" />
+        <div className="h-4 w-px bg-black/10 dark:bg-white/12 mx-1" />
 
-        {/* Actions: Résumé Download Pill & Theme Toggle */}
+        {/* Actions: Résumé Button & Theme Toggle */}
         <div className="flex items-center gap-1.5">
           <GlassButton
             variant="primary"

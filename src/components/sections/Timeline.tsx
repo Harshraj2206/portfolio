@@ -1,16 +1,7 @@
 import React from 'react';
 import { TimelineMilestone } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
-import { GlassCard } from '../common/GlassCard';
-import {
-  Briefcase,
-  GraduationCap,
-  Award,
-  Users,
-  FlaskConical,
-  MapPin,
-  Calendar
-} from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 
 interface TimelineProps {
   milestones: TimelineMilestone[];
@@ -21,109 +12,79 @@ export const Timeline: React.FC<TimelineProps> = ({
   milestones,
   className = '',
 }) => {
-  const getTypeBadge = (type: TimelineMilestone['type']) => {
-    switch (type) {
-      case 'internship':
-        return { label: 'Internship', icon: Briefcase, color: 'text-apple-blue bg-apple-blue/15' };
-      case 'research':
-        return { label: 'Research', icon: FlaskConical, color: 'text-apple-purple bg-apple-purple/15' };
-      case 'leadership':
-        return { label: 'Leadership', icon: Users, color: 'text-apple-teal bg-apple-teal/15' };
-      case 'award':
-        return { label: 'Award', icon: Award, color: 'text-amber-500 bg-amber-500/15' };
-      case 'education':
-        return { label: 'Education', icon: GraduationCap, color: 'text-emerald-500 bg-emerald-500/15' };
-      default:
-        return { label: 'Milestone', icon: Briefcase, color: 'text-apple-blue bg-apple-blue/15' };
-    }
-  };
-
   return (
     <section
-      id="timeline"
-      aria-label="Experience and Education Timeline"
-      className={`max-w-4xl mx-auto px-3 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      id="experience"
+      aria-label="Experience & Track Record"
+      className={`max-w-4xl mx-auto px-4 sm:px-6 mb-24 md:mb-32 scroll-mt-24 ${className}`}
     >
       <SectionHeading
-        eyebrow="The Record"
-        title="Experience, Research & Leadership"
-        subtitle="A chronological record of engineering internships, lab research, hackathon breakthroughs, and academic milestones."
+        title="Experience & engineering track record"
+        subtitle="Full-time software engineering roles, distributed systems contributions, and verified impact."
       />
 
-      <div className="relative border-l border-apple-gray-300 dark:border-apple-gray-700 ml-2 sm:ml-4 md:ml-8 space-y-10">
-        {milestones.map((item, index) => {
-          const badge = getTypeBadge(item.type);
-          const Icon = badge.icon;
-          const numberLabel = String(index + 1).padStart(2, '0');
-
-          return (
-            <div key={item.id} className="relative pl-4 sm:pl-6 md:pl-10">
-              {/* Numbered Chronological Milestone Marker */}
-              <div className="absolute -left-[15px] sm:-left-[18px] top-1.5 w-7 h-7 sm:w-9 sm:h-9 rounded-full glass-surface border border-apple-blue/40 flex items-center justify-center text-[10px] sm:text-xs font-mono font-bold text-apple-blue shadow-md z-10">
-                {numberLabel}
+      {/* Clean Full-Width List (No numbered circles) */}
+      <div className="space-y-6">
+        {milestones.map((item) => (
+          <div
+            key={item.id}
+            className="p-6 sm:p-8 rounded-[28px] glass-surface transition-all duration-300"
+          >
+            {/* Top Row: Role, Organization, Period, Location */}
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 border-b border-black/5 dark:border-white/10">
+              <div>
+                <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
+                  {item.title}
+                </h3>
+                <div className="text-[15px] font-medium text-[#409CFF] mt-0.5">
+                  {item.organization}
+                </div>
               </div>
 
-              <GlassCard variant="card" className="p-6 md:p-8 space-y-4">
-                {/* Header with Role and Period */}
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-pill text-xs font-semibold ${badge.color}`}
-                    >
-                      <Icon className="w-3 h-3" />
-                      {badge.label}
-                    </span>
-                    <span className="text-xs text-apple-gray-500 dark:text-apple-gray-400 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" /> {item.period}
-                    </span>
-                  </div>
-
-                  <span className="text-xs text-apple-gray-500 dark:text-apple-gray-400 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" /> {item.location}
-                  </span>
-                </div>
-
-                {/* Title & Organization */}
-                <div>
-                  <h3 className="text-xl font-bold text-apple-gray-900 dark:text-white">
-                    {item.title}
-                  </h3>
-                  <div className="text-sm font-semibold text-apple-blue mt-0.5">
-                    {item.organization}
-                  </div>
-                  <p className="mt-2 text-sm text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Key Achievements */}
-                <ul className="space-y-1.5 pt-2 border-t border-black/5 dark:border-white/10">
-                  {item.achievements.map((ach, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-xs md:text-sm text-apple-gray-700 dark:text-apple-gray-300 leading-relaxed"
-                    >
-                      <span className="text-apple-blue font-bold shrink-0 mt-0.5">•</span>
-                      <span>{ach}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Skills Used Chips */}
-                <div className="flex flex-wrap gap-1.5 pt-3">
-                  {item.skillsUsed.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-2.5 py-0.5 rounded-pill bg-black/5 dark:bg-white/10 text-[11px] font-medium text-apple-gray-600 dark:text-apple-gray-400"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </GlassCard>
+              <div className="flex flex-wrap items-center gap-3 text-[13px] text-apple-gray-500 dark:text-[#A1A1A6]">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {item.period}
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {item.location}
+                </span>
+              </div>
             </div>
-          );
-        })}
+
+            {/* Role Context */}
+            <p className="mt-4 text-[16px] text-apple-gray-600 dark:text-[#A1A1A6] font-normal leading-relaxed">
+              {item.description}
+            </p>
+
+            {/* Achievements Bullet Points */}
+            <ul className="mt-4 space-y-2">
+              {item.achievements.map((ach, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-2.5 text-[15px] text-[#515154] dark:text-[#D1D1D6] leading-relaxed"
+                >
+                  <span className="text-[#0A84FF] font-bold select-none mt-0.5">―</span>
+                  <span>{ach}</span>
+                </li>
+              ))}
+            </ul>
+
+            {/* Neutral Glass Chips for Technologies (No colors) */}
+            <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-black/5 dark:border-white/10">
+              {item.skillsUsed.map((skill) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 rounded-pill neutral-glass-chip text-[13px] font-medium"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

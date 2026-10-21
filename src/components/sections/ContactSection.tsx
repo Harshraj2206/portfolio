@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ContactConfig, SocialLink } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
-import { GlassCard } from '../common/GlassCard';
 import { GlassButton } from '../common/GlassButton';
 import { SocialLinks } from '../common/SocialLinks';
 import confetti from 'canvas-confetti';
@@ -11,23 +10,18 @@ import {
   Calendar,
   CheckCircle2,
   AlertCircle,
-  FileDown,
   Clock
 } from 'lucide-react';
 
 interface ContactSectionProps {
   contact: ContactConfig;
   socialLinks: SocialLink[];
-  resumeUrl: string;
-  onDownloadResume: () => void;
   className?: string;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
   contact,
   socialLinks,
-  resumeUrl,
-  onDownloadResume,
   className = '',
 }) => {
   const [formData, setFormData] = useState({
@@ -35,7 +29,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     email: '',
     subject: '',
     message: '',
-    honeypot: '', // anti-spam bot trap
+    honeypot: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,7 +61,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Honeypot check: If bot filled the hidden input, pretend success and abort
     if (formData.honeypot) {
       setStatus('success');
       return;
@@ -77,7 +70,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
     setStatus('submitting');
 
-    // If a Formspree endpoint is configured via env var or config
     const endpoint = contact.formspreeEndpoint || import.meta.env.VITE_CONTACT_ENDPOINT;
 
     if (endpoint) {
@@ -99,10 +91,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         if (response.ok) {
           setStatus('success');
           confetti({
-            particleCount: 50,
-            spread: 70,
+            particleCount: 30,
+            spread: 60,
             origin: { y: 0.7 },
-            colors: ['#0A84FF', '#34C759', '#AF52DE'],
+            colors: ['#0A84FF', '#FFFFFF'],
           });
           setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
           return;
@@ -111,25 +103,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         }
       } catch (err) {
         console.warn('Form submission failed, offering mailto fallback:', err);
-        // Fall back gracefully to mailto
       }
     }
 
-    // Default Mailto Fallback
     const subject = encodeURIComponent(
-      formData.subject ? `[Portfolio Inquiry] ${formData.subject}` : `[Portfolio Inquiry] From ${formData.name}`
+      formData.subject ? `[Inquiry] ${formData.subject}` : `[Inquiry] From ${formData.name}`
     );
     const body = encodeURIComponent(
-      `Hi [Your Name],\n\n${formData.message}\n\nFrom: ${formData.name}\nEmail: ${formData.email}`
+      `Hello,\n\n${formData.message}\n\nFrom: ${formData.name}\nEmail: ${formData.email}`
     );
 
     window.location.href = `mailto:${contact.emailAddress}?subject=${subject}&body=${body}`;
     setStatus('success');
     confetti({
-      particleCount: 40,
-      spread: 60,
+      particleCount: 25,
+      spread: 50,
       origin: { y: 0.7 },
-      colors: ['#0A84FF', '#34C759'],
+      colors: ['#0A84FF', '#FFFFFF'],
     });
     setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
   };
@@ -137,47 +127,44 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   return (
     <section
       id="contact"
-      aria-label="Contact and Connect"
-      className={`max-w-6xl mx-auto px-4 sm:px-6 mb-28 md:mb-36 scroll-mt-24 ${className}`}
+      aria-label="Contact & Connect"
+      className={`max-w-5xl mx-auto px-4 sm:px-6 mb-24 md:mb-32 scroll-mt-24 ${className}`}
     >
       <SectionHeading
-        eyebrow="Let's Talk"
-        title="Start a Conversation"
-        subtitle={contact.subtext}
+        title="Start a conversation"
+        subtitle="Direct channels for engineering opportunities, technical advisory, and discussions."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Direct Links & Calendar Slot (5 cols) */}
+        {/* Left Column: Direct Inquiries & Channels (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          <GlassCard variant="card" className="p-8 space-y-6">
+          <div className="p-6 sm:p-8 rounded-[28px] glass-surface space-y-6">
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-apple-blue mb-1">
+              <div className="text-[13px] font-semibold text-[#0A84FF] dark:text-[#409CFF] flex items-center gap-2 mb-1.5">
                 <Mail className="w-4 h-4" />
-                <span>Direct Inquiries</span>
+                <span>Direct email</span>
               </div>
               <a
                 href={`mailto:${contact.emailAddress}`}
-                className="text-lg md:text-xl font-bold text-apple-gray-900 dark:text-white hover:text-apple-blue transition-colors"
+                className="text-lg md:text-xl font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] hover:text-[#0A84FF] dark:hover:text-[#409CFF] transition-colors"
               >
                 {contact.emailAddress}
               </a>
-              <div className="flex items-center gap-1.5 text-xs text-apple-gray-500 dark:text-apple-gray-400 mt-2">
+              <div className="flex items-center gap-1.5 text-[13px] text-apple-gray-500 dark:text-[#A1A1A6] mt-2">
                 <Clock className="w-3.5 h-3.5" />
                 <span>{contact.officeHoursNote}</span>
               </div>
             </div>
 
-            {/* Calendly-Style Chat Link */}
+            {/* Calendly Quick Link */}
             {contact.calendlyUrl && (
-              <div className="p-4 rounded-card bg-black/5 dark:bg-white/5 border border-white/20 dark:border-white/5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold text-apple-gray-900 dark:text-white flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-apple-purple" />
-                    <span>Want a Quick 15-Min Chat?</span>
-                  </div>
+              <div className="p-4 rounded-card bg-black/5 dark:bg-white/5 border border-white/10 space-y-2">
+                <div className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#0A84FF]" />
+                  <span>Technical sync</span>
                 </div>
-                <p className="text-xs text-apple-gray-500 dark:text-apple-gray-400">
-                  Grab a time directly on my calendar to talk about engineering teams, summer opportunities, or projects.
+                <p className="text-[13px] text-apple-gray-500 dark:text-[#A1A1A6]">
+                  Schedule a 15-minute video call to discuss roles or architecture.
                 </p>
                 <div className="pt-2">
                   <GlassButton
@@ -187,65 +174,49 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     isExternal
                     icon={<Calendar className="w-3.5 h-3.5" />}
                   >
-                    Open Scheduling Calendar
+                    Open calendar
                   </GlassButton>
                 </div>
               </div>
             )}
 
             {/* Social Links Row */}
-            <div className="pt-4 border-t border-black/5 dark:border-white/10 space-y-3">
-              <span className="text-xs font-semibold text-apple-gray-600 dark:text-apple-gray-400">
-                Verified Socials & Profiles
+            <div className="pt-4 border-t border-black/5 dark:border-white/10 space-y-2.5">
+              <span className="text-[13px] font-semibold text-apple-gray-600 dark:text-[#A1A1A6]">
+                Profiles & repositories
               </span>
               <SocialLinks links={socialLinks} variant="pills" />
             </div>
-
-            {/* Résumé Quick Action */}
-            <div className="pt-2">
-              <GlassButton
-                variant="primary"
-                size="md"
-                href={resumeUrl}
-                isExternal
-                onClick={onDownloadResume}
-                icon={<FileDown className="w-4 h-4" />}
-                className="w-full justify-center"
-              >
-                Download Résumé (PDF)
-              </GlassButton>
-            </div>
-          </GlassCard>
+          </div>
         </div>
 
         {/* Right Column: Interactive Contact Form (7 cols) */}
         <div className="lg:col-span-7">
-          <GlassCard variant="card" className="p-8">
-            <h3 className="text-xl font-bold text-apple-gray-900 dark:text-white mb-6">
-              Send a Direct Message
+          <div className="p-6 sm:p-8 rounded-[28px] glass-surface">
+            <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7] mb-6">
+              Send a direct message
             </h3>
 
             {status === 'success' ? (
-              <div className="p-8 rounded-card bg-emerald-500/10 border border-emerald-500/20 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto">
+              <div className="p-8 rounded-card bg-white/5 border border-white/10 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="text-lg font-bold text-apple-gray-900 dark:text-white">
-                  Message Sent!
+                <h4 className="text-lg font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
+                  Message received
                 </h4>
-                <p className="text-sm text-apple-gray-600 dark:text-apple-gray-300 max-w-sm mx-auto">
-                  Thank you for reaching out. I have received your message and will reply to your email shortly.
+                <p className="text-[14px] text-apple-gray-500 dark:text-[#A1A1A6] max-w-sm mx-auto">
+                  Thank you for reaching out. I typically reply within one business day.
                 </p>
                 <button
                   onClick={() => setStatus('idle')}
-                  className="mt-4 text-xs font-semibold text-apple-blue hover:underline"
+                  className="mt-4 text-[13px] font-semibold text-[#0A84FF] hover:underline"
                 >
                   Send another message
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                {/* Honeypot anti-spam trap (invisible to human users) */}
                 <input
                   type="text"
                   name="honeypot"
@@ -261,9 +232,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <div>
                     <label
                       htmlFor="contact-name"
-                      className="block text-xs font-medium text-apple-gray-700 dark:text-apple-gray-300 mb-1.5"
+                      className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
                     >
-                      Your Name <span className="text-red-500">*</span>
+                      Your name <span className="text-[#0A84FF]">*</span>
                     </label>
                     <input
                       id="contact-name"
@@ -274,12 +245,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         setFormData({ ...formData, name: e.target.value });
                         if (errors.name) setErrors({ ...errors, name: '' });
                       }}
-                      className={`w-full px-4 py-2.5 rounded-chip glass-surface bg-white/40 dark:bg-black/20 text-sm text-apple-gray-900 dark:text-white placeholder:text-apple-gray-400 focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                        errors.name ? 'border-red-500' : 'border-white/30 dark:border-white/10'
+                      className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
+                        errors.name ? 'border-red-500' : 'border-black/10 dark:border-white/10'
                       }`}
                     />
                     {errors.name && (
-                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> {errors.name}
                       </p>
                     )}
@@ -289,9 +260,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <div>
                     <label
                       htmlFor="contact-email"
-                      className="block text-xs font-medium text-apple-gray-700 dark:text-apple-gray-300 mb-1.5"
+                      className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
                     >
-                      Email Address <span className="text-red-500">*</span>
+                      Email address <span className="text-[#0A84FF]">*</span>
                     </label>
                     <input
                       id="contact-email"
@@ -302,12 +273,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         setFormData({ ...formData, email: e.target.value });
                         if (errors.email) setErrors({ ...errors, email: '' });
                       }}
-                      className={`w-full px-4 py-2.5 rounded-chip glass-surface bg-white/40 dark:bg-black/20 text-sm text-apple-gray-900 dark:text-white placeholder:text-apple-gray-400 focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                        errors.email ? 'border-red-500' : 'border-white/30 dark:border-white/10'
+                      className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
+                        errors.email ? 'border-red-500' : 'border-black/10 dark:border-white/10'
                       }`}
                     />
                     {errors.email && (
-                      <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                      <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3" /> {errors.email}
                       </p>
                     )}
@@ -318,17 +289,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div>
                   <label
                     htmlFor="contact-subject"
-                    className="block text-xs font-medium text-apple-gray-700 dark:text-apple-gray-300 mb-1.5"
+                    className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
                   >
-                    Topic / Role
+                    Topic / Context
                   </label>
                   <input
                     id="contact-subject"
                     type="text"
-                    placeholder="e.g. Summer 2027 SWE Internship / Project Collaboration"
+                    placeholder="e.g. Distributed Systems Architecture / Engineering Opportunity"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-chip glass-surface bg-white/40 dark:bg-black/20 text-sm text-apple-gray-900 dark:text-white placeholder:text-apple-gray-400 focus-visible:ring-2 focus-visible:ring-apple-blue border border-white/30 dark:border-white/10 transition-colors"
+                    className="w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border border-black/10 dark:border-white/10 transition-colors"
                   />
                 </div>
 
@@ -336,25 +307,25 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div>
                   <label
                     htmlFor="contact-message"
-                    className="block text-xs font-medium text-apple-gray-700 dark:text-apple-gray-300 mb-1.5"
+                    className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
                   >
-                    Message <span className="text-red-500">*</span>
+                    Message <span className="text-[#0A84FF]">*</span>
                   </label>
                   <textarea
                     id="contact-message"
                     rows={4}
-                    placeholder="Tell me about your team, challenge, or what you'd like to discuss..."
+                    placeholder="Details about your team, problem space, or inquiry..."
                     value={formData.message}
                     onChange={(e) => {
                       setFormData({ ...formData, message: e.target.value });
                       if (errors.message) setErrors({ ...errors, message: '' });
                     }}
-                    className={`w-full px-4 py-2.5 rounded-chip glass-surface bg-white/40 dark:bg-black/20 text-sm text-apple-gray-900 dark:text-white placeholder:text-apple-gray-400 focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                      errors.message ? 'border-red-500' : 'border-white/30 dark:border-white/10'
+                    className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
+                      errors.message ? 'border-red-500' : 'border-black/10 dark:border-white/10'
                     }`}
                   />
                   {errors.message && (
-                    <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                    <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" /> {errors.message}
                     </p>
                   )}
@@ -370,12 +341,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     icon={<Send className="w-4 h-4" />}
                     className="w-full sm:w-auto"
                   >
-                    {status === 'submitting' ? 'Sending...' : 'Send Message'}
+                    {status === 'submitting' ? 'Sending...' : 'Send message'}
                   </GlassButton>
                 </div>
               </form>
             )}
-          </GlassCard>
+          </div>
         </div>
       </div>
     </section>

@@ -2,138 +2,184 @@
 
 /* Light Mode Glass Surface */
 .glass-surface {
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.50);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.85);
   transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .glass-surface-hover:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95);
   transform: translateY(-2px);
 }
 
-/* Dark Mode Glass Surface */
+/* Dark Mode Glass Surface (Default) */
 .dark .glass-surface {
-  background: rgba(28, 28, 30, 0.60);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.40), inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: all 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark .glass-surface-hover:hover {
-  background: rgba(44, 44, 46, 0.75);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.50), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   transform: translateY(-2px);
 }
 
-/* Fallback for browsers without backdrop-filter or when prefers-reduced-transparency is on */
-@supports not (backdrop-filter: blur(20px)) {
+/* Featured Items (Slightly brighter than regular to create hierarchy) */
+.glass-featured {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dark .glass-featured {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(24px)) {
   .glass-surface {
     background: #FFFFFF;
     border: 1px solid #E5E5EA;
   }
   .dark .glass-surface {
-    background: #1C1C1E;
-    border: 1px solid #2C2C2E;
+    background: #16171D;
+    border: 1px solid #252730;
+  }
+  .glass-featured {
+    background: #F8F8FA;
+    border: 1px solid #D1D1D6;
+  }
+  .dark .glass-featured {
+    background: #1D1E26;
+    border: 1px solid #323542;
   }
 }
 
+/* Fallback for prefers-reduced-transparency */
 @media (prefers-reduced-transparency: reduce) {
-  .glass-surface {
-    background: #FFFFFF !important;
+  .glass-surface,
+  .glass-featured,
+  .glass-nav {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+  .glass-surface {
+    background: #FFFFFF !important;
     border: 1px solid #D1D1D6 !important;
   }
   .dark .glass-surface {
-    background: #1C1C1E !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border: 1px solid #3A3A3C !important;
+    background: #16171D !important;
+    border: 1px solid #252730 !important;
+  }
+  .glass-featured {
+    background: #F8F8FA !important;
+    border: 1px solid #C7C7CC !important;
+  }
+  .dark .glass-featured {
+    background: #1E202A !important;
+    border: 1px solid #323542 !important;
+  }
+  .glass-nav {
+    background: #FFFFFF !important;
+    border: 1px solid #D1D1D6 !important;
+  }
+  .dark .glass-nav {
+    background: #14151B !important;
+    border: 1px solid #252730 !important;
   }
 }
 
-/* Floating Navigation Pill */
+/* Floating Navigation Pill (High opacity so scrolling page content does NOT show through) */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.60);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .dark .glass-nav {
-  background: rgba(22, 22, 24, 0.70);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.50), inset 0 1px 0 0 rgba(255, 255, 255, 0.20);
+  background: rgba(16, 17, 22, 0.86);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-/* Primary Apple Pill Button */
+/* Primary Apple Button (#0A84FF) */
 .apple-button-primary {
   background: #0A84FF;
   color: #FFFFFF;
-  box-shadow: 0 4px 14px 0 rgba(10, 132, 255, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
-  transition: all 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 14px rgba(10, 132, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .apple-button-primary:hover {
   background: #0077ED;
-  box-shadow: 0 6px 20px 0 rgba(10, 132, 255, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 20px rgba(10, 132, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-1px);
 }
 
 .apple-button-primary:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-/* Secondary Glass Pill Button */
+/* Secondary Button (Neutral Glass, #F5F5F7 text on dark) */
 .apple-button-secondary {
-  background: rgba(255, 255, 255, 0.50);
+  background: rgba(0, 0, 0, 0.05);
   color: #1D1D1F;
-  border: 1px solid rgba(255, 255, 255, 0.50);
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.7);
-  transition: all 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark .apple-button-secondary {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.08);
   color: #F5F5F7;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .apple-button-secondary:hover {
-  background: rgba(255, 255, 255, 0.70);
+  background: rgba(0, 0, 0, 0.08);
   transform: translateY(-1px);
 }
 
 .dark .apple-button-secondary:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
   transform: translateY(-1px);
 }
 
 .apple-button-secondary:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-/* Continuous Curvature Squircle Shape Helpers */
-.squircle-card {
-  border-radius: 28px;
+/* Neutral Glass Tag / Chip (No rainbow colors!) */
+.neutral-glass-chip {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #515154;
 }
 
-.squircle-panel {
-  border-radius: 36px;
-}
-
-.squircle-chip {
-  border-radius: 14px;
+.dark .neutral-glass-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: #A1A1A6;
 }

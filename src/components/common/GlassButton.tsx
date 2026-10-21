@@ -22,9 +22,9 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'px-4 py-1.5 text-xs font-medium gap-1.5',
-    md: 'px-6 py-2.5 text-sm font-medium gap-2',
-    lg: 'px-8 py-3.5 text-base font-semibold gap-2.5',
+    sm: 'px-4 py-1.5 text-[13px] font-medium gap-1.5',
+    md: 'px-5 py-2.5 text-[14px] font-medium gap-2',
+    lg: 'px-7 py-3 text-[16px] font-semibold gap-2.5',
   }[size];
 
   const variantClasses = {
