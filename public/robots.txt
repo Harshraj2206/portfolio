@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /photography
+Disallow: /art-craft
 
 Sitemap: https://portfolio.example.com/sitemap.xml

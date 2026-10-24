@@ -32,10 +32,12 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
   onSelectProject,
   className = '',
 }) => {
+  if (!recruiterData) return null;
+
   const [copied, setCopied] = useState(false);
 
   const handleCopySnippet = () => {
-    const textToCopy = `${personal.fullName} | ${recruiterData.roleSought}\nLocation: ${recruiterData.location}\nTop Skills: ${recruiterData.topSkills.join(', ')}\nEmail: student@university.edu\nPortfolio: https://portfolio.example.com\nRésumé: https://portfolio.example.com${resumeUrl}`;
+    const textToCopy = `${personal.fullName} | ${recruiterData.roleSought}\nLocation: ${recruiterData.location}\nTop Skills: ${recruiterData.topSkills.join(', ')}\nEmail: student@university.edu\nPortfolio: https://portfolio.example.com\nResume: https://portfolio.example.com${resumeUrl}`;
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
     confetti({
@@ -61,14 +63,14 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-apple-blue">
+                <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
                   Recruiter Fast Track
                 </span>
                 <span className="flex items-center gap-1 text-[11px] font-medium text-apple-gray-500 dark:text-apple-gray-400">
                   <Clock className="w-3 h-3" /> 10-second overview
                 </span>
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-apple-gray-900 dark:text-white">
+              <h3 className="text-lg md:text-xl font-semibold tracking-[-0.03em] text-apple-gray-900 dark:text-white">
                 {personal.fullName} — Executive Snapshot
               </h3>
             </div>
@@ -137,10 +139,10 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
             </div>
             <button
               onClick={() => onSelectProject(recruiterData.flagshipProjectId)}
-              className="text-left group text-sm font-semibold text-apple-blue hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5"
+              className="text-left group text-sm font-medium tracking-[-0.01em] text-apple-blue hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5"
             >
               <span>AuraKV Distributed Cache</span>
-              <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ExternalLink className="w-3.5 h-3.5 transition-colors" />
             </button>
             <div className="text-xs text-apple-gray-500 mt-1">
               Sub-1.2ms p99 latency under 100k QPS
@@ -148,7 +150,7 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
           </div>
         </div>
 
-        {/* Bottom CTA Row: Résumé Download & Direct Contact */}
+        {/* Bottom CTA Row: Resume Download & Direct Contact */}
         <div className="pt-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-xs font-medium text-apple-gray-600 dark:text-apple-gray-400">
             <span>Verified Links:</span>
@@ -184,7 +186,7 @@ export const RecruiterQuickView: React.FC<RecruiterQuickViewProps> = ({
             onClick={onDownloadResume}
             icon={<FileDown className="w-4 h-4" />}
           >
-            Download Official Résumé (PDF)
+            Download Official Resume (PDF)
           </GlassButton>
         </div>
       </GlassCard>

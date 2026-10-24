@@ -1,116 +1,157 @@
+@import './tokens.css';
 @import './glass.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #050505;
+  --bg-elevated: #0A0A0A;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #F5F5F7;
+  --text-muted: #9A9AA0;
+  --accent: #F5F5F7;
+}
+
 @layer base {
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, "Helvetica Neue", Arial, sans-serif;
+  :root, html, body {
+    background-color: transparent;
+    background: transparent;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter Variable", Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "cv11", "ss01", "calt";
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  button, [role="button"], nav, nav a, .nav-link {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  strong, b {
+    font-weight: 600;
   }
 }
 
-/* Ambient Single Soft Blue Lighting (No multi-color blobs) */
-.ambient-lighting {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-/* Primary Top Soft Blue Glow (18-25% opacity, large radius) */
-.top-blue-glow {
-  position: absolute;
-  top: -240px;
-  left: 50%;
-  width: 900px;
-  height: 700px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(10, 132, 255, 0.22) 0%, rgba(10, 132, 255, 0.06) 45%, transparent 72%);
-  filter: blur(80px);
-  border-radius: 9999px;
-  pointer-events: none;
-  animation: glowSubtleDrift 30s ease-in-out infinite alternate;
-}
-
-/* Optional Fainter Lower Glow (Same Hue, ~10% opacity) */
-.lower-blue-glow {
-  position: absolute;
-  top: 55%;
-  right: -100px;
-  width: 700px;
-  height: 600px;
-  background: radial-gradient(circle at center, rgba(10, 132, 255, 0.10) 0%, transparent 70%);
-  filter: blur(100px);
-  border-radius: 9999px;
-  pointer-events: none;
-  animation: glowSubtleDrift 36s ease-in-out infinite alternate-reverse;
-}
-
-/* Light Mode Soft Top Glow */
-:root:not(.dark) .top-blue-glow {
-  background: radial-gradient(ellipse at center, rgba(10, 132, 255, 0.12) 0%, transparent 70%);
-  opacity: 0.8;
-}
-
-:root:not(.dark) .lower-blue-glow {
-  background: radial-gradient(circle at center, rgba(10, 132, 255, 0.06) 0%, transparent 70%);
-}
-
-@keyframes glowSubtleDrift {
-  0% {
-    transform: translateX(-50%) translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateX(-48%) translateY(16px) scale(1.04);
-  }
-  100% {
-    transform: translateX(-52%) translateY(-10px) scale(0.98);
-  }
-}
-
-/* Custom Sleek Scrollbar */
+/* Custom Sleek Monochrome Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(161, 161, 166, 0.28);
-  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-pill);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(161, 161, 166, 0.50);
+  background: rgba(255, 255, 255, 0.35);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
-/* Visible 2px Apple Blue Focus Ring with Offset */
+/* White 2px Focus Ring with 3px Offset */
 *:focus-visible {
-  outline: 2px solid #0A84FF !important;
-  outline-offset: 2px !important;
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 3px !important;
+}
+
+/* Neutral Soft Radial Vignette for Hero */
+.hero-vignette {
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.05) 0%, transparent 65%);
+}
+
+/* Chrome Metal Text Fill for Hero Letters */
+.metallic-text-gradient {
+  background: linear-gradient(180deg, #FFFFFF 0%, #8A8F99 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 /* Accessibility: Respect Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  .top-blue-glow,
-  .lower-blue-glow {
-    animation: none !important;
-  }
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Ambient Background GPU-Accelerated Animations (Transform Only) */
+@keyframes ambientDrift1 {
+  0% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(-46%, 7%) scale(1.1); }
+  100% { transform: translate(-54%, -5%) scale(0.95); }
+}
+
+@keyframes ambientDrift2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-7%, -8%) scale(1.12); }
+  100% { transform: translate(6%, 6%) scale(0.94); }
+}
+
+@keyframes ambientDrift3 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(7%, -6%) scale(1.08); }
+  100% { transform: translate(-5%, 5%) scale(0.95); }
+}
+
+@keyframes dustFloat {
+  0% { transform: translateY(105vh); opacity: 0; }
+  15% { opacity: var(--dust-op, 0.15); }
+  85% { opacity: var(--dust-op, 0.15); }
+  100% { transform: translateY(-5vh); opacity: 0; }
+}
+
+.ambient-spotlight-1 {
+  animation: ambientDrift1 38s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ambient-spotlight-2 {
+  animation: ambientDrift2 44s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.ambient-spotlight-3 {
+  animation: ambientDrift3 50s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.tab-hidden *,
+.anim-paused {
+  animation-play-state: paused !important;
+}
+
+/* 60s Tech Marquee Animation */
+@keyframes techMarquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: techMarquee 60s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover,
+.group-marquee:hover .animate-marquee {
+  animation-play-state: paused;
 }

@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThemeToggle } from './ThemeToggle';
-import { GlassButton } from './GlassButton';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import {
-  Briefcase,
-  GitCommit,
-  Layers,
   User,
+  Layers,
+  Sparkles,
+  Briefcase,
   Mail,
-  Menu,
+  Award,
+  MoreHorizontal,
   X,
   FileDown
 } from 'lucide-react';
 
 interface MobileNavProps {
   activeSection: string;
-  theme: 'light' | 'dark' | 'system';
-  resolvedTheme: 'light' | 'dark';
-  onToggleTheme: () => void;
+  onSelectSection?: (id: string) => void;
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
@@ -25,104 +23,170 @@ interface MobileNavProps {
 
 export const MobileNav: React.FC<MobileNavProps> = ({
   activeSection,
-  theme,
-  resolvedTheme,
-  onToggleTheme,
+  onSelectSection,
   preferredName,
   resumeUrl,
   onDownloadResume,
 }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  // Exactly 5 main items
-  const mainItems = [
-    { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
-    { id: 'experience', label: 'Experience', href: '#experience', icon: GitCommit },
-    { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
+  // All 6 sections
+  const allSections = [
     { id: 'about', label: 'About', href: '#about', icon: User },
+    { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
+    { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
+    { id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award },
+    { id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code', icon: Sparkles },
     { id: 'contact', label: 'Contact', href: '#contact', icon: Mail },
   ];
+
+  // Mobile Bottom Bar shows 5 items: 4 primary sections + "More"
+  const bottomBarItems = [
+    { id: 'about', label: 'About', href: '#about', icon: User },
+    { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
+    { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
+    { id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award },
+    { id: 'more', label: 'More', href: '#more', icon: MoreHorizontal, isDrawerTrigger: true },
+  ];
+
+  // Determine which bottom bar item is active
+  // If activeSection is beyond-code or contact, it highlights the "More" item!
+  const isUnderMore = activeSection === 'beyond-code' || activeSection === 'contact';
+  const activeNavId = isUnderMore
+    ? 'more'
+    : bottomBarItems.some((item) => item.id === activeSection)
+    ? activeSection
+    : null;
+
+  const springConfig = prefersReducedMotion
+    ? { duration: 0 }
+    : { type: 'spring' as const, stiffness: 380, damping: 30 };
 
   return (
     <>
       {/* Top Compact Mobile Bar */}
-      <header className="fixed top-3 left-3 right-3 z-40 md:hidden flex items-center justify-between px-4 py-2 rounded-pill glass-nav shadow-md">
+      <header
+        data-sound-group="nav"
+        className="fixed top-3 left-3 right-3 z-50 md:hidden flex items-center justify-between px-4 py-2 rounded-pill glass-nav shadow-lg"
+      >
         <a
           href="#hero"
-          className="flex items-center gap-2 text-[13px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]"
+          onClick={() => onSelectSection?.('hero')}
+          className="flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
+          aria-label={`${preferredName} home`}
         >
-          <div className="w-6 h-6 rounded-full bg-[#0A84FF] flex items-center justify-center text-white text-[12px] font-bold">
-            {preferredName[0] || 'A'}
+          <div className="w-6 h-6 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white text-[12px] font-semibold">
+            {preferredName[0] || 'H'}
           </div>
-          <span className="font-semibold tracking-tight">{preferredName}</span>
+          <span className="font-medium tracking-[-0.01em]">{preferredName}</span>
         </a>
 
         <div className="flex items-center gap-1.5">
-          <ThemeToggle
-            theme={theme}
-            resolvedTheme={resolvedTheme}
-            onToggle={onToggleTheme}
-          />
           <button
             onClick={() => setSheetOpen(true)}
             aria-label="Open navigation menu"
-            className="p-1.5 rounded-full text-apple-gray-600 dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-white"
+            className="p-1.5 rounded-full text-[#9A9AA0] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
-            <Menu className="w-5 h-5" />
+            <MoreHorizontal className="w-5 h-5" />
           </button>
         </div>
       </header>
 
-      {/* Bottom Floating Glass Dock for Mobile */}
+      {/* Bottom Floating Glass Tab Bar with 5 items */}
       <nav
+        data-sound-group="nav"
         aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-40 md:hidden flex items-center justify-around py-2 px-2 rounded-pill glass-nav shadow-lg"
+        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-50 md:hidden flex items-center justify-between p-1 rounded-pill glass-nav shadow-2xl"
       >
-        {mainItems.map((item) => {
+        {bottomBarItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeSection === item.id;
+          const isActive = activeNavId === item.id;
+
+          if (item.isDrawerTrigger) {
+            return (
+              <button
+                key={item.id}
+                onClick={() => setSheetOpen(true)}
+                aria-label="Open full menu"
+                aria-expanded={sheetOpen}
+                className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                  isActive
+                    ? 'text-[#F5F5F7]'
+                    : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="mobileSlidingNavBubble"
+                    className="absolute inset-0 nav-glass-bubble-active rounded-pill pointer-events-none"
+                    transition={springConfig}
+                  />
+                )}
+                <Icon className="w-4 h-4 relative z-10" />
+                <span className="text-[11px] font-medium tracking-[-0.01em] mt-0.5 relative z-10">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
+
           return (
             <a
               key={item.id}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-pill transition-colors ${
+              onClick={() => {
+                onSelectSection?.(item.id);
+              }}
+              aria-current={isActive ? 'true' : undefined}
+              className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 isActive
-                  ? 'text-[#0A84FF] dark:text-[#409CFF] font-semibold scale-105'
-                  : 'text-apple-gray-500 dark:text-[#A1A1A6] hover:text-[#1D1D1F] dark:hover:text-white'
+                  ? 'text-[#F5F5F7]'
+                  : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
               }`}
             >
-              <Icon className="w-4 h-4" />
-              <span className="text-[11px] mt-0.5">{item.label}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="mobileSlidingNavBubble"
+                  className="absolute inset-0 nav-glass-bubble-active rounded-pill pointer-events-none"
+                  transition={springConfig}
+                />
+              )}
+              <Icon className="w-4 h-4 relative z-10" />
+              <span className="text-[11px] font-medium tracking-[-0.01em] mt-0.5 relative z-10">
+                {item.label}
+              </span>
             </a>
           );
         })}
       </nav>
 
-      {/* Expandable Glass Sheet Menu */}
+      {/* Expandable "More" Glass Sheet Menu */}
       <AnimatePresence>
         {sheetOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 md:hidden bg-black/50 backdrop-blur-md flex flex-col justify-end"
+            className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-md flex flex-col justify-end"
             onClick={() => setSheetOpen(false)}
           >
             <motion.div
+              data-sound-group="nav"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="bg-[#FFFFFF]/95 dark:bg-[#16171D]/95 backdrop-blur-2xl p-6 rounded-t-[28px] border-t border-black/10 dark:border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto"
+              className="bg-[#0A0A0A]/95 backdrop-blur-2xl p-6 rounded-t-[28px] border-t border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between pb-4 border-b border-black/5 dark:border-white/10">
-                <span className="text-[15px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  Navigation
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <span className="text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7]">
+                  Navigation &amp; Sections
                 </span>
                 <button
                   onClick={() => setSheetOpen(false)}
-                  className="p-1.5 rounded-full bg-black/5 dark:bg-white/10 text-apple-gray-500"
+                  className="p-1.5 rounded-full bg-white/10 text-[#9A9AA0] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
@@ -130,33 +194,44 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               </div>
 
               <div className="py-4 space-y-1">
-                {mainItems.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setSheetOpen(false)}
-                    className="block px-4 py-3 rounded-card text-[15px] font-medium text-apple-gray-800 dark:text-[#D1D1D6] hover:bg-black/5 dark:hover:bg-white/10 hover:text-[#0A84FF] transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                ))}
+                {allSections.map((link) => {
+                  const Icon = link.icon;
+                  const isCurrent = activeSection === link.id;
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => {
+                        onSelectSection?.(link.id);
+                        setSheetOpen(false);
+                      }}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-card text-[15px] font-medium tracking-[-0.01em] transition-colors ${
+                        isCurrent
+                          ? 'bg-white/15 text-white'
+                          : 'text-[#D1D1D6] hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 text-white/70" />
+                      <span>{link.label}</span>
+                    </a>
+                  );
+                })}
               </div>
 
-              <div className="pt-4 border-t border-black/5 dark:border-white/10 flex flex-col gap-3">
-                <GlassButton
-                  variant="primary"
-                  size="md"
+              <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+                <a
                   href={resumeUrl}
-                  isExternal
+                  download="Harsh_Raj_Resume.pdf"
                   onClick={() => {
                     onDownloadResume();
                     setSheetOpen(false);
                   }}
-                  icon={<FileDown className="w-4 h-4" />}
-                  className="w-full justify-center"
+                  className="nav-resume-btn group inline-flex items-center justify-center rounded-pill px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer w-full"
+                  aria-label="Download Resume"
                 >
-                  Résumé
-                </GlassButton>
+                  <FileDown className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
+                  <span>Resume (PDF)</span>
+                </a>
               </div>
             </motion.div>
           </motion.div>

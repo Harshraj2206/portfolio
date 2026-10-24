@@ -33,9 +33,9 @@ export function SegmentedControl<T extends string>({
             role="tab"
             aria-selected={isSelected}
             onClick={() => onChange(option.id)}
-            className={`relative px-4 py-2 text-xs md:text-sm font-medium rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue ${
+            className={`relative px-4 py-2 text-xs md:text-sm font-medium tracking-[-0.01em] rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue ${
               isSelected
-                ? 'text-apple-gray-900 dark:text-white font-semibold'
+                ? 'text-apple-gray-900 dark:text-white'
                 : 'text-apple-gray-600 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white'
             }`}
           >
@@ -50,9 +50,9 @@ export function SegmentedControl<T extends string>({
               {option.label}
               {typeof option.count === 'number' && (
                 <span
-                  className={`text-[11px] px-1.5 py-0.2 rounded-full ${
+                  className={`text-[11px] px-1.5 py-0.2 rounded-full font-medium ${
                     isSelected
-                      ? 'bg-apple-blue/15 text-apple-blue font-semibold'
+                      ? 'bg-apple-blue/15 text-apple-blue'
                       : 'bg-black/5 dark:bg-white/10 text-apple-gray-500'
                   }`}
                 >

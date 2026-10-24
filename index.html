@@ -3,56 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Portfolio & Engineering Case Studies — Senior Software Engineer</title>
-    <meta name="description" content="Senior software engineer building high-performance distributed systems, low-latency architecture, and human-centric software." />
+    <title>Harsh Raj - CSE (AI & ML) Student Portfolio</title>
+    <meta name="description" content="Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute." />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://portfolio.example.com/" />
-    <meta property="og:title" content="Portfolio & Engineering Case Studies" />
-    <meta property="og:description" content="Senior software engineer building high-performance distributed systems and human-centric software." />
+    <meta property="og:title" content="Harsh Raj - CSE (AI & ML) Student Portfolio" />
+    <meta property="og:description" content="Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute." />
     <meta property="og:image" content="/og-image.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Portfolio & Engineering Case Studies" />
-    <meta name="twitter:description" content="Senior software engineer building high-performance distributed systems and human-centric software." />
+    <meta name="twitter:title" content="Harsh Raj - CSE (AI & ML) Student Portfolio" />
+    <meta name="twitter:description" content="Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute." />
     <meta name="twitter:image" content="/og-image.png" />
 
     <!-- Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href="https://portfolio.example.com/" />
-    <meta name="theme-color" content="#0B0C10" />
-
+    <link rel="preload" as="image" href="/images/harsh-raj.png" type="image/png" />
+    <meta name="theme-color" content="#050505" />
 
     <!-- JSON-LD Structured Data for Person Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "name": "[Your Name]",
-      "jobTitle": "Software Engineer & Designer",
-      "description": "Undergraduate student building human-centered AI tools and distributed systems.",
+      "name": "Harsh Raj",
+      "jobTitle": "CSE (AI & ML) Student",
+      "description": "Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.",
       "url": "https://portfolio.example.com",
-      "sameAs": [
-        "https://github.com/example",
-        "https://linkedin.com/in/example"
-      ],
       "alumniOf": {
         "@type": "CollegeOrUniversity",
-        "name": "[Your University]"
+        "name": "Jain University Global Campus"
       },
-      "knowsAbout": ["Computer Science", "React", "TypeScript", "Distributed Systems", "Human-Computer Interaction"]
+      "knowsAbout": ["Python", "Java", "HTML", "CSS", "C", "Advanced Python", "Prompt engineering", "Artificial Intelligence", "Machine Learning"]
     }
     </script>
   </head>
-  <body class="bg-[#F5F5F7] dark:bg-[#0B0C10] text-apple-gray-900 dark:text-[#F5F5F7] font-apple antialiased transition-colors duration-300 selection:bg-apple-blue/20 selection:text-apple-blue overflow-x-hidden min-h-screen">
+    <!-- Critical inline CSS for instant zero-delay first paint -->
+    <style>
+      html, body {
+        background-color: #050505;
+        margin: 0;
+        padding: 0;
+      }
+      #initial-intro-vignette {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(14, 14, 16, 0.96) 0%, rgba(5, 5, 5, 1) 100%);
+        pointer-events: none;
+        z-index: 10;
+        transition: opacity 0.2s ease-out;
+      }
+      #initial-intro-dot {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 14px;
+        height: 14px;
+        border-radius: 9999px;
+        background-color: #ffffff;
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.9), 0 0 32px rgba(255, 255, 255, 0.5);
+        transform: translate(-50%, -36vh);
+        pointer-events: none;
+        z-index: 35;
+        transition: opacity 0.1s ease-out;
+      }
+    </style>
+
     <!-- Accessible Skip Link -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-apple-blue focus:text-white focus:rounded-pill focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-white focus:text-black focus:rounded-pill focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white">
       Skip to main content
     </a>
     
+    <!-- Inline Critical Vignette & Dot for Zero-Delay First Paint -->
+    <div id="initial-intro-vignette" aria-hidden="true"></div>
+    <div id="initial-intro-dot" aria-hidden="true"></div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

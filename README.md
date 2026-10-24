@@ -1,203 +1,276 @@
-# Liquid Glass Portfolio — College Student Portfolio
+# Liquid Glass Portfolio — Harsh Raj
 
-A production-ready, macOS "Liquid Glass" college student portfolio designed to get shortlisted for competitive software engineering internships and junior roles.
+A production-ready, macOS neutral black glass portfolio built for **Harsh Raj**, a 2nd-year CSE (AI & ML) student at Jain University Global Campus.
 
-Built with **React 18**, **TypeScript**, **Tailwind CSS**, and **Framer Motion**, powered by a single source of truth (`src/data/content.ts`), and pre-designed with **Google Stitch**.
-
----
-
-## 💎 Design & Aesthetics
-
-The portfolio implements Apple's macOS Liquid Glass design language:
-- **Continuous Curvature:** 24px–36px rounded corners on cards and modal dialogs, and pill-shaped navigation.
-- **Dynamic Translucency:** `backdrop-filter: blur(24px) saturate(180%)` with specular highlights (`inset 0 1px 0 rgba(255, 255, 255, 0.45)`).
-- **Curated macOS Light & Dark Modes:** System-aware theme toggle with instant, smooth transitions.
-- **Native macOS Micro-interactions:** Specular cursor light reflection, floating interactive dock with magnification physics, traffic-light window controls, and spring pill segmented controls.
-- **Accessibility & Contrast:** Fully passes WCAG AA contrast standards; includes `@media (prefers-reduced-motion)` and `@media (prefers-reduced-transparency)` graceful solid-surface fallbacks.
-
-Design tokens are exported in [`design/tokens.json`](file:///d:/PORTFOLIO/design/tokens.json) and generated via Google Stitch project `projects/12507645313979650743`.
+Features:
+- Single source of truth data architecture (`src/data/content.ts`).
+- Automatic demo data fallback layer (`src/data/demo.ts` + `src/data/resolve.ts`) with clear "Demo" chips and non-navigating links.
+- Real data automatically replaces demo data without touching UI code.
+- Interactive macOS dock with magnification physics, spring cross-fading Highlights tabs, responsive sliding bubble navigation, and verified AA contrast.
+- Zero placeholder text in production: `npm run content:report` tracks remaining demo data, and `VITE_FAIL_ON_DEMO=true` enforces pure real data on build.
 
 ---
 
-## ⚡ Primary Recruiter Goals
+## ⚡ How to Replace Demo Data
 
-1. **10-Second Understanding:** Recruiter Quick View card delivers name, target role, graduation year, core stack, top metrics, and a one-click "Copy 1-line blurb" button.
-2. **60-Second Skill Verification:** Deep-dive case studies covering the Problem, Architecture, Engineering Trade-offs, and measurable Outcomes, plus direct links to live demos and GitHub repositories.
-3. **Proof of Quality:** Single-page scroll-spy navigation, 0 lint warnings, type safety, SEO metadata, RSS/sitemap feeds, and honeypot spam protection.
+`src/data/content.ts` is the **only file you need to edit**. When you add real data for any field or array, the corresponding demo data and "Demo" chips disappear automatically.
 
----
+Run this command at any time to see every field still using demo data:
+```bash
+npm run content:report
+```
 
-## 🛠️ Tech Stack
-
-- **Framework:** React 18 with Vite & TypeScript
-- **Styling:** Tailwind CSS with custom glassmorphism utilities & CSS variables
-- **Motion:** Framer Motion (spring transitions, layout animations)
-- **Icons:** Lucide React
-- **Celebration & Polish:** Canvas Confetti
-
----
-
-## 📋 Checklist: What to Edit to Add Your Details
-
-You only need to edit **one single file** for 99% of your changes:  
-👉 [`src/data/content.ts`](file:///d:/PORTFOLIO/src/data/content.ts)
-
-### 1. Personal & Hero Information
-- [ ] Change `preferredName`, `fullName`, and `pronouns`
-- [ ] Update `targetRole` (e.g. *"Summer 2027 Software Engineering Intern"*)
-- [ ] Update `location` and `university`
-- [ ] Replace `blurb` and `shortBio`
-- [ ] Set `availabilityStatus` to `'available'` | `'interviewing'` | `'busy'`
-
-### 2. Social Profiles & Links
-- [ ] In `socialLinks`, replace URLs for GitHub, LinkedIn, X, Email, and LeetCode
-- [ ] Toggle `enabled: true / false` to hide or show specific links
-
-### 3. Résumé PDF
-- [ ] Replace [`public/resume.pdf`](file:///d:/PORTFOLIO/public/resume.pdf) with your actual PDF resume.
-
-### 4. Recruiter 10-Second Quick View
-- [ ] Update `oneLineSummary` with your personalized elevator pitch
-- [ ] Adjust `keySkills` to highlight your top 3 standout technical abilities
-
-### 5. Stats Bento Row
-- [ ] Update `stats` array (e.g. GPA, Projects Shipped, Monthly Active Users, Hackathons)
-
-### 6. Projects & Flagship Case Studies
-- [ ] In `projects`, customize your projects
-- [ ] Fill in `caseStudy`:
-  - `problem`: The pain point or bottleneck
-  - `solution`: How you solved it
-  - `architecture`: Distributed setup, caching, database, or UI layer
-  - `tradeoffs`: Engineering decisions and technical compromises
-  - `metrics`: Bullet points with quantitative impact (e.g. latency, throughput)
-- [ ] Set `githubUrl` and `liveDemoUrl`
-
-### 7. Education & Experience Timeline
-- [ ] In `timeline`, customize your internships, research, university coursework, or leadership roles.
-
-### 8. Skills Linked to Projects
-- [ ] In `skills`, update your languages, frameworks, developer tools, and concepts.
-- [ ] Each skill has `projectIds: ['aurakv', ...]` linking it directly to the projects where recruiters can inspect its usage!
-
-### 9. Recommendations & Testimonials
-- [ ] In `recommendations`, add quotes from managers, professors, mentors, or peer collaborators.
-
-### 10. Contact Form
-- [ ] In `contact`, replace `emailAddress`
-- [ ] (Optional) Add your Formspree endpoint (`formspreeEndpoint`) for serverless email forwarding. Without an endpoint, the form automatically falls back to a clean `mailto:` link.
+### 1. Projects
+In `src/data/content.ts`, populate the optional fields for **LandSafe** or **NammaRoute**:
+```ts
+// Example: Adding your role and tech stack to LandSafe
+{
+  id: "landsafe",
+  title: "LandSafe",
+  // ... existing fields ...
+  role: "AI & ML Model Developer",
+  techStack: ["Python", "GIS", "Scikit-learn", "FastAPI"],
+  results: [
+    "87% prediction accuracy for landslide-prone zones",
+    "Real-time evacuation routing across 8 northeastern states",
+  ],
+  context: "Smart India Hackathon 2024 Finalist",
+  challenges: "Handled sparse geospatial rainfall telemetry during heavy monsoon seasons by interpolating historical weather radar.",
+  githubUrl: "https://github.com/your-username/landsafe",
+}
+```
+*Note on 3rd Project*: The 3rd demo project (`demo-ml-project`) is automatically removed as soon as you add a 3rd real project to the `projects` array in `content.ts`.
 
 ---
 
-## 🚀 Getting Started Locally
+### 2. Highlights — Achievements
+Add real hackathons, competitions, or honors:
+```ts
+achievements: [
+  {
+    id: "sih-2024",
+    title: "Smart India Hackathon",
+    eventOrOrg: "Ministry of Education, Govt of India",
+    year: "2024",
+    result: "Grand Finalist",
+  },
+],
+```
+*Rule*: Adding 1 real item replaces the entire demo achievements list.
+
+---
+
+### 3. Highlights — Certifications
+Add your courses and certificates:
+```ts
+certifications: [
+  {
+    id: "nptel-python",
+    title: "Programming, Data Structures and Algorithms Using Python",
+    issuer: "NPTEL",
+    date: "Sep 2024",
+    credentialUrl: "https://nptel.ac.in/noc/Ecertificate/?q=...",
+  },
+],
+```
+
+---
+
+### 4. Highlights — Activities
+Harsh's real Turing Club activity is already saved in `content.ts`:
+```ts
+activities: [
+  {
+    id: "act-turing-photography",
+    title: "Photography team member, Turing Club, Jain University Global Campus",
+    dates: "",
+  },
+],
+```
+Because this real item exists, demo activities are never shown unless you clear this array.
+
+---
+
+### 5. Highlights — Recommendations
+Add quotes from professors, project mentors, or supervisors:
+```ts
+recommendations: [
+  {
+    id: "rec-prof-sharma",
+    authorName: "Dr. A. Sharma",
+    authorRole: "Professor, Department of CSE",
+    organization: "Jain University Global Campus",
+    avatarInitials: "AS",
+    quote: "Harsh demonstrates exceptional initiative in applying machine learning algorithms to practical challenges.",
+  },
+],
+```
+When `VITE_SHOW_DEMO=false` is set and this array is empty, the recommendations section is completely hidden.
+
+---
+
+### 6. Social Dock ("Find me online")
+Enable and provide URLs for your social profiles:
+```ts
+social: {
+  github: {
+    url: "https://github.com/harshraj",
+    enabled: true,
+  },
+  linkedin: {
+    url: "https://linkedin.com/in/harshraj-cse",
+    enabled: true,
+  },
+  instagram: {
+    url: "https://instagram.com/harshraj_shots",
+    enabled: true,
+  },
+  facebook: {
+    url: "https://facebook.com/harshraj",
+    enabled: true,
+  },
+},
+```
+You can also toggle between centered section dock and fixed side rail in `content.ts`:
+```ts
+socialBar: {
+  placement: "section", // or "side-rail" (fixed vertical dock on right screen edge)
+},
+```
+
+---
+
+### 7. Contact Details
+Update your email and response time:
+```ts
+contact: {
+  headline: "Start a conversation",
+  subtext: "Feel free to reach out for internship opportunities, project collaborations, or discussions.",
+  emailAddress: "harsh.raj@example.com",
+  responseTime: "Typically replies within 1-2 days", // leave empty "" to hide this badge
+},
+```
+
+---
+
+### 8. Beyond Code (Creative Showcase)
+When you are ready to publish photos or art pieces:
+```ts
+creative: {
+  heading: "Beyond code",
+  introLine: "When I'm not coding, I'm usually behind a camera or with a paintbrush.",
+  photography: {
+    title: "Photography & videography",
+    description: "I love photography and videography, and I'm part of the Turing Club photography team at my university.",
+    buttonText: "See my photo and video work",
+    url: "/photography",
+    ready: true, // change from false to true to activate button
+    iconName: "camera",
+  },
+  artCraft: {
+    title: "Art & craft",
+    description: "I love art and craft, from painting to handmade pieces.",
+    buttonText: "See my painting and craft",
+    url: "/art-craft",
+    ready: true, // change from false to true to activate button
+    iconName: "palette",
+  },
+},
+```
+
+---
+
+### 9. Replacing the Resume PDF
+The repository ships with a clean one-page demo resume with a visible "DEMO" watermark at:
+```
+public/resume.pdf
+```
+To use your real resume:
+1. Export your official 1-page PDF resume.
+2. Save it directly to `public/resume.pdf` (overwriting the demo file).
+3. Nothing else needs to change! All Resume buttons on the site (Nav, Hero, Contact, Footer) will instantly download your real PDF with the filename `Harsh_Raj_Resume.pdf`.
+
+---
+
+## 🚀 Local Development & Build Commands
 
 ```bash
 # Install dependencies
 npm install
 
-# Start Vite development server
+# Start local development server
 npm run dev
-```
 
-Visit [http://localhost:5173](http://localhost:5173) in your browser.
+# Audit remaining demo data
+npm run content:report
 
----
-
-## 📦 Building for Production
-
-```bash
-# Type check and build optimized bundle
+# Production build (automatically checks demo data and prints warning)
 npm run build
 
-# Preview production build locally
-npm run preview
+# Strict build (FAILS if any demo data remains)
+VITE_FAIL_ON_DEMO=true npm run build
 ```
-
-The production output will be generated inside the `/dist` directory.
 
 ---
 
-## 🚢 Deployment Guide
+## 🌐 Deploying to Vercel with a Custom Domain
 
-### Deploy to Vercel (Recommended)
-1. Push your code to a GitHub repository.
-2. Go to [vercel.com](https://vercel.com) and click **"Add New..." -> "Project"**.
+### Step 1: Deploy to Vercel
+1. Push your repository to GitHub:
+   ```bash
+   git add .
+   git commit -m "feat: portfolio ready for deployment"
+   git push origin main
+   ```
+2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
 3. Import your GitHub repository.
-4. Framework Preset will auto-detect as **Vite**.
-5. Click **Deploy**.
+4. Framework Preset: **Vite** (detected automatically).
+5. Build Command: `npm run build`
+6. Output Directory: `dist`
+7. Click **"Deploy"**.
 
-### Deploy to Netlify
-1. Connect your repository in [netlify.com](https://netlify.com).
-2. Set Build command: `npm run build`
-3. Set Publish directory: `dist`
-4. Deploy!
-
-### Deploy to GitHub Pages
-1. In `vite.config.ts`, set `base: '/<repository-name>/'`.
-2. Build with `npm run build`.
-3. Push the `dist` folder to your `gh-pages` branch.
+### Step 2: Connect a Custom Domain (e.g. `harshraj.dev`)
+1. In your Vercel Project Dashboard, navigate to **Settings** > **Domains**.
+2. Enter your custom domain (for example, `harshraj.dev` or `www.harshraj.dev`) and click **Add**.
+3. Configure your DNS records at your domain registrar (Namecheap, Cloudflare, Google Domains, GoDaddy, etc.):
+   - **For apex domain (`harshraj.dev`)**:
+     - Type: `A`
+     - Name: `@`
+     - Value: `76.76.21.21`
+   - **For `www` subdomain (`www.harshraj.dev`)**:
+     - Type: `CNAME`
+     - Name: `www`
+     - Value: `cname.vercel-dns.com`
+4. Vercel automatically issues and renews an SSL/TLS certificate for your domain within minutes.
+5. In `src/data/content.ts`, update `seo.canonicalUrl` to `https://harshraj.dev`.
 
 ---
 
-## 📂 Project Structure
+## 🔊 UI Sound-Effects System & Audio Overrides
 
-```
-d:/PORTFOLIO
-├── design/
-│   ├── screens/
-│   │   └── stitch_thumbnail.png       # Generated Stitch UI design
-│   └── tokens.json                    # Stitch & Apple Liquid Glass tokens
-├── public/
-│   ├── favicon.svg
-│   ├── resume.pdf                     # PDF Résumé download
-│   ├── robots.txt
-│   └── sitemap.xml
-├── src/
-│   ├── components/
-│   │   ├── common/                    # Glass UI primitives
-│   │   │   ├── AvailabilityBadge.tsx  # Pulsating status badge
-│   │   │   ├── BackToTop.tsx          # Floating return to top
-│   │   │   ├── Dock.tsx               # macOS interactive dock
-│   │   │   ├── GlassButton.tsx        # Pill buttons with gloss
-│   │   │   ├── GlassCard.tsx          # Specular light reflection card
-│   │   │   ├── MobileNav.tsx          # Mobile bar & glass sheet menu
-│   │   │   ├── PillNav.tsx            # Sticky floating glass pill nav
-│   │   │   ├── SectionHeading.tsx     # Apple typography scale
-│   │   │   ├── SegmentedControl.tsx   # Spring pill category filter
-│   │   │   ├── SocialLinks.tsx        # Safe external links
-│   │   │   ├── StatCounter.tsx        # InView animated counter
-│   │   │   ├── ThemeToggle.tsx        # Light/dark mode toggle
-│   │   │   └── WindowFrame.tsx        # macOS traffic lights window
-│   │   └── sections/
-│   │       ├── AboutSection.tsx       # Bio & engineering principles
-│   │       ├── CaseStudyModal.tsx     # Deep-dive architecture modal
-│   │       ├── ContactSection.tsx     # Form with honeypot & mailto fallback
-│   │       ├── Footer.tsx             # Colophon & quick navigation
-│   │       ├── Hero.tsx               # 10-second elevator pitch
-│   │       ├── HighlightTiers.tsx     # 3-pillar engineering focus
-│   │       ├── ProjectsGrid.tsx       # Work portfolio with category tabs
-│   │       ├── Recommendations.tsx    # Peer & mentor testimonials
-│   │       ├── RecruiterQuickView.tsx # 10-second candidate synopsis
-│   │       ├── SkillsSection.tsx      # Capabilities linked to projects
-│   │       ├── StatsRow.tsx           # Bento metrics row
-│   │       ├── Timeline.tsx           # Education & experience record
-│   │       └── WritingSection.tsx     # Engineering notes & learnings
-│   ├── data/
-│   │   ├── content.schema.ts          # TypeScript type definitions
-│   │   └── content.ts                 # SINGLE SOURCE OF TRUTH (edit here!)
-│   ├── hooks/
-│   │   ├── useAnalytics.ts            # Privacy-friendly click telemetry
-│   │   ├── useReducedMotion.ts        # Accessibility motion detector
-│   │   ├── useScrollSpy.ts            # Active section detector
-│   │   └── useTheme.ts                # Light / Dark / System theme state
-│   ├── styles/
-│   │   ├── glass.css                  # Apple Liquid Glass CSS design tokens
-│   │   └── index.css                  # Tailwind directives & mesh gradient
-│   ├── App.tsx                        # Main application container
-│   ├── main.tsx                       # Entry point
-│   └── vite-env.d.ts                  # Vite types
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-└── vite.config.ts
-```
+The portfolio features a zero-asset UI sound-effects system synthesized entirely in code using the Web Audio API (zero audio files, zero network downloads, < 6KB added footprint).
+
+### Sound Groups & Delegation
+Sounds are assigned automatically per container group:
+- **GROUP "nav"** (`data-sound-group="nav"`): Soft, low, dry mechanical tick (≤ 20ms). Assigned to desktop PillNav, mobile top bar, mobile bottom floating tab bar, and drawer navigation.
+- **GROUP "social"** (`data-sound-group="social"`): Bright, light tink with a ringing bell tail (~250ms). Assigned to the Social Dock, side-rail icons, footer social row, and contact social row.
+- **GROUP "button"** (Default fallback): Crisp, high, very short click (≤ 15ms). Automatically assigned to all buttons, links styled as buttons, tabs, filters, and action triggers.
+- **SPECIAL "state"**: Heavy thunk with a soft swept whoosh (~550ms). Fired on sound toggle turning ON, contact-form submission success, Skip intro, and opening case studies.
+- **OPTIONAL "hover"**: 6ms tick at 1200Hz on fine-pointer devices for navigation and social links.
+
+### Controls & Shortcuts
+- **Floating Sound Button**: 44x44px glass button fixed at the top-right (`z-index: 60`), with crossfading icons and sound-wave animation.
+- **Keyboard Shortcut**: Press `M` to toggle sound on/off from anywhere (automatically ignored while typing in input fields).
+- **Persistence**: Saved under `localStorage["portfolio:sound"]`.
+- **Dev Sound Lab**: Visit `/sound-lab` in development mode (`npm run dev`) to inspect synthesizers, tune volume/pitch, preview groups, and copy sound parameters.
+
+### 🎵 Optional File Override
+By default, all sounds are synthesized mathematically in code. However, you can optionally override any sound with a custom MP3 audio file:
+1. Place your audio files inside `public/sounds/`:
+   - `public/sounds/nav.mp3`
+   - `public/sounds/social.mp3`
+   - `public/sounds/button.mp3`
+   - `public/sounds/state.mp3`
+2. If any of these files exist, the sound engine automatically uses the audio file instead of the synthesized version for that specific sound.
+3. If the files do not exist, the sound engine seamlessly defaults to pure Web Audio API code synthesis.
+

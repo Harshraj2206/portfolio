@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { MONO_ACCENT_LABELS } from '../../config/design';
 
-interface SectionHeadingProps {
-  eyebrow?: string; // Kept in interface for backward compatibility, but intentionally not rendered per design specs
+export interface SectionHeadingProps {
+  index?: string;
+  label?: string;
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   align?: 'left' | 'center';
@@ -9,21 +13,119 @@ interface SectionHeadingProps {
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
+  index,
+  label,
+  eyebrow,
   title,
   subtitle,
-  align = 'center',
+  align = 'left',
   className = '',
 }) => {
-  const alignClass = align === 'center' ? 'text-center mx-auto' : 'text-left';
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
+
+  // Format index line: e.g. "01 / About" followed by 40px hairline
+  const indexText = index && label ? `${index} / ${label}` : index || eyebrow || '';
+
+  // Parse title tokens: words wrapped in *word* render as Inter italic 300
+  const words = title.split(' ');
+  const alignClass = align === 'center' ? 'text-center mx-auto items-center' : 'text-left items-start';
 
   return (
-    <div className={`max-w-3xl mb-12 md:mb-16 ${alignClass} ${className}`}>
-      {/* No small uppercase pill labels per Apple Liquid Glass design specifications */}
-      <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7] leading-[1.12]">
-        {title}
+    <div
+      ref={containerRef}
+      className={`relative w-full mb-12 md:mb-16 flex flex-col ${alignClass} ${className}`}
+    >
+      {/* Local pool of light behind each section heading (radial, 4% white) */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute -top-16 ${
+          align === 'center' ? 'left-1/2 -translate-x-1/2' : '-left-12'
+        } w-[420px] h-[260px] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.045)_0%,transparent_70%)] blur-2xl z-0`}
+      />
+
+      {/* Small index line, 13px, sentence case, followed by 40px hairline */}
+      {indexText && (
+        <div className="relative z-10 flex items-center gap-3 mb-4 select-none">
+          <span
+            className={`text-[13px] tracking-normal ${
+              MONO_ACCENT_LABELS
+                ? 'font-mono text-[#9A9AA0] font-normal'
+                : 'font-sans font-medium text-[#C9C9CF]'
+            }`}
+          >
+            {indexText}
+          </span>
+          <span className="w-10 h-px bg-white/20 inline-block" />
+        </div>
+      )}
+
+      {/* Title: clamp(44px, 7vw, 96px), weight 600, tracking -0.035em, line-height 1.15 */}
+      <h2
+        className="relative z-10 font-apple tracking-[-0.035em] leading-[1.15] overflow-visible flex flex-wrap gap-x-[0.3em] gap-y-2"
+        style={{ fontSize: 'clamp(44px, 7vw, 96px)' }}
+      >
+        {words.map((rawWord, i) => {
+          const isItalic = rawWord.startsWith('*') && rawWord.endsWith('*');
+          const cleanWord = isItalic ? rawWord.slice(1, -1) : rawWord;
+
+          return (
+            <span
+              key={i}
+              className={`inline-block py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
+            >
+              <span
+                className={`inline-block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  isItalic
+                    ? 'font-light italic text-[#F5F5F7] tracking-normal pr-[0.15em] pb-[0.1em]'
+                    : 'metallic-text-gradient font-semibold'
+                }`}
+                style={{
+                  transform: prefersReducedMotion || isInView ? 'translateY(0%)' : 'translateY(115%)',
+                  transitionDelay: prefersReducedMotion ? '0ms' : `${i * 65}ms`,
+                  ...(isItalic ? { display: 'inline-block', paddingRight: '0.15em', paddingBottom: '0.1em' } : {}),
+                }}
+              >
+                {cleanWord}
+              </span>
+            </span>
+          );
+        })}
       </h2>
+
+      {/* Optional subtitle 18px, #B4B4BA, max 56ch */}
       {subtitle && (
-        <p className="mt-4 text-[16px] sm:text-[17px] text-apple-gray-600 dark:text-[#A1A1A6] font-normal leading-relaxed max-w-2xl mx-auto">
+        <p
+          className="relative z-10 mt-5 text-[18px] text-[#B4B4BA] font-normal leading-[1.6] max-w-[56ch] transition-opacity duration-700 ease-out"
+          style={{
+            opacity: prefersReducedMotion || isInView ? 1 : 0,
+            transitionDelay: prefersReducedMotion ? '0ms' : `${words.length * 65 + 80}ms`,
+          }}
+        >
           {subtitle}
         </p>
       )}

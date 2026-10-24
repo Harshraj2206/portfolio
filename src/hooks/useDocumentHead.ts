@@ -7,6 +7,7 @@ export interface DocumentHeadOptions {
   ogImage?: string;
   ogType?: 'website' | 'article';
   jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
 }
 
 export function useDocumentHead({
@@ -16,6 +17,7 @@ export function useDocumentHead({
   ogImage = '/og-image.png',
   ogType = 'website',
   jsonLd,
+  noindex = false,
 }: DocumentHeadOptions) {
   useEffect(() => {
     // Update Title
@@ -33,6 +35,13 @@ export function useDocumentHead({
 
     // Standard Description
     setMetaTag('name', 'description', description);
+
+    // Robots meta tag
+    if (noindex) {
+      setMetaTag('name', 'robots', 'noindex, nofollow');
+    } else {
+      setMetaTag('name', 'robots', 'index, follow');
+    }
 
     // Open Graph
     setMetaTag('property', 'og:title', title);
@@ -81,5 +90,5 @@ export function useDocumentHead({
         script.remove();
       }
     };
-  }, [title, description, canonicalUrl, ogImage, ogType, jsonLd]);
+  }, [title, description, canonicalUrl, ogImage, ogType, jsonLd, noindex]);
 }

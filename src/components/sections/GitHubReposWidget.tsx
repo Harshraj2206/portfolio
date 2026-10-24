@@ -157,7 +157,7 @@ export const GitHubReposWidget: React.FC<GitHubReposWidgetProps> = ({
                       href={repo.html_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-base font-bold text-apple-gray-900 dark:text-white group-hover:text-apple-blue transition-colors flex items-center gap-2 break-all"
+                      className="text-base font-semibold text-apple-gray-900 dark:text-white group-hover:text-apple-blue transition-colors flex items-center gap-2 break-all"
                     >
                       <Github className="w-4 h-4 shrink-0 text-apple-gray-600 dark:text-apple-gray-400 group-hover:text-apple-blue" />
                       <span>{repo.name}</span>
@@ -205,7 +205,7 @@ export const GitHubReposWidget: React.FC<GitHubReposWidgetProps> = ({
                     )}
                   </div>
 
-                  <span className="text-[11px] font-mono text-apple-gray-400">
+                  <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
                     {formatRelativeTime(repo.updated_at)}
                   </span>
                 </div>

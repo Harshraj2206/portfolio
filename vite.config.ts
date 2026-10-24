@@ -5,7 +5,19 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/design/**', '**/scripts/**', '**/.git/**', '**/public/images/**'],
+      ignored: [
+        '**/design/**',
+        '**/scripts/**',
+        '**/.git/**',
+        '**/public/**',
+        '**/*.png',
+        '**/*.jpg',
+        '**/*.jpeg',
+        '**/*.webp',
+        '**/*.gif',
+        '**/*.pdf',
+        '**/*.json',
+      ],
     },
   },
   build: {
@@ -16,6 +28,8 @@ export default defineConfig({
         manualChunks: {
           'vendor': ['react', 'react-dom', 'react-router-dom'],
           'motion': ['framer-motion'],
+          'three': ['three'],
+          'gsap': ['gsap'],
         }
       }
     }

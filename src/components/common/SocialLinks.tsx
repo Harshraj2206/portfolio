@@ -56,7 +56,7 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
             rel="noopener noreferrer"
             aria-label={link.label}
             onClick={() => onLinkClick?.(link.platform)}
-            className="p-2.5 rounded-full glass-surface text-apple-gray-600 dark:text-apple-gray-300 hover:text-apple-blue dark:hover:text-apple-blue hover:scale-105 active:scale-95 transition-all shadow-xs"
+            className="p-2.5 rounded-full apple-glass-chip apple-glass-chip-interactive text-white/80 hover:text-white transition-colors shadow-xs"
           >
             {getIcon(link.platform)}
           </a>
@@ -74,12 +74,12 @@ export const SocialLinks: React.FC<SocialLinksProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => onLinkClick?.(link.platform)}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-pill glass-surface text-xs font-medium text-apple-gray-700 dark:text-apple-gray-200 hover:text-apple-blue dark:hover:text-apple-blue hover:border-apple-blue/40 shadow-xs transition-all active:scale-95"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-pill apple-glass-chip apple-glass-chip-interactive text-[14px] font-medium text-white/90 hover:text-white shadow-xs transition-colors"
         >
           {getIcon(link.platform)}
           <span>{link.label}</span>
           {link.handleOrNote && (
-            <span className="text-[11px] text-apple-gray-400">
+            <span className="text-[13px] text-[#A8A8AF]">
               ({link.handleOrNote})
             </span>
           )}

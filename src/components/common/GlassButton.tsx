@@ -22,19 +22,19 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'px-4 py-1.5 text-[13px] font-medium gap-1.5',
-    md: 'px-5 py-2.5 text-[14px] font-medium gap-2',
-    lg: 'px-7 py-3 text-[16px] font-semibold gap-2.5',
+    sm: 'px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2',
+    md: 'px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2',
+    lg: 'px-6 py-3.5 text-[16px] font-medium tracking-[-0.01em] gap-2',
   }[size];
 
   const variantClasses = {
     primary: 'apple-button-primary',
     secondary: 'apple-button-secondary',
-    ghost: 'bg-transparent text-apple-gray-600 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 active:scale-95',
+    ghost: 'bg-transparent text-apple-gray-600 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10',
   }[variant];
 
   const baseClasses = clsx(
-    'inline-flex items-center justify-center rounded-pill cursor-pointer transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2',
+    'inline-flex items-center justify-center rounded-full cursor-pointer transition-[background-color,border-color,box-shadow,filter] duration-[180ms] select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2',
     sizeClasses,
     variantClasses,
     className

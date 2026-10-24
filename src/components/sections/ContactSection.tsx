@@ -1,29 +1,72 @@
-import React, { useState } from 'react';
-import { ContactConfig, SocialLink } from '../../data/content.schema';
+import React, { useState, useRef, useEffect } from 'react';
+import { ContactConfig, SocialConfig } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
-import { GlassButton } from '../common/GlassButton';
-import { SocialLinks } from '../common/SocialLinks';
+import { GlassCard } from '../common/GlassCard';
 import confetti from 'canvas-confetti';
 import {
   Send,
   Mail,
-  Calendar,
-  CheckCircle2,
-  AlertCircle,
-  Clock
+  Clock,
+  ArrowUpRight,
 } from 'lucide-react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { soundEngine } from '../../audio/soundEngine';
+
+const BRAND_SVGS = {
+  github:
+    'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12',
+  instagram:
+    'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z',
+  linkedin:
+    'M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.72a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26z',
+  facebook:
+    'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
+};
 
 interface ContactSectionProps {
   contact: ContactConfig;
-  socialLinks: SocialLink[];
+  social: SocialConfig;
+  contactButtons: {
+    email: { value: string; isDemo: boolean };
+    linkedin: { value: string; isDemo: boolean };
+    github: { value: string; isDemo: boolean };
+  };
   className?: string;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
   contact,
-  socialLinks,
+  social: _social,
+  contactButtons: _contactButtons,
   className = '',
 }) => {
+  const containerRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -34,319 +77,338 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Please enter your name.';
-    }
-
+    const errs: Record<string, string> = {};
+    if (!formData.name.trim()) errs.name = 'Please enter your name';
     if (!formData.email.trim()) {
-      newErrors.email = 'Please enter your email.';
+      errs.email = 'Please enter your email address';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address.';
+      errs.email = 'Please enter a valid email address';
     }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Please enter a message.';
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters.';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!formData.message.trim()) errs.message = 'Please enter your message';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.honeypot) {
-      setStatus('success');
-      return;
-    }
-
+    if (formData.honeypot) return;
     if (!validate()) return;
 
     setStatus('submitting');
+    setErrorMessage('');
+    soundEngine.play('state');
 
-    const endpoint = contact.formspreeEndpoint || import.meta.env.VITE_CONTACT_ENDPOINT;
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'f984cc3f-51c7-47c2-aefc-1dc97807a062',
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
 
-    if (endpoint) {
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject || 'Portfolio Inquiry',
-            message: formData.message,
-          }),
-        });
+      const data = await res.json().catch(() => ({}));
 
-        if (response.ok) {
-          setStatus('success');
+      if (res.ok && data.success !== false) {
+        setStatus('success');
+        setErrorMessage('');
+        soundEngine.play('state');
+        setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
+        setErrors({});
+        if (!prefersReducedMotion) {
           confetti({
-            particleCount: 30,
+            particleCount: 80,
             spread: 60,
-            origin: { y: 0.7 },
-            colors: ['#0A84FF', '#FFFFFF'],
+            origin: { y: 0.8 },
+            colors: ['#FFFFFF', '#D1D1D6', '#9A9AA0'],
           });
-          setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
-          return;
-        } else {
-          throw new Error('Service returned an error.');
         }
-      } catch (err) {
-        console.warn('Form submission failed, offering mailto fallback:', err);
+      } else {
+        console.log(data);
+        setStatus('error');
+        setErrorMessage(data.message || 'Something went wrong, please try again');
       }
+    } catch (err) {
+      console.log(err);
+      setStatus('error');
+      setErrorMessage('Something went wrong, please try again');
     }
-
-    const subject = encodeURIComponent(
-      formData.subject ? `[Inquiry] ${formData.subject}` : `[Inquiry] From ${formData.name}`
-    );
-    const body = encodeURIComponent(
-      `Hello,\n\n${formData.message}\n\nFrom: ${formData.name}\nEmail: ${formData.email}`
-    );
-
-    window.location.href = `mailto:${contact.emailAddress}?subject=${subject}&body=${body}`;
-    setStatus('success');
-    confetti({
-      particleCount: 25,
-      spread: 50,
-      origin: { y: 0.7 },
-      colors: ['#0A84FF', '#FFFFFF'],
-    });
-    setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
   };
 
   return (
     <section
       id="contact"
-      aria-label="Contact & Connect"
-      className={`max-w-5xl mx-auto px-4 sm:px-6 mb-24 md:mb-32 scroll-mt-24 ${className}`}
+      ref={containerRef}
+      aria-label="Contact"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+        transition: prefersReducedMotion
+          ? 'none'
+          : 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
     >
+      {/* 06 "Let's *talk*" - Big Centered Headline */}
       <SectionHeading
-        title="Start a conversation"
-        subtitle="Direct channels for engineering opportunities, technical advisory, and discussions."
+        index="06"
+        label="Contact"
+        title="Let's *talk*"
+        subtitle={contact.subtext || "Feel free to reach out for internship opportunities, project collaborations, or discussions."}
+        align="center"
       />
 
+      {/* Two-Column Layout: Contact Options Left, Form Right */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Direct Inquiries & Channels (5 cols) */}
+        {/* Left Column (Cols 1-5): Contact Options */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="p-6 sm:p-8 rounded-[28px] glass-surface space-y-6">
-            <div>
-              <div className="text-[13px] font-semibold text-[#0A84FF] dark:text-[#409CFF] flex items-center gap-2 mb-1.5">
-                <Mail className="w-4 h-4" />
-                <span>Direct email</span>
+          <GlassCard
+            variant="default"
+            radius="large"
+            hoverEffect={false}
+            className="p-8 sm:p-10 flex flex-col"
+          >
+            {/* Paragraph and direct contact description */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                <span>Get in touch</span>
+                <span className="w-8 h-px bg-white/15" />
               </div>
+
+              <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#F5F5F7]">
+                Direct Contact
+              </h3>
+
+              <p className="text-[16px] text-[#B4B4BA] leading-relaxed">
+                Whether you're looking to discuss an internship, technical project, or just say hello, I'd love to connect.
+              </p>
+            </div>
+
+            {/* Primary Action: 56px high Full Capsule White Email Button (24px separation below paragraph) */}
+            <div className="mt-[24px]">
               <a
-                href={`mailto:${contact.emailAddress}`}
-                className="text-lg md:text-xl font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] hover:text-[#0A84FF] dark:hover:text-[#409CFF] transition-colors"
+                href="mailto:hraj224488@gmail.com"
+                aria-label="Send email to hraj224488@gmail.com"
+                className="w-full h-[56px] inline-flex items-center justify-center gap-3 px-8 rounded-full bg-white text-black font-semibold text-[16px] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] shadow-[0_4px_20px_rgba(255,255,255,0.15),inset_0_1px_0_0_rgba(255,255,255,0.6)] hover:shadow-[0_6px_24px_rgba(255,255,255,0.25),inset_0_1px_0_0_rgba(255,255,255,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                {contact.emailAddress}
+                <Mail className="w-5 h-5 text-black shrink-0" />
+                <span>Send an email</span>
               </a>
-              <div className="flex items-center gap-1.5 text-[13px] text-apple-gray-500 dark:text-[#A1A1A6] mt-2">
-                <Clock className="w-3.5 h-3.5" />
-                <span>{contact.officeHoursNote}</span>
+
+              {/* Centered email text row: exactly 14px below the primary button */}
+              <div className="mt-[14px] flex items-center justify-center gap-2 text-[13px] font-sans text-[#C9C9CF] px-1 select-all">
+                <span className="whitespace-nowrap">hraj224488@gmail.com</span>
               </div>
             </div>
 
-            {/* Calendly Quick Link */}
-            {contact.calendlyUrl && (
-              <div className="p-4 rounded-card bg-black/5 dark:bg-white/5 border border-white/10 space-y-2">
-                <div className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-[#0A84FF]" />
-                  <span>Technical sync</span>
+            {/* Secondary Direct Channels: LinkedIn & GitHub (16px below email row)
+                52px high capsules, side by side, equal width, 12px gap */}
+            <div className="mt-[16px] grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+              <a
+                href="https://www.linkedin.com/in/harshraj2206"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open LinkedIn profile"
+                className="apple-glass-chip apple-glass-chip-interactive w-full h-[52px] px-5 rounded-full flex items-center justify-between text-[14px] font-medium text-[#F5F5F7] transition-[background-color,border-color,box-shadow,filter] duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <div className="flex items-center gap-2.5">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white/80 shrink-0">
+                    <path d={BRAND_SVGS.linkedin} />
+                  </svg>
+                  <span>LinkedIn</span>
                 </div>
-                <p className="text-[13px] text-apple-gray-500 dark:text-[#A1A1A6]">
-                  Schedule a 15-minute video call to discuss roles or architecture.
-                </p>
-                <div className="pt-2">
-                  <GlassButton
-                    variant="secondary"
-                    size="sm"
-                    href={contact.calendlyUrl}
-                    isExternal
-                    icon={<Calendar className="w-3.5 h-3.5" />}
-                  >
-                    Open calendar
-                  </GlassButton>
+                <ArrowUpRight className="w-4 h-4 text-white/60 shrink-0" />
+              </a>
+
+              <a
+                href="https://github.com/Harshraj2206"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open GitHub profile"
+                className="apple-glass-chip apple-glass-chip-interactive w-full h-[52px] px-5 rounded-full flex items-center justify-between text-[14px] font-medium text-[#F5F5F7] transition-[background-color,border-color,box-shadow,filter] duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              >
+                <div className="flex items-center gap-2.5">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white/80 shrink-0">
+                    <path d={BRAND_SVGS.github} />
+                  </svg>
+                  <span>GitHub</span>
                 </div>
+                <ArrowUpRight className="w-4 h-4 text-white/60 shrink-0" />
+              </a>
+            </div>
+
+            {/* Faint gradient divider with 24px space above and below */}
+            <div className="my-[24px] w-full h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent pointer-events-none" />
+
+            {/* Response Time */}
+            {contact.responseTime && (
+              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                <Clock className="w-4 h-4 text-white/70 shrink-0" />
+                <span>{contact.responseTime}</span>
               </div>
             )}
-
-            {/* Social Links Row */}
-            <div className="pt-4 border-t border-black/5 dark:border-white/10 space-y-2.5">
-              <span className="text-[13px] font-semibold text-apple-gray-600 dark:text-[#A1A1A6]">
-                Profiles & repositories
-              </span>
-              <SocialLinks links={socialLinks} variant="pills" />
-            </div>
-          </div>
+          </GlassCard>
         </div>
 
-        {/* Right Column: Interactive Contact Form (7 cols) */}
+        {/* Right Column (Cols 6-12): The Message Form in GlassCard */}
         <div className="lg:col-span-7">
-          <div className="p-6 sm:p-8 rounded-[28px] glass-surface">
-            <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7] mb-6">
+          <GlassCard
+            variant="default"
+            radius="large"
+            hoverEffect={false}
+            className="p-8 sm:p-10 space-y-6"
+          >
+            <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#F5F5F7]">
               Send a direct message
             </h3>
 
-            {status === 'success' ? (
-              <div className="p-8 rounded-card bg-white/5 border border-white/10 text-center space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <h4 className="text-lg font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  Message received
-                </h4>
-                <p className="text-[14px] text-apple-gray-500 dark:text-[#A1A1A6] max-w-sm mx-auto">
-                  Thank you for reaching out. I typically reply within one business day.
-                </p>
-                <button
-                  onClick={() => setStatus('idle')}
-                  className="mt-4 text-[13px] font-semibold text-[#0A84FF] hover:underline"
-                >
-                  Send another message
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                <input
-                  type="text"
-                  name="honeypot"
-                  value={formData.honeypot}
-                  onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
-                  className="hidden"
-                  tabIndex={-1}
-                  autoComplete="off"
-                />
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <input
+                type="text"
+                name="honeypot"
+                value={formData.honeypot}
+                onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
+                className="hidden"
+                tabIndex={-1}
+                autoComplete="off"
+              />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Name Input */}
-                  <div>
-                    <label
-                      htmlFor="contact-name"
-                      className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
-                    >
-                      Your name <span className="text-[#0A84FF]">*</span>
-                    </label>
-                    <input
-                      id="contact-name"
-                      type="text"
-                      placeholder="e.g. Sarah Jenkins"
-                      value={formData.name}
-                      onChange={(e) => {
-                        setFormData({ ...formData, name: e.target.value });
-                        if (errors.name) setErrors({ ...errors, name: '' });
-                      }}
-                      className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                        errors.name ? 'border-red-500' : 'border-black/10 dark:border-white/10'
-                      }`}
-                    />
-                    {errors.name && (
-                      <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.name}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Email Input */}
-                  <div>
-                    <label
-                      htmlFor="contact-email"
-                      className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
-                    >
-                      Email address <span className="text-[#0A84FF]">*</span>
-                    </label>
-                    <input
-                      id="contact-email"
-                      type="email"
-                      placeholder="e.g. sarah@company.com"
-                      value={formData.email}
-                      onChange={(e) => {
-                        setFormData({ ...formData, email: e.target.value });
-                        if (errors.email) setErrors({ ...errors, email: '' });
-                      }}
-                      className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                        errors.email ? 'border-red-500' : 'border-black/10 dark:border-white/10'
-                      }`}
-                    />
-                    {errors.email && (
-                      <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" /> {errors.email}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Subject Input */}
-                <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {/* Name Input */}
+                <div className="space-y-2">
                   <label
-                    htmlFor="contact-subject"
-                    className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
+                    htmlFor="contact-name"
+                    className="block text-[13px] font-sans font-medium text-[#C9C9CF]"
                   >
-                    Topic / Context
+                    Your name <span className="text-white/50">*</span>
                   </label>
                   <input
-                    id="contact-subject"
+                    id="contact-name"
                     type="text"
-                    placeholder="e.g. Distributed Systems Architecture / Engineering Opportunity"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border border-black/10 dark:border-white/10 transition-colors"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Jane Doe"
+                    className={`w-full px-4 py-3 rounded-[16px] bg-white/[0.05] border ${
+                      errors.name ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
+                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors`}
                   />
-                </div>
-
-                {/* Message Input */}
-                <div>
-                  <label
-                    htmlFor="contact-message"
-                    className="block text-[13px] font-medium text-apple-gray-700 dark:text-[#A1A1A6] mb-1.5"
-                  >
-                    Message <span className="text-[#0A84FF]">*</span>
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    rows={4}
-                    placeholder="Details about your team, problem space, or inquiry..."
-                    value={formData.message}
-                    onChange={(e) => {
-                      setFormData({ ...formData, message: e.target.value });
-                      if (errors.message) setErrors({ ...errors, message: '' });
-                    }}
-                    className={`w-full px-4 py-2.5 rounded-chip bg-white/40 dark:bg-black/30 text-[14px] text-apple-gray-900 dark:text-[#F5F5F7] placeholder:text-apple-gray-400 dark:placeholder:text-[#6E6E73] focus-visible:ring-2 focus-visible:ring-apple-blue border transition-colors ${
-                      errors.message ? 'border-red-500' : 'border-black/10 dark:border-white/10'
-                    }`}
-                  />
-                  {errors.message && (
-                    <p className="text-[12px] text-red-500 mt-1 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> {errors.message}
-                    </p>
+                  {errors.name && (
+                    <p className="text-[13px] text-white/70 font-sans">{errors.name}</p>
                   )}
                 </div>
 
-                {/* Submit Pill Button */}
-                <div className="pt-2">
-                  <GlassButton
-                    variant="primary"
-                    size="md"
-                    type="submit"
-                    disabled={status === 'submitting'}
-                    icon={<Send className="w-4 h-4" />}
-                    className="w-full sm:w-auto"
+                {/* Email Input */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="contact-email"
+                    className="block text-[13px] font-sans font-medium text-[#C9C9CF]"
                   >
-                    {status === 'submitting' ? 'Sending...' : 'Send message'}
-                  </GlassButton>
+                    Your email <span className="text-white/50">*</span>
+                  </label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="jane@example.com"
+                    className={`w-full px-4 py-3 rounded-[16px] bg-white/[0.05] border ${
+                      errors.email ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
+                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors`}
+                  />
+                  {errors.email && (
+                    <p className="text-[13px] text-white/70 font-sans">{errors.email}</p>
+                  )}
                 </div>
-              </form>
-            )}
-          </div>
+              </div>
+
+              {/* Subject Input */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-subject"
+                  className="block text-[13px] font-sans font-medium text-[#C9C9CF]"
+                >
+                  Subject
+                </label>
+                <input
+                  id="contact-subject"
+                  type="text"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  placeholder="Project Inquiry / Internship Opportunity"
+                  className="w-full px-4 py-3 rounded-[16px] bg-white/[0.05] border border-white/[0.12] focus:border-white/30 text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors"
+                />
+              </div>
+
+              {/* Message Input */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="contact-message"
+                  className="block text-[13px] font-sans font-medium text-[#C9C9CF]"
+                >
+                  Message <span className="text-white/50">*</span>
+                </label>
+                <textarea
+                  id="contact-message"
+                  required
+                  rows={5}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  placeholder="Hi Harsh, I'd like to talk about..."
+                  className={`w-full px-4 py-3 rounded-[20px] bg-white/[0.05] border ${
+                    errors.message ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
+                  } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors resize-none`}
+                />
+                {errors.message && (
+                  <p className="text-[13px] text-white/70 font-sans">{errors.message}</p>
+                )}
+              </div>
+
+              {/* Submit Action: Full Capsule Button */}
+              <div className="pt-2 space-y-3">
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="inline-flex items-center justify-center gap-2 px-8 h-[52px] rounded-full bg-white text-black font-semibold text-[15px] tracking-[-0.01em] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                  {status === 'submitting' ? (
+                    <>
+                      <div className="w-4 h-4 rounded-full border-2 border-black border-t-transparent animate-spin" />
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send message</span>
+                      <Send className="w-4 h-4 text-black shrink-0" />
+                    </>
+                  )}
+                </button>
+
+                {status === 'success' && (
+                  <p className="text-[13px] font-sans font-medium text-[#C9C9CF]">
+                    Message sent
+                  </p>
+                )}
+
+                {status === 'error' && (
+                  <p className="text-[13px] font-sans font-medium text-[#C9C9CF]">
+                    {errorMessage || 'Something went wrong, please try again'}
+                  </p>
+                )}
+              </div>
+            </form>
+          </GlassCard>
         </div>
       </div>
     </section>

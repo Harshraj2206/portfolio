@@ -47,11 +47,11 @@ export const Recommendations: React.FC<RecommendationsProps> = ({
             {/* Author Attribution */}
             <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-apple-blue/20 to-apple-purple/20 flex items-center justify-center font-bold text-xs text-apple-blue shadow-xs">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-apple-blue/20 to-apple-purple/20 flex items-center justify-center font-semibold text-xs text-apple-blue shadow-xs">
                   {rec.avatarInitials}
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-apple-gray-900 dark:text-white flex items-center gap-1.5">
+                  <div className="text-sm font-semibold text-apple-gray-900 dark:text-white flex items-center gap-1.5">
                     <span>{rec.authorName}</span>
                     <CheckCircle2 className="w-3.5 h-3.5 text-apple-blue shrink-0" />
                   </div>

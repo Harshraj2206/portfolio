@@ -1,55 +1,50 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { portfolioContent } from '../data/content';
+import { resolvedPortfolioContent } from '../data/resolve';
 import { useDocumentHead } from '../hooks/useDocumentHead';
 import { useAnalytics } from '../hooks/useAnalytics';
-import { GlassButton } from '../components/common/GlassButton';
+import { soundEngine } from '../audio/soundEngine';
 import { WindowFrame } from '../components/common/WindowFrame';
-import { ThemeToggle } from '../components/common/ThemeToggle';
+import { ProjectMockup } from '../components/sections/ProjectMockup';
 import { NotFoundPage } from '../components/pages/NotFoundPage';
+import { Footer } from '../components/sections/Footer';
+import { DemoChip } from '../components/common/DemoChip';
+import { DemoAction } from '../components/common/DemoAction';
+import { Chip } from '../components/common/Chip';
 import {
   ArrowLeft,
   ArrowRight,
   ExternalLink,
   Github,
-  Target,
-  Users,
+  CheckCircle2,
   Clock,
-  Layers,
-  Cpu,
+  HelpCircle,
   Lightbulb,
+  Award,
 } from 'lucide-react';
 
-interface ProjectPageProps {
-  theme: 'light' | 'dark' | 'system';
-  resolvedTheme: 'light' | 'dark';
-  onToggleTheme: () => void;
-}
-
-export const ProjectPage: React.FC<ProjectPageProps> = ({
-  theme,
-  resolvedTheme,
-  onToggleTheme,
-}) => {
+export const ProjectPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { projects, personal, meta } = portfolioContent;
+  const { projects, personal, meta } = resolvedPortfolioContent;
   const { trackProjectClick } = useAnalytics(meta.analyticsId);
 
-  // Scroll to top on route change
+  // Scroll to top on route change & play state sound
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    soundEngine.play('state');
   }, [slug]);
 
-  const currentIndex = projects.findIndex((p) => p.id === slug);
-  const project = currentIndex !== -1 ? projects[currentIndex] : null;
+  const activeProjects = projects.filter((p) => !p.comingSoon);
+  const currentIndex = activeProjects.findIndex((p) => p.id === slug);
+  const project = currentIndex !== -1 ? activeProjects[currentIndex] : null;
 
   const prevProject =
     currentIndex !== -1
-      ? projects[(currentIndex - 1 + projects.length) % projects.length]
+      ? activeProjects[(currentIndex - 1 + activeProjects.length) % activeProjects.length]
       : null;
   const nextProject =
     currentIndex !== -1
-      ? projects[(currentIndex + 1) % projects.length]
+      ? activeProjects[(currentIndex + 1) % activeProjects.length]
       : null;
 
   // SEO tags
@@ -58,269 +53,195 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
       ? `${project.title} — Case Study | ${personal.preferredName}`
       : 'Project Not Found',
     description: project
-      ? `${project.outcome}. ${project.tagline}`
+      ? project.oneLiner || project.outcome || ''
       : 'The requested engineering case study does not exist.',
     canonicalUrl: project
       ? `https://portfolio.example.com/projects/${project.id}`
       : 'https://portfolio.example.com/404',
     ogType: 'article',
-    jsonLd: project
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'TechArticle',
-          headline: project.title,
-          description: project.outcome,
-          author: {
-            '@type': 'Person',
-            name: personal.fullName,
-          },
-          dependencies: project.tags.join(', '),
-        }
-      : undefined,
+    ogImage: project?.image || '/og-image.png',
   });
 
-  if (!project || !prevProject || !nextProject) {
+  if (!project || !project.caseStudy) {
     return <NotFoundPage />;
   }
 
   const { caseStudy } = project;
+  const isLive = project.status?.toLowerCase() === 'live';
+  const isDemo = Boolean(project.isDemo);
+  const demoFields = project.demoFields || {};
+
+  const liveUrl = project.liveSiteUrl || project.liveDemoUrl || caseStudy.liveDemoUrl;
+  const isLiveDemo = isDemo || Boolean(demoFields.liveDemoUrl);
+  const githubUrl = project.githubUrl || caseStudy.githubUrl;
+  const isGithubDemo = isDemo || Boolean(demoFields.githubUrl);
+
+  const displayChips = project.featureChips
+    ? project.featureChips
+    : [
+        ...(project.statChips || []),
+        ...(project.extraChip ? [project.extraChip] : []),
+      ];
 
   return (
-    <div className="relative min-h-screen bg-[#F5F5F7] dark:bg-[#0B0C10] text-[#1D1D1F] dark:text-[#F5F5F7] transition-colors duration-300 pb-24">
-      {/* Ambient Single Blue Lighting */}
-      <div className="ambient-lighting" aria-hidden="true">
-        <div className="top-blue-glow" />
-      </div>
-
+    <div className="relative min-h-screen bg-[#050505] text-[#F5F5F7] flex flex-col justify-between selection:bg-white/20 selection:text-white">
       {/* Top Floating Glass Navigation */}
-      <header className="sticky top-4 z-40 max-w-6xl mx-auto px-4 sm:px-6">
+      <header className="sticky top-4 z-40 max-w-[1120px] mx-auto px-4 sm:px-6 w-full pt-2">
         <nav
           aria-label="Case Study Navigation"
-          className="flex items-center justify-between px-4 sm:px-6 py-2.5 rounded-pill glass-nav shadow-md"
+          className="flex items-center justify-between px-4 sm:px-6 py-2.5 rounded-pill glass-nav shadow-lg"
         >
           <Link
             to="/#projects"
-            className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] hover:text-[#0A84FF] dark:hover:text-[#409CFF] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue rounded-pill"
+            className="inline-flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>All projects</span>
           </Link>
 
-          <div className="hidden sm:flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#0A84FF] inline-block animate-pulse" />
-            <span className="text-[13px] font-mono text-apple-gray-600 dark:text-[#A1A1A6]">
-              {project.id}.app
-            </span>
+          <div className="flex items-center gap-2">
+            <Chip variant="status" status={isLive ? 'live' : 'in-development'}>
+              {project.status}
+            </Chip>
+            {isDemo && <DemoChip />}
           </div>
 
           <div className="flex items-center gap-3">
-            <ThemeToggle
-              theme={theme}
-              resolvedTheme={resolvedTheme}
-              onToggle={onToggleTheme}
-            />
-
-            {project.liveDemoUrl && (
-              <GlassButton
-                variant="primary"
-                size="sm"
-                href={project.liveDemoUrl}
-                isExternal
+            {liveUrl && liveUrl.trim().length > 0 && (
+              <DemoAction
+                isDemo={isLiveDemo}
+                href={liveUrl}
                 onClick={() => trackProjectClick(project.id, 'demo')}
-                icon={<ExternalLink className="w-3.5 h-3.5" />}
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-white text-black text-[14px] font-medium tracking-[-0.01em] hover:bg-[#E5E5EA] transition-all"
+                ariaLabel={`View live site for ${project.title}`}
               >
-                Live demo
-              </GlassButton>
+                <span>Live demo</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </DemoAction>
             )}
           </div>
         </nav>
       </header>
 
-      {/* Main Content */}
-      <main id="main-content" className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 space-y-12">
-        {/* Hero Section */}
+      {/* Main Case Study Content */}
+      <main id="main-content" className="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 pt-10 sm:pt-14 pb-20 w-full space-y-12 sm:space-y-16">
+        {/* Header Block */}
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="px-3 py-1 rounded-pill neutral-glass-chip text-[13px] font-medium">
-              {project.category}
-            </span>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-pill bg-[#0A84FF]/10 text-[#0A84FF] dark:text-[#409CFF] text-[13px] font-medium">
-              <span>{project.outcome}</span>
-            </div>
+            <Chip variant="status" status={isLive ? 'live' : 'in-development'}>
+              {project.status}
+            </Chip>
+
+            {isDemo && <DemoChip />}
+
+            {displayChips.map((chip) => (
+              <Chip key={chip} variant="default">
+                {chip}
+              </Chip>
+            ))}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] tracking-[-0.03em] leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
             {project.title}
           </h1>
 
-          <p className="text-[17px] text-apple-gray-600 dark:text-[#A1A1A6] leading-relaxed font-normal">
-            {project.tagline}
+          <p className="text-[18px] sm:text-[19px] text-[#9A9AA0] font-normal leading-[1.6] max-w-[62ch]">
+            {project.oneLiner || project.outcome}
           </p>
-
-          {/* Metadata Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-            <div className="p-3.5 rounded-card glass-surface">
-              <div className="flex items-center gap-1.5 text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] mb-1">
-                <Target className="w-3.5 h-3.5 text-[#0A84FF]" />
-                <span>My Role</span>
-              </div>
-              <p className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {caseStudy.myRole}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-card glass-surface">
-              <div className="flex items-center gap-1.5 text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] mb-1">
-                <Clock className="w-3.5 h-3.5 text-[#0A84FF]" />
-                <span>Duration</span>
-              </div>
-              <p className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {caseStudy.duration}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-card glass-surface">
-              <div className="flex items-center gap-1.5 text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] mb-1">
-                <Users className="w-3.5 h-3.5 text-[#0A84FF]" />
-                <span>Team Context</span>
-              </div>
-              <p className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] line-clamp-1">
-                {caseStudy.team}
-              </p>
-            </div>
-
-            <div className="p-3.5 rounded-card glass-surface">
-              <div className="flex items-center gap-1.5 text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] mb-1">
-                <Layers className="w-3.5 h-3.5 text-[#0A84FF]" />
-                <span>Target Users</span>
-              </div>
-              <p className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] line-clamp-1">
-                {caseStudy.targetAudience}
-              </p>
-            </div>
-          </div>
 
           {/* Action Links */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            {project.liveDemoUrl && (
-              <GlassButton
-                variant="primary"
-                size="md"
-                href={project.liveDemoUrl}
-                isExternal
+            {liveUrl && liveUrl.trim().length > 0 && (
+              <DemoAction
+                isDemo={isLiveDemo}
+                href={liveUrl}
                 onClick={() => trackProjectClick(project.id, 'demo')}
-                icon={<ExternalLink className="w-4 h-4" />}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-white text-black text-[14px] font-medium tracking-[-0.01em] hover:bg-[#E5E5EA] transition-all"
+                ariaLabel={`View live demo for ${project.title}`}
               >
-                Launch live demo
-              </GlassButton>
+                <span>View live demo</span>
+                <ExternalLink className="w-4 h-4" />
+              </DemoAction>
             )}
 
-            {project.githubUrl && (
-              <GlassButton
-                variant="secondary"
-                size="md"
-                href={project.githubUrl}
-                isExternal
+            {githubUrl && githubUrl.trim().length > 0 && (
+              <Chip
+                variant="button"
+                as={DemoAction}
+                isDemo={isGithubDemo}
+                href={githubUrl}
                 onClick={() => trackProjectClick(project.id, 'github')}
-                icon={<Github className="w-4 h-4" />}
+                ariaLabel={`View source code for ${project.title}`}
               >
-                View source on GitHub
-              </GlassButton>
+                <Github className="w-4 h-4" />
+                <span>View source</span>
+              </Chip>
             )}
           </div>
         </div>
 
-        {/* 1. Problem & Context */}
-        <section aria-labelledby="problem-heading" className="space-y-4">
-          <h2 id="problem-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
-            The problem & context
-          </h2>
-          <div className="p-6 sm:p-8 rounded-[28px] glass-surface">
-            <p className="text-[16px] text-apple-gray-700 dark:text-[#D1D1D6] leading-relaxed">
-              {caseStudy.problem}
-            </p>
-          </div>
-        </section>
+        {/* Hero Visual inside macOS Window Frame */}
+        <div className="w-full">
+          <WindowFrame title={`${project.id}.app`} className="w-full shadow-2xl">
+            <ProjectMockup project={project} />
+          </WindowFrame>
+        </div>
 
-        {/* 2. Key Architectural Decisions & Engineering Trade-offs */}
-        <section aria-labelledby="decisions-heading" className="space-y-5">
-          <h2 id="decisions-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
-            Key architectural decisions & trade-offs
-          </h2>
-
-          <div className="space-y-4">
-            {caseStudy.keyDecisions.map((decision, idx) => (
-              <WindowFrame key={idx} title={`decision-0${idx + 1}-${decision.title.toLowerCase().replace(/\s+/g, '-').slice(0, 30)}.md`}>
-                <div className="p-6 sm:p-8 space-y-4">
-                  <h3 className="text-lg font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] flex items-center gap-2">
-                    <Cpu className="w-5 h-5 text-[#0A84FF]" />
-                    <span>{decision.title}</span>
-                  </h3>
-
-                  <div className="space-y-3 text-[14px] text-apple-gray-700 dark:text-[#A1A1A6]">
-                    <p>
-                      <strong className="text-[#1D1D1F] dark:text-[#F5F5F7]">Context: </strong>
-                      {decision.context}
-                    </p>
-                    <p>
-                      <strong className="text-[#0A84FF] dark:text-[#409CFF] font-semibold">Decision: </strong>
-                      {decision.decision}
-                    </p>
-                    <div className="p-3 rounded-chip bg-black/5 dark:bg-white/5 border border-white/5">
-                      <strong className="text-[#1D1D1F] dark:text-[#F5F5F7] font-semibold">Rationale: </strong>
-                      <span>{decision.rationale}</span>
-                    </div>
-                  </div>
+        {/* Project Context & Role Highlights Box */}
+        {(project.role || project.context || (project.techStack && project.techStack.length > 0)) && (
+          <div className="p-6 sm:p-8 rounded-[28px] glass-surface grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {project.role && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                  <span>Role</span>
+                  {demoFields.role && <DemoChip />}
                 </div>
-              </WindowFrame>
-            ))}
-          </div>
-        </section>
-
-        {/* 3. Measurable Quantitative Results */}
-        <section aria-labelledby="metrics-heading" className="space-y-4">
-          <h2 id="metrics-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
-            Quantified outcomes & benchmarks
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {caseStudy.measurableResults.map((result, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-card glass-surface flex flex-col justify-between"
-              >
-                <div>
-                  <div className="text-3xl font-semibold text-[#0A84FF] dark:text-[#409CFF] font-mono tracking-tight">
-                    {result.metric}
-                  </div>
-                  <div className="text-[15px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] mt-1">
-                    {result.label}
-                  </div>
+                <div className="text-[15px] font-medium text-white">{project.role}</div>
+              </div>
+            )}
+            {project.context && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                  <span>Context</span>
+                  {demoFields.context && <DemoChip />}
                 </div>
-                <p className="text-[13px] text-apple-gray-600 dark:text-[#A1A1A6] mt-3 pt-3 border-t border-black/5 dark:border-white/10 leading-relaxed">
-                  {result.context}
-                </p>
+                <div className="text-[15px] text-[#D1D1D6]">{project.context}</div>
               </div>
-            ))}
+            )}
+            {project.techStack && project.techStack.length > 0 && (
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                  <span>Technologies</span>
+                  {demoFields.techStack && <DemoChip />}
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {project.techStack.map((tech) => (
+                    <Chip key={tech} variant="default">
+                      {tech}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </section>
+        )}
 
-        {/* 4. Retrospective */}
-        {caseStudy.whatIWouldImprove && caseStudy.whatIWouldImprove.length > 0 && (
-          <section aria-labelledby="retro-heading" className="space-y-3">
-            <div className="p-6 rounded-card glass-surface space-y-3">
-              <div className="flex items-center gap-2 text-[15px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                <Lightbulb className="w-4 h-4 text-[#0A84FF]" />
-                <h3 id="retro-heading">Retrospective: What I would improve next</h3>
-              </div>
-              <ul className="space-y-2">
-                {caseStudy.whatIWouldImprove.map((item, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2.5 text-[14px] text-apple-gray-600 dark:text-[#A1A1A6]"
-                  >
-                    <span className="text-[#0A84FF] select-none">•</span>
-                    <span>{item}</span>
+        {/* Measurable Results */}
+        {project.results && project.results.length > 0 && (
+          <section aria-labelledby="results-heading" className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-white" />
+              <h2 id="results-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7]">
+                Measurable results
+              </h2>
+              {demoFields.results && <DemoChip />}
+            </div>
+            <div className="p-6 sm:p-8 rounded-[28px] glass-surface">
+              <ul className="space-y-3">
+                {project.results.map((res, i) => (
+                  <li key={i} className="flex items-start gap-3 text-[16px] text-[#D1D1D6] leading-relaxed">
+                    <CheckCircle2 className="w-5 h-5 text-white shrink-0 mt-0.5" />
+                    <span>{res}</span>
                   </li>
                 ))}
               </ul>
@@ -328,59 +249,183 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({
           </section>
         )}
 
-        {/* 5. Technologies Used */}
-        <section aria-labelledby="tech-heading" className="space-y-3">
-          <h2 id="tech-heading" className="text-lg font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
-            Technologies & tools applied
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3.5 py-1 rounded-pill neutral-glass-chip text-[13px] font-medium"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        {/* Next / Previous Footer Navigation */}
-        <nav
-          aria-label="Next or Previous Case Study"
-          className="pt-8 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
-          <Link
-            to={`/projects/${prevProject.id}`}
-            className="w-full sm:w-auto p-4 rounded-card glass-surface hover:border-[#0A84FF]/40 flex items-center gap-3 transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue"
-          >
-            <ArrowLeft className="w-5 h-5 text-[#0A84FF] group-hover:-translate-x-1 transition-transform" />
-            <div className="text-left">
-              <span className="text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] block uppercase tracking-wider">
-                Previous
-              </span>
-              <span className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {prevProject.title}
-              </span>
+        {/* Challenges: A Hard Problem I Solved */}
+        {project.challenges && (
+          <section aria-labelledby="challenges-heading" className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-white/70" />
+              <h2 id="challenges-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7]">
+                A hard problem I solved
+              </h2>
+              {demoFields.challenges && <DemoChip />}
             </div>
-          </Link>
-
-          <Link
-            to={`/projects/${nextProject.id}`}
-            className="w-full sm:w-auto p-4 rounded-card glass-surface hover:border-[#0A84FF]/40 flex items-center justify-between sm:justify-end gap-3 transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue"
-          >
-            <div className="text-right">
-              <span className="text-[12px] text-apple-gray-500 dark:text-[#A1A1A6] block uppercase tracking-wider">
-                Next
-              </span>
-              <span className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                {nextProject.title}
-              </span>
+            <div className="p-8 sm:p-10 rounded-[28px] glass-surface">
+              <p className="text-[17px] sm:text-[18px] text-[#D1D1D6] leading-[1.7] font-normal">
+                {project.challenges}
+              </p>
             </div>
-            <ArrowRight className="w-5 h-5 text-[#0A84FF] group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </nav>
+          </section>
+        )}
+
+        {/* 1. Overview */}
+        {caseStudy.overview && (
+          <section aria-labelledby="overview-heading" className="space-y-4">
+            <h2 id="overview-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7]">
+              Overview
+            </h2>
+            <div className="p-8 sm:p-10 rounded-[28px] glass-surface">
+              <p className="text-[17px] sm:text-[18px] text-[#D1D1D6] leading-[1.7] max-w-[62ch] font-normal">
+                {caseStudy.overview}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* 2. How it works (LandSafe & Demo project 3-step glass cards) */}
+        {caseStudy.howItWorks && caseStudy.howItWorks.length > 0 && (
+          <section aria-labelledby="how-it-works-heading" className="space-y-6">
+            <div className="space-y-1">
+              <h2 id="how-it-works-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7]">
+                How it works
+              </h2>
+              <p className="text-[15px] text-[#9A9AA0]">
+                Core architectural stages and execution flow.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {caseStudy.howItWorks.map((step) => (
+                <div
+                  key={step.step}
+                  className="p-6 sm:p-8 rounded-[28px] glass-surface flex flex-col justify-between space-y-4"
+                >
+                  <div className="space-y-3">
+                    <div className="w-9 h-9 rounded-full bg-white/[0.08] border border-white/15 flex items-center justify-center text-white font-sans text-[14px] font-semibold">
+                      0{step.step}
+                    </div>
+                    <h3 className="text-lg font-semibold tracking-[-0.02em] text-[#F5F5F7]">
+                      {step.title}
+                    </h3>
+                    <p className="text-[15px] text-[#9A9AA0] leading-[1.6]">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 3. Built so far & In progress (NammaRoute & Demo project lists) */}
+        {((caseStudy.builtSoFar && caseStudy.builtSoFar.length > 0) ||
+          (caseStudy.inProgress && caseStudy.inProgress.length > 0)) && (
+          <section aria-labelledby="progress-heading" className="space-y-6">
+            <h2 id="progress-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7]">
+              Current status &amp; roadmap
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Built So Far Checklist */}
+              {caseStudy.builtSoFar && caseStudy.builtSoFar.length > 0 && (
+                <div className="p-8 rounded-[28px] glass-surface space-y-4">
+                  <div className="flex items-center gap-2 text-[15px] font-semibold text-[#F5F5F7]">
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                    <h3>Built so far</h3>
+                  </div>
+                  <ul className="space-y-3 pt-2">
+                    {caseStudy.builtSoFar.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-[15px] text-[#D1D1D6] leading-relaxed">
+                        <span className="text-white select-none mt-1 font-bold">✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* In Progress List */}
+              {caseStudy.inProgress && caseStudy.inProgress.length > 0 && (
+                <div className="p-8 rounded-[28px] glass-surface space-y-4">
+                  <div className="flex items-center gap-2 text-[15px] font-semibold text-[#F5F5F7]">
+                    <Clock className="w-5 h-5 text-white/70" />
+                    <h3>In progress</h3>
+                  </div>
+                  <ul className="space-y-3 pt-2">
+                    {caseStudy.inProgress.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-[15px] text-[#D1D1D6] leading-relaxed">
+                        <span className="w-2 h-2 rounded-full bg-white/70 inline-block mt-2 shrink-0 animate-pulse" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* 4. Why it is helpful */}
+        {caseStudy.whyHelpful && (
+          <section aria-labelledby="why-helpful-heading" className="space-y-4">
+            <div className="flex items-center gap-2 text-[#F5F5F7]">
+              <HelpCircle className="w-5 h-5 text-white/70" />
+              <h2 id="why-helpful-heading" className="text-xl sm:text-2xl font-semibold tracking-[-0.03em]">
+                Why it is helpful
+              </h2>
+            </div>
+            <div className="p-8 sm:p-10 rounded-[28px] glass-surface">
+              <p className="text-[17px] sm:text-[18px] text-[#D1D1D6] leading-[1.7] max-w-[62ch] font-normal">
+                {caseStudy.whyHelpful}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Next / Previous Project Navigation */}
+        {prevProject && nextProject && (
+          <nav
+            aria-label="Next or Previous Case Study"
+            className="pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
+          >
+            <Link
+              to={`/projects/${prevProject.id}`}
+              className="w-full sm:w-auto p-5 rounded-[20px] glass-surface hover:border-white/25 flex items-center gap-3 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <ArrowLeft className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <span className="text-[13px] text-[#C9C9CF] block font-sans font-medium">
+                  Previous Project
+                </span>
+                <span className="text-[15px] font-semibold text-[#F5F5F7]">
+                  {prevProject.title}
+                </span>
+              </div>
+            </Link>
+
+            <Link
+              to={`/projects/${nextProject.id}`}
+              className="w-full sm:w-auto p-5 rounded-[20px] glass-surface hover:border-white/25 flex items-center justify-between sm:justify-end gap-3 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+              <div className="text-right">
+                <span className="text-[13px] text-[#C9C9CF] block font-sans font-medium">
+                  Next Project
+                </span>
+                <span className="text-[15px] font-semibold text-[#F5F5F7]">
+                  {nextProject.title}
+                </span>
+              </div>
+              <ArrowRight className="w-5 h-5 text-white/70" />
+            </Link>
+          </nav>
+        )}
       </main>
+
+      {/* Footer */}
+      <Footer
+        personal={personal}
+        meta={meta}
+        resumeUrl="/resume.pdf"
+      />
     </div>
   );
 };

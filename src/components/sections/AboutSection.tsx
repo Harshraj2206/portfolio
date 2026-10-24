@@ -1,89 +1,252 @@
-import React from 'react';
-import { AboutSectionData } from '../../data/content.schema';
+import React, { useRef, useState, useEffect } from 'react';
+import { AboutSectionData, PortfolioContent, NowConfig } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
+import { GlassCard } from '../common/GlassCard';
+import { Chip } from '../common/Chip';
+import { TerminalTile } from './about/TerminalTile';
+import { GraduationCap, Sparkles, Hammer, BookOpen } from 'lucide-react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 interface AboutSectionProps {
   about: AboutSectionData;
+  personal?: PortfolioContent['personal'];
+  availability?: PortfolioContent['availability'];
+  now?: NowConfig;
+  educationText?: string;
+  currentlyLearning?: string[];
   className?: string;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ about, className = '' }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({
+  about,
+  personal,
+  availability,
+  now,
+  educationText = "Jain University Global Campus, B.Tech CSE (AI & ML), 2nd year",
+  currentlyLearning = ["Advanced Python", "Prompt engineering"],
+  className = '',
+}) => {
+  const containerRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
+
+  // Fallbacks from personal if provided
+  const fullName = personal?.fullName || "Harsh Raj";
+  const role = personal?.roleLine?.split(' at ')[0] || "2nd-year CSE (AI & ML) student";
+  const from = personal?.hometown || "Patna, Bihar";
+  const skills = personal?.primarySkills || ["Python", "Java", "HTML", "CSS", "C"];
+  const statusText = availability?.statusText || "open to internships";
+
+  // Now tile data
+  const buildingList = now?.building || [
+    { name: "NammaRoute", status: "In development" },
+  ];
+  const learningList = now?.learning || currentlyLearning || [
+    "Advanced Python",
+    "Prompt engineering",
+  ];
+  const hasNowContent = buildingList.length > 0 || learningList.length > 0;
+
   return (
     <section
       id="about"
-      aria-label="About and Engineering Philosophy"
-      className={`max-w-5xl mx-auto px-4 sm:px-6 mb-24 md:mb-32 scroll-mt-24 ${className}`}
+      ref={containerRef}
+      aria-label="About me"
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
     >
+      {/* 01 "About *me*" */}
       <SectionHeading
-        title="About & engineering principles"
-        subtitle="Designing durable distributed architectures and human-centric developer experiences."
+        index="01"
+        label="About"
+        title="About *me*"
+        align="left"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Personal Narrative & Collaboration (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="p-6 sm:p-8 rounded-[28px] glass-surface space-y-5">
-            <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Background & approach
-            </h3>
+      {/* 12-column Bento Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        {/* 1. Intro Tile (Cols 1-7, 2 rows): 3 About paragraphs */}
+        <div
+          className={`lg:col-span-7 ${hasNowContent ? 'lg:row-span-2' : ''} flex flex-col transition-all duration-700 ease-out`}
+          style={{
+            opacity: prefersReducedMotion || inView ? 1 : 0,
+            transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
+            transitionDelay: prefersReducedMotion ? '0ms' : '80ms',
+          }}
+        >
+          <GlassCard
+            variant="default"
+            radius="large"
+            className="flex-1 flex flex-col justify-between space-y-6 p-8 sm:p-10"
+          >
+            <div className="space-y-5">
+              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                <span>Biography</span>
+                <span className="w-8 h-px bg-white/15" />
+              </div>
 
-            {about.storyParagraphs.map((para, i) => (
-              <p
-                key={i}
-                className="text-[16px] text-apple-gray-600 dark:text-[#A1A1A6] leading-relaxed font-normal"
-              >
-                {para}
-              </p>
-            ))}
-
-            {/* Team Collaboration */}
-            <div className="pt-4 border-t border-black/5 dark:border-white/10">
-              <h4 className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7] mb-1.5">
-                How I collaborate on engineering teams
-              </h4>
-              <p className="text-[15px] text-apple-gray-600 dark:text-[#A1A1A6] leading-relaxed">
-                {about.collaborationStyle}
-              </p>
+              {about.storyParagraphs.map((para, i) => (
+                <p
+                  key={i}
+                  className="text-[18px] text-[#B4B4BA] leading-[1.6] font-normal"
+                >
+                  {para}
+                </p>
+              ))}
             </div>
-          </div>
+          </GlassCard>
         </div>
 
-        {/* Right Column: Three Core Engineering Principles & Technical Interests (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
-          <h3 className="text-lg font-semibold tracking-[-0.03em] text-[#1D1D1F] dark:text-[#F5F5F7] px-1">
-            Core principles
-          </h3>
-
-          <div className="space-y-3">
-            {about.principles.map((pr) => (
-              <div key={pr.title} className="p-5 rounded-card glass-surface space-y-1.5">
-                <div className="text-[15px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-                  {pr.title}
-                </div>
-                <p className="text-[14px] text-apple-gray-500 dark:text-[#A1A1A6] leading-relaxed">
-                  {pr.description}
-                </p>
+        {/* 2. Education Tile (Cols 8-12, Row 1) */}
+        <div
+          className="lg:col-span-5 flex flex-col transition-all duration-700 ease-out"
+          style={{
+            opacity: prefersReducedMotion || inView ? 1 : 0,
+            transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
+            transitionDelay: prefersReducedMotion ? '0ms' : '160ms',
+          }}
+        >
+          <GlassCard
+            variant="default"
+            radius="large"
+            className="flex-1 flex flex-col justify-between p-7 sm:p-9 space-y-4"
+          >
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                <GraduationCap className="w-4 h-4 text-white/80" />
+                <span>Education</span>
               </div>
-            ))}
-          </div>
 
-          {/* Technical Interests */}
-          <div className="p-5 rounded-card glass-surface mt-4 space-y-2.5">
-            <div className="text-[14px] font-semibold text-[#1D1D1F] dark:text-[#F5F5F7]">
-              Areas of active exploration
+              <div className="space-y-2">
+                <h3 className="text-xl sm:text-[22px] font-semibold text-[#F5F5F7] tracking-[-0.02em] leading-snug">
+                  {personal?.college || "Jain University Global Campus"}
+                </h3>
+                <p className="text-[15px] sm:text-[16px] text-[#B4B4BA] font-normal leading-relaxed">
+                  {educationText
+                    ? educationText.replace(/^Jain University Global Campus,?\s*/i, '').trim() || "B.Tech CSE (AI & ML), 2nd year"
+                    : "B.Tech CSE (AI & ML), 2nd year"}
+                </p>
+                {personal?.graduationYear && (
+                  <div className="pt-1">
+                    <span className="font-sans font-medium text-[13px] text-[#C9C9CF]">
+                      Expected Graduation: {personal.graduationYear}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-            <ul className="space-y-1.5">
-              {about.interestsAndFunFacts.map((fact, index) => (
-                <li
-                  key={index}
-                  className="flex items-start gap-2 text-[13px] text-apple-gray-600 dark:text-[#A1A1A6] leading-relaxed"
-                >
-                  <span className="text-[#0A84FF] select-none">•</span>
-                  <span>{fact}</span>
-                </li>
-              ))}
-            </ul>
+          </GlassCard>
+        </div>
+
+        {/* 3. "Now" Tile (Cols 8-12, Row 2) - Hidden if both empty */}
+        {hasNowContent && (
+          <div
+            className="lg:col-span-5 flex flex-col transition-all duration-700 ease-out"
+            style={{
+              opacity: prefersReducedMotion || inView ? 1 : 0,
+              transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
+              transitionDelay: prefersReducedMotion ? '0ms' : '240ms',
+            }}
+          >
+            <GlassCard
+              variant="default"
+              radius="large"
+              className="flex-1 flex flex-col justify-between p-7 sm:p-9 space-y-5"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                  <Sparkles className="w-4 h-4 text-white/80" />
+                  <span>Now</span>
+                </div>
+
+                {/* Building section */}
+                {buildingList.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                      <Hammer className="w-3.5 h-3.5 text-white/70" />
+                      <span>Building</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2.5">
+                      {buildingList.map((item, idx) => {
+                        const name = typeof item === 'string' ? item : item.name;
+                        const status = typeof item === 'object' ? item.status : 'In development';
+                        return (
+                          <div
+                            key={idx}
+                            className="inline-flex items-center gap-2"
+                          >
+                            <Chip variant="default">{name}</Chip>
+                            {status && (
+                              <Chip variant="status" status="in-development">
+                                {status}
+                              </Chip>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Learning section */}
+                {learningList.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                      <BookOpen className="w-3.5 h-3.5 text-white/70" />
+                      <span>Learning</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {learningList.map((item) => (
+                        <Chip key={item} variant="default">
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </GlassCard>
           </div>
+        )}
+
+        {/* 4. Terminal Tile (Cols 1-12, Row 3) */}
+        <div
+          className="lg:col-span-12 transition-all duration-700 ease-out pt-2"
+          style={{
+            opacity: prefersReducedMotion || inView ? 1 : 0,
+            transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
+            transitionDelay: prefersReducedMotion ? '0ms' : '320ms',
+          }}
+        >
+          <TerminalTile
+            fullName={fullName}
+            role={role}
+            from={from}
+            skills={skills}
+            statusText={statusText}
+          />
         </div>
       </div>
     </section>

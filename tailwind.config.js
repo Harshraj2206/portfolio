@@ -5,27 +5,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkBg: '#0B0C10',
+        darkBg: '#050505',
+        accent: 'var(--accent, #F5F5F7)',
+        surface: 'var(--surface, rgba(255, 255, 255, 0.04))',
+        border: 'var(--border, rgba(255, 255, 255, 0.09))',
         apple: {
-          blue: '#0A84FF',
-          blueLink: '#409CFF', // Optimal contrast link/text on dark graphite (6.2:1 WCAG AA)
-          blueText: '#0071E3', // High-contrast Apple Blue for text on light backgrounds
           gray: {
             50: '#FBFBFD',
             100: '#F5F5F7',
             200: '#E5E5EA',
             300: '#D1D1D6',
-            400: '#A1A1A6', // Secondary text on dark
-            500: '#6E6E73', // Secondary text on light
-            600: '#515154', // Body text on light
+            400: '#9A9AA0',
+            500: '#6E6E73',
+            600: '#515154',
             700: '#3A3A3C',
-            800: '#22232A',
-            900: '#16171D',
-            950: '#0B0C10',
+            800: '#222225',
+            900: '#161618',
+            950: '#0A0A0A',
           },
-          darkSurface: 'rgba(255, 255, 255, 0.07)',
-          darkBorder: 'rgba(255, 255, 255, 0.12)',
-          darkHighlight: 'rgba(255, 255, 255, 0.18)',
+          darkSurface: 'rgba(255, 255, 255, 0.04)',
+          darkBorder: 'rgba(255, 255, 255, 0.09)',
         },
       },
       fontFamily: {
@@ -34,41 +33,49 @@ export default {
           'BlinkMacSystemFont',
           '"SF Pro Display"',
           '"SF Pro Text"',
+          '"Inter Variable"',
           'Inter',
-          '"Helvetica Neue"',
-          'Arial',
+          'system-ui',
           'sans-serif',
+        ],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"SF Pro Display"',
+          '"SF Pro Text"',
+          '"Inter Variable"',
+          'Inter',
+          'system-ui',
+          'sans-serif',
+        ],
+        mono: [
+          '"JetBrains Mono"',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace',
         ],
       },
       borderRadius: {
-        'panel': '36px',
-        'card': '28px',
-        'chip': '12px',
-        'pill': '9999px',
+        'pill': 'var(--r-pill, 999px)',
+        'card-lg': 'var(--r-card-lg, 28px)',
+        'card-md': 'var(--r-card-md, 20px)',
+        'card': 'var(--r-card-lg, 28px)',
+        'input': 'var(--r-input, 16px)',
+        'textarea': 'var(--r-textarea, 20px)',
       },
       backdropBlur: {
-        'glass': '24px',
-        'heavy': '36px',
+        'glass': '20px',
+        'heavy': '32px',
       },
       boxShadow: {
-        'glass-light': '0 8px 32px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)',
-        'glass-dark': '0 10px 40px rgba(0, 0, 0, 0.45)',
-        'panel-dark': '0 10px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18)',
-        'featured-dark': '0 16px 48px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.24)',
-        'glow-soft-blue': '0 0 80px 20px rgba(10, 132, 255, 0.22)',
+        'glass': 'inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 32px rgba(0, 0, 0, 0.5)',
+        'featured': 'inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 16px 48px rgba(0, 0, 0, 0.6)',
       },
       transitionTimingFunction: {
         'spring': 'cubic-bezier(0.22, 1, 0.36, 1)',
-      },
-      animation: {
-        'glow-slow': 'glowDrift 30s ease-in-out infinite alternate',
-      },
-      keyframes: {
-        glowDrift: {
-          '0%': { transform: 'scale(1) translateY(0px)' },
-          '50%': { transform: 'scale(1.08) translateY(-15px)' },
-          '100%': { transform: 'scale(1.02) translateY(12px)' },
-        },
       },
     },
   },

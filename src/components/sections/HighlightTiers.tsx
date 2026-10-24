@@ -35,6 +35,7 @@ export const HighlightTiers: React.FC<HighlightTiersProps> = ({
             <GlassCard
               key={tier.id}
               variant="card"
+              hoverEffect={false}
               className={`p-8 flex flex-col justify-between relative ${
                 isFeatured ? 'border-apple-purple/40 shadow-xl md:-translate-y-2' : ''
               }`}
@@ -43,7 +44,7 @@ export const HighlightTiers: React.FC<HighlightTiersProps> = ({
                 {/* Badge */}
                 <div className="flex items-center justify-between mb-4">
                   <span
-                    className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-pill"
+                    className="text-[11px] font-semibold px-3 py-1 rounded-pill"
                     style={{
                       backgroundColor: `${tier.accentColor}18`,
                       color: tier.accentColor,
@@ -61,7 +62,7 @@ export const HighlightTiers: React.FC<HighlightTiersProps> = ({
                 <div className="text-xs text-apple-gray-500 dark:text-apple-gray-400 font-medium">
                   {tier.title}
                 </div>
-                <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mt-1">
+                <h3 className="text-2xl font-semibold tracking-[-0.03em] text-apple-gray-900 dark:text-white mt-1">
                   {tier.headline}
                 </h3>
                 <p className="mt-4 text-xs md:text-sm text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed">

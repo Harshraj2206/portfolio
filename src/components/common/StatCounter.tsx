@@ -48,7 +48,7 @@ export const StatCounter: React.FC<StatCounterProps> = ({
       className={`p-6 flex flex-col justify-between ${className}`}
     >
       <div>
-        <div className="text-3xl md:text-5xl font-bold tracking-tight text-apple-gray-900 dark:text-white flex items-baseline gap-1 font-apple">
+        <div className="text-3xl md:text-5xl font-semibold tracking-[-0.03em] text-apple-gray-900 dark:text-white flex items-baseline gap-1 font-apple">
           {prefix && <span className="text-2xl md:text-3xl font-medium text-apple-blue">{prefix}</span>}
           <span>{value % 1 !== 0 ? displayValue.toFixed(2) : displayValue}</span>
           {suffix && <span className="text-2xl md:text-3xl font-medium text-apple-blue">{suffix}</span>}
