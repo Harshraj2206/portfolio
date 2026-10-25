@@ -1096,7 +1096,7 @@ export const Hero: React.FC<HeroProps> = ({
       id="hero"
       ref={containerRef}
       aria-label="Hero Introduction"
-      className="relative w-full h-[100svh] min-h-[100svh] bg-transparent overflow-hidden select-text isolation-isolate flex flex-col justify-center items-center"
+      className="relative w-full h-[100dvh] min-h-[100dvh] bg-transparent overflow-hidden select-text isolation-isolate flex flex-col justify-center items-center"
       style={{ isolation: 'isolate' }}
     >
       {/* Soft Neutral Radial Vignette */}
@@ -1244,7 +1244,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="overflow-hidden inline-flex">
               <a
                 href="#projects"
-                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px]"
+                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center"
               >
                 View my work
               </a>
@@ -1256,7 +1256,7 @@ export const Hero: React.FC<HeroProps> = ({
                 href={resumeUrl}
                 download="Harsh_Raj_Resume.pdf"
                 onClick={onDownloadResume}
-                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px]"
+                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center"
               >
                 Resume
               </a>
@@ -1275,7 +1275,7 @@ export const Hero: React.FC<HeroProps> = ({
         <div className="w-[1px] h-4 bg-gradient-to-b from-[#D1D1D6] via-[#D1D1D6]/40 to-transparent animate-pulse" />
       </div>
 
-      {/* Skip Intro Button: 40px glass pill, bottom-center on mobile, bottom-right on desktop, contrast AA, keyboard focusable */}
+      {/* Skip Intro Button: min 44px glass pill, bottom-center on mobile, bottom-right on desktop, contrast AA, keyboard focusable */}
       {showSkipBtn && isIntroActive && (
         <button
           ref={skipBtnRef}
@@ -1285,7 +1285,7 @@ export const Hero: React.FC<HeroProps> = ({
           }}
           data-sound="state"
           aria-label="Skip introductory animation"
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 md:bottom-8 md:right-8 md:left-auto md:translate-x-0 z-[100] pointer-events-auto apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive h-10 px-5 text-[#F5F5F7] hover:text-white text-[14px] font-medium tracking-[-0.01em] shadow-2xl flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 md:bottom-8 md:right-8 md:left-auto md:translate-x-0 z-[100] pointer-events-auto apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive min-h-[44px] px-5 text-[#F5F5F7] hover:text-white text-[14px] font-medium tracking-[-0.01em] shadow-2xl flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none"
         >
           <span>Skip intro</span>
           <ArrowRight className="w-4 h-4 text-white/80" />

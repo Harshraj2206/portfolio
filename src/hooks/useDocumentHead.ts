@@ -14,7 +14,7 @@ export function useDocumentHead({
   title,
   description,
   canonicalUrl,
-  ogImage = '/og-image.png',
+  ogImage = 'https://portfolio-gilt-omega-10.vercel.app/og-image.png',
   ogType = 'website',
   jsonLd,
   noindex = false,
@@ -51,8 +51,11 @@ export function useDocumentHead({
       setMetaTag('property', 'og:url', canonicalUrl);
     }
     if (ogImage) {
-      setMetaTag('property', 'og:image', ogImage);
-      setMetaTag('name', 'twitter:image', ogImage);
+      const fullOgImage = ogImage.startsWith('http')
+        ? ogImage
+        : `https://portfolio-gilt-omega-10.vercel.app${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
+      setMetaTag('property', 'og:image', fullOgImage);
+      setMetaTag('name', 'twitter:image', fullOgImage);
     }
 
     // Twitter Card

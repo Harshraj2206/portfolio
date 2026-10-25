@@ -64,8 +64,8 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
       <div
         aria-hidden="true"
         className={`pointer-events-none absolute -top-16 ${
-          align === 'center' ? 'left-1/2 -translate-x-1/2' : '-left-12'
-        } w-[420px] h-[260px] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.045)_0%,transparent_70%)] blur-2xl z-0`}
+          align === 'center' ? 'left-1/2 -translate-x-1/2' : 'left-0 sm:-left-12'
+        } w-[min(420px,100%)] max-w-full h-[260px] rounded-full bg-[radial-gradient(ellipse,rgba(255,255,255,0.045)_0%,transparent_70%)] blur-2xl z-0`}
       />
 
       {/* Small index line, 13px, sentence case, followed by 40px hairline */}
@@ -84,10 +84,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         </div>
       )}
 
-      {/* Title: clamp(44px, 7vw, 96px), weight 600, tracking -0.035em, line-height 1.15 */}
+      {/* Title: clamp(32px, 6.5vw, 96px), weight 600, tracking -0.035em, line-height 1.15 */}
       <h2
-        className="relative z-10 font-apple tracking-[-0.035em] leading-[1.15] overflow-visible flex flex-wrap gap-x-[0.3em] gap-y-2"
-        style={{ fontSize: 'clamp(44px, 7vw, 96px)' }}
+        className="relative z-10 font-apple tracking-[-0.035em] leading-[1.15] overflow-visible flex flex-wrap gap-x-[0.3em] gap-y-1 sm:gap-y-2"
+        style={{ fontSize: 'clamp(32px, 6.5vw, 96px)' }}
       >
         {words.map((rawWord, i) => {
           const isItalic = rawWord.startsWith('*') && rawWord.endsWith('*');
@@ -117,10 +117,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         })}
       </h2>
 
-      {/* Optional subtitle 18px, #B4B4BA, max 56ch */}
+      {/* Optional subtitle 15px/18px, #B4B4BA, max 56ch */}
       {subtitle && (
         <p
-          className="relative z-10 mt-5 text-[18px] text-[#B4B4BA] font-normal leading-[1.6] max-w-[56ch] transition-opacity duration-700 ease-out"
+          className="relative z-10 mt-3 sm:mt-5 text-[15px] sm:text-[18px] text-[#B4B4BA] font-normal leading-[1.6] max-w-[56ch] transition-opacity duration-700 ease-out"
           style={{
             opacity: prefersReducedMotion || isInView ? 1 : 0,
             transitionDelay: prefersReducedMotion ? '0ms' : `${words.length * 65 + 80}ms`,

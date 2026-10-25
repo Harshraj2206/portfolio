@@ -62,7 +62,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
       id="beyond-code"
       ref={containerRef}
       aria-label="Beyond Code"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
     >
       {/* 05 "Beyond *code*" */}
       <SectionHeading
@@ -73,7 +73,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
         align="left"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
         {cards.map((card, idx) => {
           const Icon = card.icon;
           const isReady = Boolean(card.ready);
@@ -92,7 +92,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                 variant="default"
                 radius="large"
                 hoverEffect={false}
-                className="flex-1 flex flex-col justify-between space-y-8 p-8 sm:p-10 relative overflow-hidden"
+                className="flex-1 flex flex-col justify-between space-y-6 sm:space-y-8 p-6 sm:p-8 md:p-10 relative overflow-hidden"
               >
                 {/* Soft blurred monochrome texture inside tile */}
                 <div
@@ -100,19 +100,19 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                   className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.06)_0%,transparent_70%)] blur-2xl"
                 />
 
-                <div className="space-y-5 relative z-10">
+                <div className="space-y-4 sm:space-y-5 relative z-10">
                   {/* Neutral Line Icon */}
                   <div className="w-12 h-12 rounded-[16px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/90 shadow-sm">
                     <Icon className="w-6 h-6" />
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-2xl sm:text-[26px] font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
+                  <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
                     {card.title}
                   </h3>
 
                   {/* Short description in AA contrast */}
-                  <p className="text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
+                  <p className="text-[15px] sm:text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
                     {card.description}
                   </p>
                 </div>

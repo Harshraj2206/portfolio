@@ -114,7 +114,7 @@ export const TerminalTile: React.FC<TerminalTileProps> = ({
       <GlassCard
         variant="default"
         radius="large"
-        className="p-5 sm:p-7 md:p-8 font-mono text-[14px] bg-[#0A0A0C]/90 border border-white/10"
+        className="p-4 sm:p-7 md:p-8 font-mono text-[13px] sm:text-[14px] bg-[#0A0A0C]/90 border border-white/10 overflow-hidden"
         aria-label={`Developer Terminal: ${accessibleText}`}
         role="region"
       >
@@ -145,9 +145,9 @@ export const TerminalTile: React.FC<TerminalTileProps> = ({
             return (
               <div key={idx} className="space-y-1">
                 {/* Command Line */}
-                <div className="flex items-center gap-2 text-white/90">
+                <div className="flex items-center gap-2 text-white/90 break-words">
                   <span className="text-[#9A9AA0] select-none font-medium">$</span>
-                  <span className="font-semibold text-white">
+                  <span className="font-semibold text-white break-words">
                     {isCompletedStep ? step.cmd : isCurrentStep ? typedCmd : ''}
                   </span>
                   {isCurrentStep && (
@@ -157,7 +157,7 @@ export const TerminalTile: React.FC<TerminalTileProps> = ({
 
                 {/* Command Output */}
                 {isStepOutputVisible && (
-                  <div className="text-[#B4B4BA] pl-4 font-normal text-[13px] sm:text-[14px]">
+                  <div className="text-[#B4B4BA] pl-4 font-normal text-[13px] sm:text-[14px] break-words">
                     {step.output}
                   </div>
                 )}

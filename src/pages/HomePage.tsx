@@ -28,8 +28,6 @@ import { Footer } from '../components/sections/Footer';
 import { CaseStudyModal } from '../components/case-study/CaseStudyModal';
 import { ProjectItem } from '../data/content.schema';
 
-const sectionIds = ['hero', 'about', 'projects', 'skills', 'highlights', 'beyond-code', 'contact'];
-
 interface HomePageProps {
   theme?: string;
   resolvedTheme?: string;
@@ -56,6 +54,25 @@ export const HomePage: React.FC<HomePageProps> = () => {
     meta,
     seo,
   } = resolvedPortfolioContent;
+
+  const hasHighlights =
+    achievements.length > 0 ||
+    certifications.length > 0 ||
+    activities.length > 0 ||
+    recommendations.length > 0;
+
+  const sectionIds = React.useMemo(
+    () => [
+      'hero',
+      'about',
+      'projects',
+      'skills',
+      ...(hasHighlights ? ['highlights'] : []),
+      'beyond-code',
+      'contact',
+    ],
+    [hasHighlights]
+  );
 
   // Initialize Lenis smooth scroll (respects reduced motion & flag)
   useSmoothScroll();
@@ -126,8 +143,8 @@ export const HomePage: React.FC<HomePageProps> = () => {
   useDocumentHead({
     title: seo?.siteTitle || `${personal.fullName} - CSE (AI & ML) Student Portfolio`,
     description: seo?.siteDescription || `Portfolio of ${personal.fullName}, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.`,
-    canonicalUrl: seo?.canonicalUrl || 'https://portfolio.example.com/',
-    ogImage: '/og-image.png',
+    canonicalUrl: seo?.canonicalUrl || 'https://portfolio-gilt-omega-10.vercel.app/',
+    ogImage: 'https://portfolio-gilt-omega-10.vercel.app/og-image.png',
     ogType: 'website',
     jsonLd: {
       '@context': 'https://schema.org',
@@ -135,7 +152,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
       name: personal.fullName,
       jobTitle: 'CSE (AI & ML) Student',
       description: `Portfolio of ${personal.fullName}, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.`,
-      url: seo?.canonicalUrl || 'https://portfolio.example.com',
+      url: seo?.canonicalUrl || 'https://portfolio-gilt-omega-10.vercel.app',
       sameAs: sameAsLinks.length > 0 ? sameAsLinks : undefined,
       alumniOf: {
         '@type': 'CollegeOrUniversity',
@@ -191,6 +208,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
           preferredName={personal.preferredName}
           resumeUrl={resumeUrl}
           onDownloadResume={trackResumeDownload}
+          hasHighlights={hasHighlights}
         />
 
         <MobileNav
@@ -199,6 +217,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
           preferredName={personal.preferredName}
           resumeUrl={resumeUrl}
           onDownloadResume={trackResumeDownload}
+          hasHighlights={hasHighlights}
         />
       </div>
 
@@ -254,17 +273,22 @@ export const HomePage: React.FC<HomePageProps> = () => {
             />
           </div>
 
-          <SectionDivider />
+          {hasHighlights && (
+            <>
+              <SectionDivider />
+              {/* Section Band 4: Highlights (transparent) */}
+              <div className="w-full bg-transparent">
+                <HighlightsSection
+                  achievements={achievements}
+                  certifications={certifications}
+                  activities={activities}
+                  recommendations={recommendations}
+                />
+              </div>
+            </>
+          )}
 
-          {/* Section Band 4: Highlights (transparent) */}
-          <div className="w-full bg-transparent">
-            <HighlightsSection
-              achievements={achievements}
-              certifications={certifications}
-              activities={activities}
-              recommendations={recommendations}
-            />
-          </div>
+          <SectionDivider />
 
           {/* Find me online: Glass Dock Band */}
           <div className="w-full bg-transparent">
@@ -302,6 +326,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
         meta={meta}
         social={social}
         resumeUrl={resumeUrl}
+        hasHighlights={hasHighlights}
       />
 
       {/* Back to Top Quick Action */}

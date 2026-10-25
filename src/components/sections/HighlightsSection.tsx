@@ -39,7 +39,6 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
   recommendations,
   className = '',
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>('achievements');
   const containerRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -67,7 +66,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  const tabs: { key: TabKey; label: string; count: number; icon: React.ElementType }[] = [
+  const allTabs: { key: TabKey; label: string; count: number; icon: React.ElementType }[] = [
     {
       key: 'achievements',
       label: 'Achievements',
@@ -88,6 +87,17 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
     },
   ];
 
+  // If an entire Highlights tab has only placeholders (count === 0), hide the tab
+  const tabs = allTabs.filter((t) => t.count > 0);
+
+  const [activeTab, setActiveTab] = useState<TabKey>(tabs[0]?.key || 'achievements');
+
+  useEffect(() => {
+    if (tabs.length > 0 && !tabs.some((t) => t.key === activeTab)) {
+      setActiveTab(tabs[0].key);
+    }
+  }, [tabs, activeTab]);
+
   const springConfig = {
     type: 'spring',
     stiffness: 400,
@@ -100,12 +110,18 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
     return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3';
   };
 
+  // If the whole section has only placeholders, hide the section
+  const hasContent = tabs.length > 0 || (recommendations && recommendations.length > 0);
+  if (!hasContent) {
+    return null;
+  }
+
   return (
     <section
       id="highlights"
       ref={containerRef}
       aria-label="Highlights"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
     >
       {/* 04 "Career *highlights*" */}
       <SectionHeading
@@ -117,11 +133,11 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
       />
 
       {/* Segmented Control Pill Bar */}
-      <div className="mb-10 flex items-center justify-start">
+      <div className="mb-10 w-full max-w-full overflow-x-auto no-scrollbar py-1 flex items-center justify-start">
         <div
           role="tablist"
           aria-label="Highlights Categories"
-          className="inline-flex p-1.5 rounded-pill bg-[#0A0A0C]/90 border border-white/10 backdrop-blur-xl shadow-lg select-none"
+          className="inline-flex p-1 sm:p-1.5 rounded-pill bg-[#0A0A0C]/90 border border-white/10 backdrop-blur-xl shadow-lg select-none max-w-full"
         >
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
@@ -136,7 +152,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                 aria-controls={`tabpanel-${tab.key}`}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => setActiveTab(tab.key)}
-                className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-pill text-[14px] font-medium tracking-[-0.01em] transition-colors duration-200 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                className={`relative px-3 sm:px-5 py-2 sm:py-2.5 rounded-pill text-[12px] sm:text-[14px] font-medium tracking-[-0.01em] transition-colors duration-200 flex items-center gap-1.5 sm:gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shrink-0 ${
                   isActive ? 'text-white' : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
                 }`}
               >

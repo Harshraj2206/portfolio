@@ -72,6 +72,9 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
 
         {/* Modal Window Container */}
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="case-study-title"
           initial={{ opacity: 0, scale: 0.96, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 16 }}
@@ -128,7 +131,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
                 ))}
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
+              <h2 id="case-study-title" className="text-3xl sm:text-4xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
                 {project.title}
               </h2>
 

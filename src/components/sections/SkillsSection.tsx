@@ -169,7 +169,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       id="skills"
       ref={containerRef}
       aria-label="Skills"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
     >
       {/* 03 "Core *skills*" */}
       <SectionHeading
@@ -231,8 +231,8 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           </div>
         )}
 
-        {/* Bento Row: auto-height tiles fitting content (24px padding), columns sized to content (1fr 1.35fr 0.9fr 1.75fr) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1.35fr_0.9fr_1.75fr] gap-4 items-start">
+        {/* Bento Row: stack into one column on phones & tablets, 4-col on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.35fr_0.9fr_1.75fr] gap-4 items-start">
           {/* 1. Working Knowledge */}
           <div
             className="transition-all duration-700 ease-out"

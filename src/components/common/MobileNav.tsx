@@ -19,6 +19,7 @@ interface MobileNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
+  hasHighlights?: boolean;
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({
@@ -27,16 +28,17 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
+  hasHighlights = false,
 }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
-  // All 6 sections
+  // All navigation sections
   const allSections = [
     { id: 'about', label: 'About', href: '#about', icon: User },
     { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
     { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
-    { id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award },
+    ...(hasHighlights ? [{ id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award }] : []),
     { id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code', icon: Sparkles },
     { id: 'contact', label: 'Contact', href: '#contact', icon: Mail },
   ];
@@ -46,13 +48,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     { id: 'about', label: 'About', href: '#about', icon: User },
     { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
     { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
-    { id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award },
+    ...(hasHighlights
+      ? [{ id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award }]
+      : [{ id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code', icon: Sparkles }]),
     { id: 'more', label: 'More', href: '#more', icon: MoreHorizontal, isDrawerTrigger: true },
   ];
 
   // Determine which bottom bar item is active
-  // If activeSection is beyond-code or contact, it highlights the "More" item!
-  const isUnderMore = activeSection === 'beyond-code' || activeSection === 'contact';
+  const isUnderMore = !bottomBarItems.some((item) => item.id === activeSection) && activeSection !== 'hero';
   const activeNavId = isUnderMore
     ? 'more'
     : bottomBarItems.some((item) => item.id === activeSection)
@@ -65,39 +68,51 @@ export const MobileNav: React.FC<MobileNavProps> = ({
 
   return (
     <>
-      {/* Top Compact Mobile Bar */}
+      {/* Top Compact Mobile Bar with Quick Reachable Resume Button */}
       <header
         data-sound-group="nav"
-        className="fixed top-3 left-3 right-3 z-50 md:hidden flex items-center justify-between px-4 py-2 rounded-pill glass-nav shadow-lg"
+        className="fixed top-3 left-2.5 right-2.5 sm:left-4 sm:right-4 z-50 md:hidden pointer-events-auto flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 rounded-pill glass-nav shadow-lg"
       >
         <a
           href="#hero"
           onClick={() => onSelectSection?.('hero')}
-          className="flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
+          className="flex items-center gap-2 text-[14px] sm:text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
           aria-label={`${preferredName} home`}
         >
-          <div className="w-6 h-6 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white text-[12px] font-semibold">
+          <div className="w-6 h-6 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white text-[12px] font-semibold shrink-0">
             {preferredName[0] || 'H'}
           </div>
-          <span className="font-medium tracking-[-0.01em]">{preferredName}</span>
+          <span className="font-medium tracking-[-0.01em] truncate max-w-[100px] sm:max-w-none">{preferredName}</span>
         </a>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Quick Reachable Resume Button */}
+          <a
+            href={resumeUrl}
+            download="Harsh_Raj_Resume.pdf"
+            onClick={onDownloadResume}
+            className="nav-resume-btn flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[14px] font-medium tracking-[-0.01em] min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none"
+            aria-label="Download Resume"
+          >
+            <FileDown className="w-3.5 h-3.5 shrink-0" />
+            <span>Resume</span>
+          </a>
+
           <button
             onClick={() => setSheetOpen(true)}
             aria-label="Open navigation menu"
-            className="p-1.5 rounded-full text-[#9A9AA0] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#9A9AA0] hover:text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <MoreHorizontal className="w-5 h-5" />
           </button>
         </div>
       </header>
 
-      {/* Bottom Floating Glass Tab Bar with 5 items */}
+      {/* Bottom Floating Glass Tab Bar with 5 items (min-h-[44px] touch target) */}
       <nav
         data-sound-group="nav"
         aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-50 md:hidden flex items-center justify-between p-1 rounded-pill glass-nav shadow-2xl"
+        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-50 md:hidden pointer-events-auto flex items-center justify-between p-1 rounded-pill glass-nav shadow-2xl"
       >
         {bottomBarItems.map((item) => {
           const Icon = item.icon;
@@ -110,7 +125,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 onClick={() => setSheetOpen(true)}
                 aria-label="Open full menu"
                 aria-expanded={sheetOpen}
-                className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   isActive
                     ? 'text-[#F5F5F7]'
                     : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
@@ -139,7 +154,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
                 onSelectSection?.(item.id);
               }}
               aria-current={isActive ? 'true' : undefined}
-              className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+              className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                 isActive
                   ? 'text-[#F5F5F7]'
                   : 'text-[#9A9AA0] hover:text-[#F5F5F7]'

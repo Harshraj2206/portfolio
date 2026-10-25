@@ -15,6 +15,7 @@ interface PillNavProps {
   preferredName: string;
   resumeUrl: string;
   onDownloadResume: () => void;
+  hasHighlights?: boolean;
 }
 
 export const PillNav: React.FC<PillNavProps> = ({
@@ -23,13 +24,13 @@ export const PillNav: React.FC<PillNavProps> = ({
   preferredName,
   resumeUrl,
   onDownloadResume,
+  hasHighlights = false,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Exactly 6 links matching desktop navigation sections
-  const navItems: NavItem[] = [
+  const baseNavItems: NavItem[] = [
     { id: 'about', label: 'About', href: '#about' },
     { id: 'projects', label: 'Projects', href: '#projects' },
     { id: 'skills', label: 'Skills', href: '#skills' },
@@ -37,6 +38,10 @@ export const PillNav: React.FC<PillNavProps> = ({
     { id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code' },
     { id: 'contact', label: 'Contact', href: '#contact' },
   ];
+
+  const navItems = hasHighlights
+    ? baseNavItems
+    : baseNavItems.filter((item) => item.id !== 'highlights');
 
   useEffect(() => {
     const handleScroll = () => {

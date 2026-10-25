@@ -159,7 +159,7 @@ export const SocialDock: React.FC<SocialDockProps> = ({
     <section
       data-sound-group="social"
       aria-label="Find me online"
-      className={`max-w-[1120px] mx-auto px-6 sm:px-8 mb-24 md:mb-32 flex flex-col items-center justify-center text-center ${className}`}
+      className={`max-w-[1120px] mx-auto px-4 sm:px-6 md:px-8 mb-16 md:mb-24 flex flex-col items-center justify-center text-center ${className}`}
     >
       {/* Small subtle line above: "Find me online" */}
       <div className="mb-4 flex items-center gap-3">
@@ -174,7 +174,7 @@ export const SocialDock: React.FC<SocialDockProps> = ({
       <div
         ref={dockRef}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-pill apple-glass-chip !shadow-2xl relative"
+        className="inline-flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 rounded-pill apple-glass-chip !shadow-2xl relative max-w-full"
       >
         {activeItems.map((item, idx) => {
           const isTarget = activeIndex === idx;
@@ -215,15 +215,15 @@ export const SocialDock: React.FC<SocialDockProps> = ({
                     setTimeout(() => setDemoTooltipId(null), 2500);
                   }
                 }}
-                className={`w-14 h-14 rounded-full flex items-center justify-center text-[#F5F5F7] apple-glass-chip apple-glass-chip-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors duration-200 ${
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-[#F5F5F7] apple-glass-chip apple-glass-chip-interactive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors duration-200 ${
                   item.isDemo ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'
                 }`}
               >
-                {/* 28px icon inside 56px circle */}
+                {/* 24px icon on mobile, 28px on sm+ */}
                 <svg
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="w-7 h-7 text-[#F5F5F7]"
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#F5F5F7]"
                   aria-hidden="true"
                 >
                   <path d={item.svgPath} />

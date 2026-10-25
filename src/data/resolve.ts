@@ -127,54 +127,45 @@ export function resolvePortfolioContent(
     };
   });
 
-  // If real projects has fewer than 3 projects, append demo third project
-  if (real.projects.length < 3 && showDemo) {
-    resolvedProjects.push({
-      ...demoThirdProject,
-      isDemo: true,
-      demoFields: {
-        role: true,
-        techStack: true,
-        results: true,
-        context: true,
-        challenges: true,
-        githubUrl: true,
-        liveDemoUrl: true,
-      },
-    });
-  }
+  const hasBracketedPlaceholder = (str?: string): boolean => {
+    if (!str) return false;
+    return /\[.*?\]/.test(str);
+  };
 
-  // 2. Achievements Array Resolution
-  // Rule: If real array has at least 1 item, use ONLY real array. Otherwise demo array.
+  // 1. Projects: Only include real projects (hide demo third project; preserved in demo.ts)
+  // (resolvedProjects contains real projects only)
+
+  // 2. Achievements Array Resolution: hide entries containing bracketed placeholders
   let resolvedAchievements: AchievementItem[] = [];
-  if (real.achievements && real.achievements.length > 0) {
-    resolvedAchievements = real.achievements.map((item) => ({ ...item, isDemo: false }));
-  } else if (showDemo) {
-    resolvedAchievements = demoAchievements.map((item) => ({ ...item, isDemo: true }));
-  }
+  const rawAchievements = real.achievements && real.achievements.length > 0
+    ? real.achievements.map((item) => ({ ...item, isDemo: false }))
+    : (showDemo ? demoAchievements.map((item) => ({ ...item, isDemo: true })) : []);
+  resolvedAchievements = rawAchievements.filter(
+    (item) => !hasBracketedPlaceholder(item.title) && !hasBracketedPlaceholder(item.eventOrOrg) && !hasBracketedPlaceholder(item.year)
+  );
 
-  // 3. Certifications Array Resolution
+  // 3. Certifications Array Resolution: hide entries containing bracketed placeholders
   let resolvedCertifications: CertificationItem[] = [];
-  if (real.certifications && real.certifications.length > 0) {
-    resolvedCertifications = real.certifications.map((item) => ({ ...item, isDemo: false }));
-  } else if (showDemo) {
-    resolvedCertifications = demoCertifications.map((item) => ({ ...item, isDemo: true }));
-  }
+  const rawCertifications = real.certifications && real.certifications.length > 0
+    ? real.certifications.map((item) => ({ ...item, isDemo: false }))
+    : (showDemo ? demoCertifications.map((item) => ({ ...item, isDemo: true })) : []);
+  resolvedCertifications = rawCertifications.filter(
+    (item) => !hasBracketedPlaceholder(item.title) && !hasBracketedPlaceholder(item.issuer) && !hasBracketedPlaceholder(item.date)
+  );
 
-  // 4. Activities Array Resolution
+  // 4. Activities Array Resolution: hide entries containing bracketed placeholders
   let resolvedActivities: ActivityItem[] = [];
-  if (real.activities && real.activities.length > 0) {
-    resolvedActivities = real.activities.map((item) => ({ ...item, isDemo: false }));
-  } else if (showDemo) {
-    resolvedActivities = demoActivities.map((item) => ({ ...item, isDemo: true }));
-  }
+  const rawActivities = real.activities && real.activities.length > 0
+    ? real.activities.map((item) => ({ ...item, isDemo: false }))
+    : (showDemo ? demoActivities.map((item) => ({ ...item, isDemo: true })) : []);
+  resolvedActivities = rawActivities.filter(
+    (item) => !hasBracketedPlaceholder(item.title) && !hasBracketedPlaceholder(item.dates) && !hasBracketedPlaceholder(item.role)
+  );
 
-  // 5. Recommendations Array Resolution
+  // 5. Recommendations Array Resolution: keep real recommendations if present
   let resolvedRecommendations: RecommendationItem[] = [];
   if (real.recommendations && real.recommendations.length > 0) {
     resolvedRecommendations = real.recommendations.map((item) => ({ ...item, isDemo: false }));
-  } else if (showDemo) {
-    resolvedRecommendations = demoRecommendations.map((item) => ({ ...item, isDemo: true }));
   }
 
   // 6. Social Configuration Resolution

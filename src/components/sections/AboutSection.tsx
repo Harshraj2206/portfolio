@@ -75,7 +75,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       id="about"
       ref={containerRef}
       aria-label="About me"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
     >
       {/* 01 "About *me*" */}
       <SectionHeading
@@ -99,7 +99,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           <GlassCard
             variant="default"
             radius="large"
-            className="flex-1 flex flex-col justify-between space-y-6 p-8 sm:p-10"
+            className="flex-1 flex flex-col justify-between space-y-6 p-5 sm:p-8 md:p-10"
           >
             <div className="space-y-5">
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
@@ -110,7 +110,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               {about.storyParagraphs.map((para, i) => (
                 <p
                   key={i}
-                  className="text-[18px] text-[#B4B4BA] leading-[1.6] font-normal"
+                  className="text-[16px] sm:text-[18px] text-[#B4B4BA] leading-[1.6] font-normal"
                 >
                   {para}
                 </p>
@@ -131,7 +131,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           <GlassCard
             variant="default"
             radius="large"
-            className="flex-1 flex flex-col justify-between p-7 sm:p-9 space-y-4"
+            className="flex-1 flex flex-col justify-between p-5 sm:p-7 md:p-9 space-y-4"
           >
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
@@ -173,7 +173,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <GlassCard
               variant="default"
               radius="large"
-              className="flex-1 flex flex-col justify-between p-7 sm:p-9 space-y-5"
+              className="flex-1 flex flex-col justify-between p-5 sm:p-7 md:p-9 space-y-5"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
@@ -195,7 +195,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                         return (
                           <div
                             key={idx}
-                            className="inline-flex items-center gap-2"
+                            className="flex flex-wrap items-center gap-2"
                           >
                             <Chip variant="default">{name}</Chip>
                             {status && (

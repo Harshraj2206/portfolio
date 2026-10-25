@@ -165,14 +165,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         variant="default"
         radius="large"
         hoverEffect={false}
-        className="p-8 sm:p-10 md:p-12 glass-card-opaque overflow-hidden"
+        className="p-5 sm:p-8 md:p-12 glass-card-opaque overflow-hidden"
       >
         <div
           className="transition-opacity duration-200 ease-out"
           style={{ opacity: contentOpacity }}
         >
           <div
-            className={`grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center`}
+            className={`grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center`}
           >
           {/* macOS Window Frame Image Area (~60% / 7 cols) */}
           <div
@@ -219,10 +219,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
             {/* Title & One-liner in AA Contrast */}
             <div className="space-y-3">
-              <h3 className="text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
                 {project.title}
               </h3>
-              <p className="text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
+              <p className="text-[15px] sm:text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
                 {project.oneLiner || project.outcome}
               </p>
             </div>

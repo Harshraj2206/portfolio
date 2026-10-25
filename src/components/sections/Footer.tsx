@@ -7,6 +7,7 @@ interface FooterProps {
   meta: PortfolioContent['meta'];
   social?: SocialConfig;
   resumeUrl: string;
+  hasHighlights?: boolean;
 }
 
 const BRAND_SVGS = {
@@ -20,8 +21,8 @@ const BRAND_SVGS = {
     'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
 };
 
-export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUrl }) => {
-  const navLinks = [
+export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUrl, hasHighlights = false }) => {
+  const baseNavLinks = [
     { label: 'About', href: '#about' },
     { label: 'Projects', href: '#projects' },
     { label: 'Skills', href: '#skills' },
@@ -30,6 +31,10 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
     { label: 'Contact', href: '#contact' },
     { label: 'Resume', href: resumeUrl, isExternal: true, download: 'Harsh_Raj_Resume.pdf' },
   ];
+
+  const navLinks = hasHighlights
+    ? baseNavLinks
+    : baseNavLinks.filter((link) => link.href !== '#highlights');
 
   const socialItems = [
     { id: 'github', label: 'GitHub', url: social?.github?.url || 'https://github.com/Harshraj2206', enabled: true, isDemo: false, path: BRAND_SVGS.github },
@@ -41,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
   return (
     <footer className="relative border-t border-white/10 bg-transparent pt-16 pb-12 overflow-hidden">
       {/* Top Controls & Navigation: max-w-[1200px] & 1360px on >=1600px */}
-      <div className="relative z-10 w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 mb-16 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="relative z-10 w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 mb-12 sm:mb-16 flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Left Side: Brand & Copyright */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-2">
           <div className="flex items-center gap-2.5 text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7]">
@@ -54,9 +59,9 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
             © {meta.copyrightYear} {personal.fullName}. CSE (AI &amp; ML) Student.
           </div>
 
-          {/* Small Social Icons */}
+          {/* Accessible Social Icons: min 44x44px tap target, never overlap */}
           {socialItems.length > 0 && (
-            <div data-sound-group="social" className="flex items-center gap-2 pt-1.5">
+            <div data-sound-group="social" className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 pt-2">
               {socialItems.map((item) => (
                 <a
                   key={item.id}
@@ -64,7 +69,7 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open ${item.label} profile`}
-                  className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/12 border border-white/10 flex items-center justify-center text-[#9A9AA0] hover:text-white transition-colors"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.04] hover:bg-white/12 border border-white/10 flex items-center justify-center text-[#9A9AA0] hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                     <path d={item.path} />
@@ -75,10 +80,10 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
           )}
         </div>
 
-        {/* Center: Sitemap Links */}
+        {/* Center: Sitemap Links with touch-friendly spacing */}
         <nav
           aria-label="Footer Sitemap"
-          className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 text-[14px] sm:text-[15px] font-medium tracking-[-0.01em] text-[#9A9AA0]"
+          className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-[14px] sm:text-[15px] font-medium tracking-[-0.01em] text-[#9A9AA0]"
         >
           {navLinks.map((link) => (
             <a
@@ -87,7 +92,7 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
               download={link.download}
               target={link.isExternal ? '_blank' : undefined}
               rel={link.isExternal ? 'noopener noreferrer' : undefined}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors py-1.5 sm:py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
             >
               {link.label}
             </a>

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /photography
 Disallow: /art-craft
 
-Sitemap: https://portfolio.example.com/sitemap.xml
+Sitemap: https://portfolio-gilt-omega-10.vercel.app/sitemap.xml

@@ -175,7 +175,7 @@ export const AmbientBackground: React.FC = () => {
 
         {/* Right-Margin Spotlight: illuminates right margin prominently */}
         <div
-          className={`absolute -right-[6vw] top-[22vh] w-[70vw] h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full ${
+          className={`absolute -right-[6vw] top-[22dvh] w-[70vw] h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full ${
             prefersReducedMotion ? '' : 'ambient-spotlight-2'
           }`}
           style={{
@@ -185,7 +185,7 @@ export const AmbientBackground: React.FC = () => {
 
         {/* Left-Margin Spotlight: illuminates left margin prominently */}
         <div
-          className={`absolute -left-[6vw] bottom-[15vh] w-[70vw] h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full ${
+          className={`absolute -left-[6vw] bottom-[15dvh] w-[70vw] h-[70vw] max-w-[1200px] max-h-[1200px] rounded-full ${
             prefersReducedMotion ? '' : 'ambient-spotlight-3'
           }`}
           style={{

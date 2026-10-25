@@ -94,6 +94,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (status === 'submitting') return;
     if (formData.honeypot) return;
     if (!validate()) return;
 
@@ -157,7 +158,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           ? 'none'
           : 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-6 sm:px-8 py-[64px] lg:py-[96px] scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
     >
       {/* 06 "Let's *talk*" - Big Centered Headline */}
       <SectionHeading
@@ -176,7 +177,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             variant="default"
             radius="large"
             hoverEffect={false}
-            className="p-8 sm:p-10 flex flex-col"
+            className="p-6 sm:p-8 md:p-10 flex flex-col"
           >
             {/* Paragraph and direct contact description */}
             <div className="space-y-4">
@@ -266,7 +267,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             variant="default"
             radius="large"
             hoverEffect={false}
-            className="p-8 sm:p-10 space-y-6"
+            className="p-6 sm:p-8 md:p-10 space-y-6"
           >
             <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#F5F5F7]">
               Send a direct message
@@ -380,7 +381,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
-                  className="inline-flex items-center justify-center gap-2 px-8 h-[52px] rounded-full bg-white text-black font-semibold text-[15px] tracking-[-0.01em] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 h-[52px] rounded-full bg-white text-black font-semibold text-[15px] tracking-[-0.01em] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {status === 'submitting' ? (
                     <>

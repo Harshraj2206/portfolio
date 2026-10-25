@@ -16,7 +16,7 @@ export const PhotographyPage: React.FC = () => {
   useDocumentHead({
     title: 'Photography & Videography — Harsh Raj',
     description: 'Photography and videography portfolio of Harsh Raj.',
-    canonicalUrl: 'https://portfolio.example.com/photography',
+    canonicalUrl: 'https://portfolio-gilt-omega-10.vercel.app/photography',
     noindex: true,
   });
 
