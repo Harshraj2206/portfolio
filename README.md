@@ -180,7 +180,56 @@ creative: {
 
 ---
 
-### 9. Replacing the Resume PDF
+### 9. How to Add Photos and Videos (`/photography`)
+
+The photography showcase at `/photography` features a 3D cylindrical gallery ring with camera motion, inertia-driven drag/wheel controls, velocity blur, and an expanding lightbox.
+
+#### 📁 Dropping Media Files
+Simply drop any photos or video clips into:
+```
+src/assets/photography/
+```
+- **Supported Formats:** Images (`.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`) and videos (`.mp4`, `.webm`).
+- **Discovery:** Files are automatically discovered via `import.meta.glob` and ordered by natural filename sorting (e.g., `frame_01.jpg`, `frame_02.jpg`, `frame_10.jpg`).
+- **Demo vs Real Data:** If the directory has no media files, the ring renders 14 elegant glass demo placeholders with a visible "Demo" chip. **Adding real files automatically replaces ALL demo placeholders.**
+
+#### 📝 Adding Captions & Metadata (`captions.json`)
+You can optionally provide a `src/assets/photography/captions.json` file to specify rich titles, captions, dates, and locations for each item:
+```json
+{
+  "campus_golden_hour.jpg": {
+    "title": "Jain Global Campus at Dusk",
+    "caption": "Golden light striking the engineering quadrangle after monsoon showers.",
+    "year": "2024",
+    "location": "Bengaluru, KA"
+  },
+  "turing_hackathon_recap.mp4": {
+    "title": "Turing Club 24h Hackathon Recap",
+    "caption": "Highlights reel capturing team demos, late-night debugging, and prize ceremonies.",
+    "year": "2024",
+    "location": "Turing Lab"
+  }
+}
+```
+*Note: Any file without an entry in `captions.json` automatically generates a clean fallback title and frame counter.*
+
+#### 🔄 How the 3D Ring Automatically Adjusts
+- **Zero Card Overlap:** For any count $N$ from 1 to 200+, the ring geometry dynamically computes $M = \max(N, 14)$ and radius $R = (W + G) / (2 \cdot \tan(\pi / M))$. Spacing is guaranteed never to overlap.
+- **Repeat Padding for Low $N$:** When $N < 14$, items repeat around the cylinder so the amphitheater curvature remains visually complete.
+- **Performance Culling:** Cards outside $\pm 110^\circ$ of view are culled from DOM painting, maintaining 60 FPS even with high card counts. Videos off-screen are paused and unloaded automatically.
+
+#### ⚙️ Customizing Sizing, Speed & Physics
+You can tune all visual and physics parameters in `src/config/gallery.ts`:
+- `CARD_ASPECT`: Aspect ratio (default `9 / 16`).
+- `AUTO_ROTATE`: Idle rotation speed in degrees per second (default `6`).
+- `INTRO_SECONDS`: Duration of intro timeline animation (default `4.2`).
+- `MIN_RING_CARDS`: Minimum angular divisions for the ring (default `14`).
+- `MOTION_BLUR`: Toggle velocity-proportional blur and skew (default `true`).
+- `PHYSICS`: Friction damping (`0.92`), touch sensitivity, and drag multipliers.
+
+---
+
+### 10. Replacing the Resume PDF
 The repository ships with a clean one-page demo resume with a visible "DEMO" watermark at:
 ```
 public/resume.pdf

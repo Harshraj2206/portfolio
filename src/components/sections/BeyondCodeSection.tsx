@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { CreativeSectionData } from '../../data/content.schema';
 import { SectionHeading } from '../common/SectionHeading';
 import { GlassCard } from '../common/GlassCard';
-import { Chip } from '../common/Chip';
 import { Camera, Palette, ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
@@ -32,7 +32,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     );
 
     if (containerRef.current) {
@@ -50,10 +50,14 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
     {
       ...photography,
       icon: Camera,
+      buttonText: 'View photo & video',
+      url: '/photography',
     },
     {
       ...artCraft,
       icon: Palette,
+      buttonText: 'View painting & craft',
+      url: '/art-craft',
     },
   ];
 
@@ -76,12 +80,11 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
         {cards.map((card, idx) => {
           const Icon = card.icon;
-          const isReady = Boolean(card.ready);
 
           return (
             <div
               key={card.title}
-              className="flex flex-col transition-all duration-700 ease-out"
+              className="flex flex-col h-full transition-all duration-700 ease-out"
               style={{
                 opacity: prefersReducedMotion || inView ? 1 : 0,
                 transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
@@ -92,7 +95,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                 variant="default"
                 radius="large"
                 hoverEffect={false}
-                className="flex-1 flex flex-col justify-between space-y-6 sm:space-y-8 p-6 sm:p-8 md:p-10 relative overflow-hidden"
+                className="flex-1 flex flex-col justify-between p-6 sm:p-8 md:p-10 relative overflow-hidden h-full"
               >
                 {/* Soft blurred monochrome texture inside tile */}
                 <div
@@ -100,7 +103,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                   className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.06)_0%,transparent_70%)] blur-2xl"
                 />
 
-                <div className="space-y-4 sm:space-y-5 relative z-10">
+                <div className="space-y-4 sm:space-y-5 relative z-10 flex-1">
                   {/* Neutral Line Icon */}
                   <div className="w-12 h-12 rounded-[16px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/90 shadow-sm">
                     <Icon className="w-6 h-6" />
@@ -117,25 +120,17 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                   </p>
                 </div>
 
-                {/* Action Button: Disabled "Coming soon" state if ready is false */}
-                <div className="pt-2 relative z-10">
-                  {isReady ? (
-                    <Chip
-                      variant="button"
-                      as="a"
-                      href={card.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${card.buttonText} (opens in new tab)`}
-                    >
-                      <span>{card.buttonText}</span>
-                      <ArrowUpRight className="w-4 h-4 text-white/70 shrink-0" />
-                    </Chip>
-                  ) : (
-                    <Chip variant="badge">
-                      Coming soon
-                    </Chip>
-                  )}
+                {/* Action Button: White pill with dark text, bottom aligned at equal height */}
+                <div className="mt-8 pt-2 relative z-10 flex items-center">
+                  <Link
+                    to={card.url}
+                    data-sound="button"
+                    className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white text-[#0A0A0C] text-[14px] sm:text-[15px] font-semibold py-[12px] px-[22px] transition-all duration-250 ease-out hover:-translate-y-[2px] hover:bg-[#F5F5F7] hover:shadow-[0_4px_20px_rgba(255,255,255,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0C]"
+                    aria-label={card.buttonText}
+                  >
+                    <span className="whitespace-nowrap">{card.buttonText}</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#0A0A0C] shrink-0 transition-transform duration-250 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </Link>
                 </div>
               </GlassCard>
             </div>

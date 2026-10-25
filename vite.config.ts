@@ -9,14 +9,10 @@ export default defineConfig({
         '**/design/**',
         '**/scripts/**',
         '**/.git/**',
-        '**/public/**',
-        '**/*.png',
-        '**/*.jpg',
-        '**/*.jpeg',
-        '**/*.webp',
-        '**/*.gif',
-        '**/*.pdf',
-        '**/*.json',
+        '**/screenshots_verification/**',
+        '**/public/resume.pdf',
+        '**/photography page design.mp4',
+        '**/src/assets/photography/**',
       ],
     },
   },
@@ -25,11 +21,19 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'motion': ['framer-motion'],
-          'three': ['three'],
-          'gsap': ['gsap'],
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+            return 'vendor';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'motion';
+          }
+          if (id.includes('node_modules/three')) {
+            return 'three';
+          }
+          if (id.includes('node_modules/gsap')) {
+            return 'gsap';
+          }
         }
       }
     }
