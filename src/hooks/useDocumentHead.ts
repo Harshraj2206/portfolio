@@ -14,7 +14,7 @@ export function useDocumentHead({
   title,
   description,
   canonicalUrl,
-  ogImage = 'https://portfolio-gilt-omega-10.vercel.app/og-image.png',
+  ogImage = 'https://portfolio-five-smoky-5uetdazjey.vercel.app/og-image.png',
   ogType = 'website',
   jsonLd,
   noindex = false,
@@ -53,7 +53,7 @@ export function useDocumentHead({
     if (ogImage) {
       const fullOgImage = ogImage.startsWith('http')
         ? ogImage
-        : `https://portfolio-gilt-omega-10.vercel.app${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
+        : `https://portfolio-five-smoky-5uetdazjey.vercel.app${ogImage.startsWith('/') ? '' : '/'}${ogImage}`;
       setMetaTag('property', 'og:image', fullOgImage);
       setMetaTag('name', 'twitter:image', fullOgImage);
     }

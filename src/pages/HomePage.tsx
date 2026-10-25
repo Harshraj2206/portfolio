@@ -143,8 +143,8 @@ export const HomePage: React.FC<HomePageProps> = () => {
   useDocumentHead({
     title: seo?.siteTitle || `${personal.fullName} - CSE (AI & ML) Student Portfolio`,
     description: seo?.siteDescription || `Portfolio of ${personal.fullName}, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.`,
-    canonicalUrl: seo?.canonicalUrl || 'https://portfolio-gilt-omega-10.vercel.app/',
-    ogImage: 'https://portfolio-gilt-omega-10.vercel.app/og-image.png',
+    canonicalUrl: seo?.canonicalUrl || 'https://portfolio-five-smoky-5uetdazjey.vercel.app/',
+    ogImage: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/og-image.png',
     ogType: 'website',
     jsonLd: {
       '@context': 'https://schema.org',
@@ -152,7 +152,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
       name: personal.fullName,
       jobTitle: 'CSE (AI & ML) Student',
       description: `Portfolio of ${personal.fullName}, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.`,
-      url: seo?.canonicalUrl || 'https://portfolio-gilt-omega-10.vercel.app',
+      url: seo?.canonicalUrl || 'https://portfolio-five-smoky-5uetdazjey.vercel.app',
       sameAs: sameAsLinks.length > 0 ? sameAsLinks : undefined,
       alumniOf: {
         '@type': 'CollegeOrUniversity',

@@ -16,7 +16,7 @@ export const ArtCraftPage: React.FC = () => {
   useDocumentHead({
     title: 'Art & Craft — Harsh Raj',
     description: 'Art and handmade craft portfolio of Harsh Raj.',
-    canonicalUrl: 'https://portfolio-gilt-omega-10.vercel.app/art-craft',
+    canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/art-craft',
     noindex: true,
   });
 

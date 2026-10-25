@@ -56,12 +56,12 @@ export const ProjectPage: React.FC = () => {
       ? project.oneLiner || project.outcome || ''
       : 'The requested engineering case study does not exist.',
     canonicalUrl: project
-      ? `https://portfolio-gilt-omega-10.vercel.app/projects/${project.id}`
-      : 'https://portfolio-gilt-omega-10.vercel.app/404',
+      ? `https://portfolio-five-smoky-5uetdazjey.vercel.app/projects/${project.id}`
+      : 'https://portfolio-five-smoky-5uetdazjey.vercel.app/404',
     ogType: 'article',
     ogImage: project?.image
-      ? (project.image.startsWith('http') ? project.image : `https://portfolio-gilt-omega-10.vercel.app${project.image}`)
-      : 'https://portfolio-gilt-omega-10.vercel.app/og-image.png',
+      ? (project.image.startsWith('http') ? project.image : `https://portfolio-five-smoky-5uetdazjey.vercel.app${project.image}`)
+      : 'https://portfolio-five-smoky-5uetdazjey.vercel.app/og-image.png',
   });
 
   if (!project || !project.caseStudy) {

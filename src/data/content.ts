@@ -88,7 +88,7 @@ export const portfolioContent: PortfolioContent = {
   seo: {
     siteTitle: "Harsh Raj - CSE (AI & ML) Student Portfolio",
     siteDescription: "Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.",
-    canonicalUrl: "https://portfolio-gilt-omega-10.vercel.app",
+    canonicalUrl: "https://portfolio-five-smoky-5uetdazjey.vercel.app",
     keywords: [
       "Harsh Raj",
       "LandSafe",
