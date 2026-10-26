@@ -144,6 +144,9 @@ export interface AchievementItem {
   year: string;
   /** One-line outcome, e.g. "Finalist / Top 10" */
   result: string;
+  /** Optional detailed outcome or description */
+  detail?: string;
+  description?: string;
   /** Tagged true if this is demo data */
   isDemo?: boolean;
 }

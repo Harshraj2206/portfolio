@@ -158,7 +158,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           ? 'none'
           : 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-24 ${className}`}
     >
       {/* 06 "Let's *talk*" - Big Centered Headline */}
       <SectionHeading
@@ -297,15 +297,19 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     id="contact-name"
                     type="text"
                     required
+                    aria-invalid={errors.name ? 'true' : 'false'}
+                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Jane Doe"
                     className={`w-full px-4 py-3 rounded-[16px] bg-white/[0.05] border ${
-                      errors.name ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
-                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors`}
+                      errors.name ? 'border-[#FF6B6B]/60 focus:border-[#FF6B6B]' : 'border-white/[0.12] focus:border-white/30'
+                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 ${
+                      errors.name ? 'focus:ring-[#FF6B6B]/40' : 'focus:ring-white/50'
+                    } transition-colors`}
                   />
                   {errors.name && (
-                    <p className="text-[13px] text-white/70 font-sans">{errors.name}</p>
+                    <p id="contact-name-error" className="text-[13px] text-[#FF6B6B] font-sans font-medium" role="alert">{errors.name}</p>
                   )}
                 </div>
 
@@ -321,15 +325,19 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     id="contact-email"
                     type="email"
                     required
+                    aria-invalid={errors.email ? 'true' : 'false'}
+                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="jane@example.com"
                     className={`w-full px-4 py-3 rounded-[16px] bg-white/[0.05] border ${
-                      errors.email ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
-                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors`}
+                      errors.email ? 'border-[#FF6B6B]/60 focus:border-[#FF6B6B]' : 'border-white/[0.12] focus:border-white/30'
+                    } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 ${
+                      errors.email ? 'focus:ring-[#FF6B6B]/40' : 'focus:ring-white/50'
+                    } transition-colors`}
                   />
                   {errors.email && (
-                    <p className="text-[13px] text-white/70 font-sans">{errors.email}</p>
+                    <p id="contact-email-error" className="text-[13px] text-[#FF6B6B] font-sans font-medium" role="alert">{errors.email}</p>
                   )}
                 </div>
               </div>
@@ -364,15 +372,19 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   id="contact-message"
                   required
                   rows={5}
+                  aria-invalid={errors.message ? 'true' : 'false'}
+                  aria-describedby={errors.message ? 'contact-message-error' : undefined}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Hi Harsh, I'd like to talk about..."
                   className={`w-full px-4 py-3 rounded-[20px] bg-white/[0.05] border ${
-                    errors.message ? 'border-white/50 focus:border-white' : 'border-white/[0.12] focus:border-white/30'
-                  } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 focus:ring-white/50 transition-colors resize-none`}
+                    errors.message ? 'border-[#FF6B6B]/60 focus:border-[#FF6B6B]' : 'border-white/[0.12] focus:border-white/30'
+                  } text-white placeholder-[#8E8E93] text-[16px] focus:outline-none focus:ring-2 ${
+                    errors.message ? 'focus:ring-[#FF6B6B]/40' : 'focus:ring-white/50'
+                  } transition-colors resize-none`}
                 />
                 {errors.message && (
-                  <p className="text-[13px] text-white/70 font-sans">{errors.message}</p>
+                  <p id="contact-message-error" className="text-[13px] text-[#FF6B6B] font-sans font-medium" role="alert">{errors.message}</p>
                 )}
               </div>
 

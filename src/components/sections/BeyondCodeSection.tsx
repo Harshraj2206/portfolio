@@ -66,7 +66,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
       id="beyond-code"
       ref={containerRef}
       aria-label="Beyond Code"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-24 ${className}`}
     >
       {/* 05 "Beyond *code*" */}
       <SectionHeading
@@ -95,7 +95,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                 variant="default"
                 radius="large"
                 hoverEffect={false}
-                className="flex-1 flex flex-col justify-between p-6 sm:p-8 md:p-10 relative overflow-hidden h-full"
+                className="flex-1 p-6 sm:p-8 md:p-10 relative overflow-hidden h-full flex flex-col"
               >
                 {/* Soft blurred monochrome texture inside tile */}
                 <div
@@ -103,34 +103,36 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                   className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.06)_0%,transparent_70%)] blur-2xl"
                 />
 
-                <div className="space-y-4 sm:space-y-5 relative z-10 flex-1">
-                  {/* Neutral Line Icon */}
-                  <div className="w-12 h-12 rounded-[16px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/90 shadow-sm">
-                    <Icon className="w-6 h-6" />
+                <div className="flex flex-col justify-between h-full w-full flex-1">
+                  <div className="space-y-4 sm:space-y-5 relative z-10 flex-1">
+                    {/* Neutral Line Icon */}
+                    <div className="w-12 h-12 rounded-[16px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-white/90 shadow-sm">
+                      <Icon className="w-6 h-6" />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
+                      {card.title}
+                    </h3>
+
+                    {/* Short description in AA contrast */}
+                    <p className="text-[15px] sm:text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
+                      {card.description}
+                    </p>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-[#F5F5F7] leading-tight">
-                    {card.title}
-                  </h3>
-
-                  {/* Short description in AA contrast */}
-                  <p className="text-[15px] sm:text-[17px] text-[#B4B4BA] font-normal leading-[1.6]">
-                    {card.description}
-                  </p>
-                </div>
-
-                {/* Action Button: White pill with dark text, bottom aligned at equal height */}
-                <div className="mt-8 pt-2 relative z-10 flex items-center">
-                  <Link
-                    to={card.url}
-                    data-sound="button"
-                    className="apple-button-white-3d group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[#0A0A0C] text-[14px] sm:text-[15px] font-semibold py-[12px] px-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                    aria-label={card.buttonText}
-                  >
-                    <span className="whitespace-nowrap">{card.buttonText}</span>
-                    <ArrowUpRight className="w-4 h-4 text-[#0A0A0C] shrink-0 transition-transform duration-250 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
+                  {/* Action Button: White pill with dark text, bottom aligned at equal height */}
+                  <div className="mt-8 pt-2 relative z-10 flex items-center">
+                    <Link
+                      to={card.url}
+                      data-sound="button"
+                      className="apple-button-white-3d group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[#0A0A0C] text-[14px] sm:text-[15px] font-semibold py-[12px] px-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      aria-label={card.buttonText}
+                    >
+                      <span className="whitespace-nowrap">{card.buttonText}</span>
+                      <ArrowUpRight className="w-4 h-4 text-[#0A0A0C] shrink-0 transition-transform duration-250 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  </div>
                 </div>
               </GlassCard>
             </div>

@@ -98,6 +98,30 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
     }
   }, [tabs, activeTab]);
 
+  const handleTabKeyDown = (e: React.KeyboardEvent, currentKey: TabKey) => {
+    const currentIndex = tabs.findIndex((t) => t.key === currentKey);
+    let nextIndex = -1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextIndex = (currentIndex + 1) % tabs.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      nextIndex = tabs.length - 1;
+    }
+    if (nextIndex !== -1) {
+      const nextTab = tabs[nextIndex];
+      setActiveTab(nextTab.key);
+      const nextBtn = document.getElementById(`tab-${nextTab.key}`);
+      nextBtn?.focus();
+    }
+  };
+
   const springConfig = {
     type: 'spring',
     stiffness: 400,
@@ -121,7 +145,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
       id="highlights"
       ref={containerRef}
       aria-label="Highlights"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-24 ${className}`}
     >
       {/* 04 "Career *highlights*" */}
       <SectionHeading
@@ -152,6 +176,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                 aria-controls={`tabpanel-${tab.key}`}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => setActiveTab(tab.key)}
+                onKeyDown={(e) => handleTabKeyDown(e, tab.key)}
                 className={`relative px-3 sm:px-5 py-2 sm:py-2.5 rounded-pill text-[12px] sm:text-[14px] font-medium tracking-[-0.01em] transition-colors duration-200 flex items-center gap-1.5 sm:gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shrink-0 ${
                   isActive ? 'text-white' : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
                 }`}
@@ -221,6 +246,12 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                         <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#F5F5F7] leading-tight">
                           {item.title}
                         </h3>
+
+                        {(item.detail || item.description) && (
+                          <p className="text-[14px] sm:text-[15px] text-[#B4B4BA] leading-relaxed font-normal pt-0.5">
+                            {item.detail || item.description}
+                          </p>
+                        )}
                       </div>
 
                       {/* Result badge: strict monochrome with white dot */}

@@ -8,31 +8,27 @@ import { PortfolioContent, SkillItem } from './content.schema';
  * Learning now: Advanced Python, Prompt engineering
  */
 export const technicalSkills: SkillItem[] = [
-  {
-    name: "Python",
-    level: "Working knowledge",
-    associatedProjectIds: [],
-  },
-  {
-    name: "Java",
-    level: "Intermediate",
-    associatedProjectIds: [],
-  },
-  {
-    name: "HTML",
-    level: "Intermediate",
-    associatedProjectIds: [],
-  },
-  {
-    name: "CSS",
-    level: "Intermediate",
-    associatedProjectIds: [],
-  },
-  {
-    name: "C",
-    level: "Basics",
-    associatedProjectIds: [],
-  },
+  // Languages
+  { name: "Python", associatedProjectIds: [] },
+  { name: "Java", associatedProjectIds: [] },
+  { name: "C", associatedProjectIds: [] },
+  { name: "HTML", associatedProjectIds: [] },
+  { name: "CSS", associatedProjectIds: [] },
+  // Web and APIs
+  { name: "React", associatedProjectIds: [] },
+  { name: "FastAPI", associatedProjectIds: [] },
+  { name: "REST APIs", associatedProjectIds: [] },
+  { name: "Tailwind CSS", associatedProjectIds: [] },
+  { name: "Vite", associatedProjectIds: [] },
+  // Machine Learning and GIS
+  { name: "scikit-learn", associatedProjectIds: [] },
+  { name: "OSMnx", associatedProjectIds: [] },
+  { name: "Leaflet", associatedProjectIds: [] },
+  // Tools
+  { name: "Git", associatedProjectIds: [] },
+  { name: "GitHub", associatedProjectIds: [] },
+  { name: "Vercel", associatedProjectIds: [] },
+  // Learning now
   {
     name: "Advanced Python",
     level: "Learning now",
@@ -112,12 +108,55 @@ export const portfolioContent: PortfolioContent = {
     season: "2025 - 2026",
   },
 
-  // Skills: compact glass block with level labels, no bars/percentages
+  // Skills: category groups
   skills: [
     {
-      categoryName: "Technical Skills",
-      description: "Languages and foundations with demonstrated proficiency and active learning areas.",
-      skills: technicalSkills,
+      categoryName: "Languages",
+      description: "Core programming and markup languages.",
+      skills: [
+        { name: "Python" },
+        { name: "Java" },
+        { name: "C" },
+        { name: "HTML" },
+        { name: "CSS" },
+      ],
+    },
+    {
+      categoryName: "Web and APIs",
+      description: "Frontend libraries, web frameworks, and API architecture.",
+      skills: [
+        { name: "React" },
+        { name: "FastAPI" },
+        { name: "REST APIs" },
+        { name: "Tailwind CSS" },
+        { name: "Vite" },
+      ],
+    },
+    {
+      categoryName: "Machine Learning and GIS",
+      description: "ML toolkits and spatial network analysis.",
+      skills: [
+        { name: "scikit-learn" },
+        { name: "OSMnx" },
+        { name: "Leaflet" },
+      ],
+    },
+    {
+      categoryName: "Tools",
+      description: "Version control and deployment platforms.",
+      skills: [
+        { name: "Git" },
+        { name: "GitHub" },
+        { name: "Vercel" },
+      ],
+    },
+    {
+      categoryName: "Learning now",
+      description: "Topics currently exploring and expanding upon.",
+      skills: [
+        { name: "Advanced Python", isCurrentlyLearning: true },
+        { name: "Prompt engineering", isCurrentlyLearning: true },
+      ],
     },
   ],
 
@@ -241,11 +280,33 @@ export const portfolioContent: PortfolioContent = {
   ],
 
   // Highlights Section Data:
-  // - achievements: empty array (shows demo items in demo mode)
-  achievements: [],
+  // - achievements: Real SIH 2026 entry
+  achievements: [
+    {
+      id: "ach-sih-2026",
+      title: "Smart India Hackathon 2026",
+      eventOrOrg: "Internal University Hackathon",
+      year: "2026",
+      result: "Round 2 Shortlisted (In progress)",
+      detail: "Cleared Round 1, the university internal hackathon (Sep 2026), with LandSafe. Team shortlisted for Round 2 (in progress).",
+    },
+  ],
 
-  // - certifications: empty array (shows demo items in demo mode)
-  certifications: [],
+  // - certifications: Real LinkedIn Learning credentials
+  certifications: [
+    {
+      id: "cert-discrete-math",
+      title: "Programming Foundations: Discrete Mathematics",
+      issuer: "LinkedIn Learning",
+      date: "Sep 2026",
+    },
+    {
+      id: "cert-graph-neural-networks",
+      title: "Learning Graph Neural Networks",
+      issuer: "LinkedIn Learning",
+      date: "Sep 2026",
+    },
+  ],
 
   // - activities: REAL item from Harsh Raj (replaces demo array completely)
   activities: [

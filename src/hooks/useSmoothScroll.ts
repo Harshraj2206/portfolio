@@ -39,7 +39,7 @@ export function useSmoothScroll() {
         const el = document.getElementById(id);
         if (el) {
           e.preventDefault();
-          lenis.scrollTo(el, { offset: -30 });
+          lenis.scrollTo(el, { offset: -96 });
           window.history.pushState(null, '', href);
         }
       }

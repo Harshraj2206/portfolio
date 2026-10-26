@@ -23,6 +23,7 @@ interface HeroProps {
   onNavFadeIn?: () => void;
   onIntroComplete?: () => void;
   isIntroAlreadyDone?: boolean;
+  onSelectSection?: (id: string) => void;
 }
 
 export interface ReelSlotConfig {
@@ -106,6 +107,7 @@ export const Hero: React.FC<HeroProps> = ({
   onNavFadeIn,
   onIntroComplete,
   isIntroAlreadyDone = false,
+  onSelectSection,
 }) => {
   const containerRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -123,9 +125,18 @@ export const Hero: React.FC<HeroProps> = ({
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const metricsRef = useRef<FontAndSlotMetrics | null>(null);
 
-  const [isIntroActive, setIsIntroActive] = useState(!isIntroAlreadyDone);
+  const isSessionDone = typeof window !== 'undefined' && (() => {
+    try {
+      return sessionStorage.getItem('portfolio_intro_done') === 'true';
+    } catch {
+      return false;
+    }
+  })();
+  const effectiveIntroDone = isIntroAlreadyDone || Boolean(isSessionDone);
+
+  const [isIntroActive, setIsIntroActive] = useState(!effectiveIntroDone);
   const [showSkipBtn, setShowSkipBtn] = useState(false);
-  const [dotRemoved, setDotRemoved] = useState(isIntroAlreadyDone);
+  const [dotRemoved, setDotRemoved] = useState(effectiveIntroDone);
 
   const isSkippingRef = useRef(false);
   const introStartTimeRef = useRef<number>(0);
@@ -235,6 +246,14 @@ export const Hero: React.FC<HeroProps> = ({
       particleEngineRef.current.jumpToFinal();
     }
 
+    try {
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('portfolio_intro_done', 'true');
+      }
+    } catch {
+      // Ignore storage errors
+    }
+
     markPortraitDone();
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('hero:portraitDone'));
@@ -333,7 +352,7 @@ export const Hero: React.FC<HeroProps> = ({
             const wordRect = wordContainerRef.current.getBoundingClientRect();
             engine.setWordPosition(wordRect.top - heroRect.top, wordRect.height || metrics.pSize);
           }
-          if (isIntroAlreadyDone || isReducedMotion) {
+          if (effectiveIntroDone || isReducedMotion) {
             engine.jumpToFinal();
           }
         },
@@ -341,7 +360,7 @@ export const Hero: React.FC<HeroProps> = ({
       particleEngineRef.current = engine;
 
       // Handle Reduced Motion or already played session
-      if (isIntroAlreadyDone || isReducedMotion) {
+      if (effectiveIntroDone || isReducedMotion) {
         finishIntro();
         setDotRemoved(true);
         const initialDot = document.getElementById('initial-intro-dot');
@@ -972,7 +991,6 @@ export const Hero: React.FC<HeroProps> = ({
           {
             y: '0%',
             opacity: 1,
-            stagger: 0.06,
             duration: INTRO_TIMING.subtitlePopDuration,
             ease: 'power3.out',
           },
@@ -1163,10 +1181,6 @@ export const Hero: React.FC<HeroProps> = ({
       {/* Soft Neutral Radial Vignette */}
       <div className="absolute inset-0 pointer-events-none hero-vignette z-0" aria-hidden="true" />
 
-      {/* Accessible semantic <h1> Harsh Raj always in DOM */}
-      <h1 className="sr-only">
-        {personal.fullName} - 2nd-year CSE (AI &amp; ML) student at {personal.college}
-      </h1>
       <div
         role="img"
         aria-label={`Halftone particle portrait of ${personal.fullName}`}
@@ -1232,7 +1246,7 @@ export const Hero: React.FC<HeroProps> = ({
                       cIdx > 0 ? 'reel-extra-glyph' : 'reel-main-glyph'
                     }`}
                     style={{
-                      visibility: isIntroAlreadyDone || cIdx === 0 ? 'visible' : 'hidden',
+                      visibility: effectiveIntroDone || cIdx === 0 ? 'visible' : 'hidden',
                     }}
                   >
                     {char === ' ' ? '\u00A0' : char}
@@ -1266,27 +1280,37 @@ export const Hero: React.FC<HeroProps> = ({
         <div
           className="absolute top-full left-1/2 -translate-x-1/2 w-full max-w-[1050px] px-4 mt-3 sm:mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6 z-[3] pointer-events-auto"
         >
-          {/* Subtitle masked pop-up: "CSE (AI & ML) Student" */}
+          {/* Bottom-left block: Name (h1) + Subtitle */}
           <div
             ref={subtitleRef}
-            className="flex items-center gap-1.5 text-[18px] sm:text-[22px] tracking-[-0.01em] overflow-hidden"
+            className="flex flex-col items-start overflow-hidden"
           >
-            <div className="overflow-hidden inline-flex">
-              <span className="pop-word font-semibold text-[#F5F5F7] inline-block">
-                CSE&nbsp;(AI&nbsp;&amp;&nbsp;ML)
+            {/* Page's only h1: Harsh Raj */}
+            <h1 className="overflow-hidden inline-flex m-0 p-0 leading-tight mb-1" style={{ marginBottom: '4px' }}>
+              <span className="pop-word font-bold text-white text-[28px] sm:text-[35px] leading-tight tracking-[-0.02em] whitespace-nowrap inline-block">
+                {personal.fullName || 'Harsh Raj'}
               </span>
-            </div>
-            <div className="overflow-hidden inline-flex">
-              <span className="pop-word font-light italic text-[#9A9AA0] inline-block">
-                Student
-              </span>
+            </h1>
+
+            {/* Subtitle masked pop-up: "CSE (AI & ML) Student" */}
+            <div className="flex items-center gap-1.5 text-[18px] sm:text-[22px] tracking-[-0.01em] overflow-hidden">
+              <div className="overflow-hidden inline-flex">
+                <span className="pop-word font-semibold text-[#F5F5F7] inline-block">
+                  CSE&nbsp;(AI&nbsp;&amp;&nbsp;ML)
+                </span>
+              </div>
+              <div className="overflow-hidden inline-flex">
+                <span className="pop-word font-light italic text-[#9A9AA0] inline-block">
+                  Student
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Bottom Right Row: Badge + View my work + Resume */}
           <div
             ref={bottomRowRef}
-            className="flex flex-wrap items-center gap-4 sm:gap-7 text-[14px] sm:text-[15px] overflow-hidden"
+            className="flex flex-wrap items-center gap-3 sm:gap-6 text-[14px] sm:text-[15px] overflow-hidden"
           >
             {/* Open to internships badge */}
             {availability?.isOpen && (
@@ -1307,7 +1331,17 @@ export const Hero: React.FC<HeroProps> = ({
                 href="#projects"
                 onClick={(e) => {
                   e.preventDefault();
-                  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                  onSelectSection?.('projects');
+                  const el = document.getElementById('projects');
+                  if (el) {
+                    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, options?: { offset: number }) => void } }).__lenis;
+                    if (lenis) {
+                      lenis.scrollTo(el, { offset: -96 });
+                    } else {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    window.history.pushState(null, '', '#projects');
+                  }
                 }}
                 className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center cursor-pointer"
               >
@@ -1331,10 +1365,11 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
       </div>
 
-      {/* "Scroll" cue lifted to at least 32px from bottom, contrast #D1D1D6 */}
+      {/* "Scroll" cue lifted to at least 32px from bottom, contrast #D1D1D6 (hidden on phones to avoid overlap) */}
       <div
         ref={scrollCueRef}
-        className="flex absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 pointer-events-none select-none text-[13px] tracking-[0.2em] text-[#D1D1D6] font-medium opacity-0 z-[3]"
+        data-testid="scroll-cue"
+        className="hidden md:flex absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-1.5 pointer-events-none select-none text-[13px] tracking-[0.2em] text-[#D1D1D6] font-medium opacity-0 z-[3]"
         aria-hidden="true"
       >
         <span>Scroll</span>

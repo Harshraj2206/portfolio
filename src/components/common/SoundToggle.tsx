@@ -107,17 +107,17 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ isIntroActive: isIntro
       }`}
       aria-hidden={activeIntro ? 'true' : 'false'}
       style={{
-        top: 'calc(16px + env(safe-area-inset-top, 0px))',
-        right: '16px',
+        top: 'calc(12px + env(safe-area-inset-top, 0px))',
+        right: 'calc(12px + env(safe-area-inset-right, 0px))',
       }}
       data-sound="none"
     >
-      {/* 3-Second Post-Intro Caption */}
+      {/* 3-Second Post-Intro Caption: Anchored safely below the navbar on mobile */}
       {showCaption && (
         <div
           role="status"
           aria-live="polite"
-          className="mr-3 px-3.5 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap animate-in fade-in slide-in-from-right-3 duration-300"
+          className="absolute top-[calc(100%+20px)] right-0 md:top-auto md:static md:mr-3 px-3.5 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap shadow-xl pointer-events-none animate-in fade-in slide-in-from-top-2 md:slide-in-from-right-3 duration-300 z-50"
         >
           <span>Sound effects on. Tap to mute.</span>
         </div>
@@ -127,7 +127,7 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ isIntroActive: isIntro
       {showTooltip && !showCaption && (
         <div
           role="tooltip"
-          className="absolute right-full mr-2.5 px-3 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap pointer-events-none animate-in fade-in duration-150"
+          className="hidden md:block absolute right-full mr-2.5 px-3 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap pointer-events-none animate-in fade-in duration-150"
         >
           {isSoundEnabled ? 'Turn sound effects off [M]' : 'Turn sound effects on [M]'}
         </div>

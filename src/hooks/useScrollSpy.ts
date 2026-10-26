@@ -4,7 +4,6 @@ export function useScrollSpy(sectionIds: string[], offset = 120) {
   const [activeSection, setActiveSection] = useState<string>(sectionIds[0] || '');
   const isClickScrollRef = useRef(false);
   const clickTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const entriesMapRef = useRef<Map<string, IntersectionObserverEntry>>(new Map());
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -36,71 +35,58 @@ export function useScrollSpy(sectionIds: string[], offset = 120) {
         }
       }
 
-      // 3. Fallback to intersecting entry with largest ratio or closest top
-      const intersecting = Array.from(entriesMapRef.current.values()).filter(
-        (entry) => entry.isIntersecting
-      );
+      // 3. Find the section that covers the target line just below the navbar (~140px from top)
+      const targetY = 140;
+      let matchedSection = '';
 
-      if (intersecting.length > 0) {
-        intersecting.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const topEntry = intersecting[0];
-        if (topEntry?.target?.id) {
-          setActiveSection(topEntry.target.id);
+      for (const id of sectionIds) {
+        if (id === 'hero') continue;
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= targetY && rect.bottom > targetY) {
+          matchedSection = id;
+          break;
         }
+      }
+
+      if (!matchedSection) {
+        let maxTop = -Infinity;
+        for (const id of sectionIds) {
+          if (id === 'hero') continue;
+          const el = document.getElementById(id);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= targetY && rect.top > maxTop) {
+            maxTop = rect.top;
+            matchedSection = id;
+          }
+        }
+      }
+
+      if (matchedSection) {
+        setActiveSection(matchedSection);
       }
     };
 
-    const hasIntersectionObserver = typeof IntersectionObserver !== 'undefined';
+    const handleScroll = () => {
+      computeActiveSection();
+    };
 
-    if (hasIntersectionObserver) {
-      const observerCallback: IntersectionObserverCallback = (entries) => {
-        entries.forEach((entry) => {
-          entriesMapRef.current.set(entry.target.id, entry);
-        });
-        computeActiveSection();
-      };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    computeActiveSection();
 
-      const observer = new IntersectionObserver(observerCallback, {
-        rootMargin: '-15% 0px -50% 0px',
-        threshold: [0.1, 0.3, 0.6],
-      });
-
-      sectionIds.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el);
-      });
-
-      const handleScroll = () => {
-        computeActiveSection();
-      };
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-
-      return () => {
-        observer.disconnect();
-        window.removeEventListener('scroll', handleScroll);
-      };
-    } else {
-      // Fallback scroll listener
-      const handleScroll = () => {
-        if (isClickScrollRef.current) return;
-        const scrollPosition = window.scrollY + offset;
-        for (let i = sectionIds.length - 1; i >= 0; i--) {
-          const id = sectionIds[i];
-          const element = document.getElementById(id);
-          if (element && scrollPosition >= element.offsetTop) {
-            setActiveSection(id);
-            return;
-          }
-        }
-        if (sectionIds.length > 0) {
-          setActiveSection(sectionIds[0]);
-        }
-      };
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => window.removeEventListener('scroll', handleScroll);
+    const lenis = (window as unknown as { __lenis?: { on: (event: string, fn: () => void) => void; off: (event: string, fn: () => void) => void } }).__lenis;
+    if (lenis) {
+      lenis.on('scroll', handleScroll);
     }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (lenis) {
+        lenis.off('scroll', handleScroll);
+      }
+    };
   }, [sectionIds, offset]);
 
   const setManualSection = (id: string) => {

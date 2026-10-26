@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GlassButton } from '../common/GlassButton';
 import { WindowFrame } from '../common/WindowFrame';
@@ -11,6 +11,14 @@ export const NotFoundPage: React.FC = () => {
     title: '404 — Page Not Found | Harsh Raj Portfolio',
     description: "The page or case study you were looking for doesn't exist or has moved.",
   });
+
+  // Remove top-center home-page intro dot on the 404 page
+  useEffect(() => {
+    const initialDot = document.getElementById('initial-intro-dot');
+    if (initialDot) initialDot.remove();
+    const initialVignette = document.getElementById('initial-intro-vignette');
+    if (initialVignette) initialVignette.remove();
+  }, []);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 bg-[#050505] text-[#F5F5F7] transition-colors">
@@ -44,8 +52,8 @@ export const NotFoundPage: React.FC = () => {
                 <GlassButton
                   variant="primary"
                   size="md"
-                  icon={<Home className="w-4 h-4" />}
-                  className="w-full justify-center"
+                  icon={<Home className="w-4 h-4 text-[#0A0A0C]" />}
+                  className="w-full justify-center !text-[#0A0A0C] font-semibold"
                 >
                   Return to home
                 </GlassButton>

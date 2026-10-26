@@ -28,7 +28,7 @@ export const Photography: React.FC = () => {
 
   // SEO & Head configuration
   useDocumentHead({
-    title: 'Photography & videography | Harsh Raj',
+    title: 'Photography & videography — Harsh Raj',
     description: 'Frames from my camera and everyday moments. Drag or scroll to explore.',
     canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/photography',
   });

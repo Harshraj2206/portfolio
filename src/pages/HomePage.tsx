@@ -233,6 +233,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
             isIntroAlreadyDone={isIntroAlreadyDone}
             onNavFadeIn={handleNavFadeIn}
             onIntroComplete={handleIntroComplete}
+            onSelectSection={setActiveSection}
           />
         </div>
 

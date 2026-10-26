@@ -184,7 +184,7 @@ export const ProjectPage: React.FC = () => {
 
         {/* Hero Visual inside macOS Window Frame */}
         <div className="w-full">
-          <WindowFrame title={`${project.id}.app`} className="w-full shadow-2xl">
+          <WindowFrame title={project.id === 'landsafe' ? 'si-h-2026.vercel.app' : `${project.id}.app`} className="w-full shadow-2xl">
             <ProjectMockup project={project} />
           </WindowFrame>
         </div>

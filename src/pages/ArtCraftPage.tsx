@@ -49,6 +49,12 @@ export const ArtCraftPage: React.FC = () => {
     ? rawArtCraft.items
     : [];
 
+  useDocumentHead({
+    title: 'Art & craft — Harsh Raj',
+    description: 'A curated archive of handmade artwork, sketches, and physical crafts.',
+    canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/art-craft',
+  });
+
   // In development, preview with demo items if real items are empty.
   // In production builds (import.meta.env.DEV is false), only realItems is used.
   const items: ArtCraftItem[] =

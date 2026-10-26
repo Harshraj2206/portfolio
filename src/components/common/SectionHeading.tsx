@@ -86,33 +86,36 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
       {/* Title: clamp(32px, 6.5vw, 96px), weight 600, tracking -0.035em, line-height 1.15 */}
       <h2
-        className="relative z-10 font-apple tracking-[-0.035em] leading-[1.15] overflow-visible flex flex-wrap gap-x-[0.3em] gap-y-1 sm:gap-y-2"
+        className="relative z-10 font-apple tracking-[-0.035em] leading-[1.15] overflow-visible"
         style={{ fontSize: 'clamp(32px, 6.5vw, 96px)' }}
+        aria-label={title.replace(/\*/g, '')}
       >
         {words.map((rawWord, i) => {
           const isItalic = rawWord.startsWith('*') && rawWord.endsWith('*');
           const cleanWord = isItalic ? rawWord.slice(1, -1) : rawWord;
 
           return (
-            <span
-              key={i}
-              className={`inline-block py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
-            >
+            <React.Fragment key={i}>
+              {i > 0 && ' '}
               <span
-                className={`inline-block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  isItalic
-                    ? 'font-light italic text-[#F5F5F7] tracking-normal pr-[0.15em] pb-[0.1em]'
-                    : 'metallic-text-gradient font-semibold'
-                }`}
-                style={{
-                  transform: prefersReducedMotion || isInView ? 'translateY(0%)' : 'translateY(115%)',
-                  transitionDelay: prefersReducedMotion ? '0ms' : `${i * 65}ms`,
-                  ...(isItalic ? { display: 'inline-block', paddingRight: '0.15em', paddingBottom: '0.1em' } : {}),
-                }}
+                className={`inline-block py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
               >
-                {cleanWord}
+                <span
+                  className={`inline-block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isItalic
+                      ? 'font-light italic text-[#F5F5F7] tracking-normal pr-[0.15em] pb-[0.1em]'
+                      : 'metallic-text-gradient font-semibold'
+                  }`}
+                  style={{
+                    transform: prefersReducedMotion || isInView ? 'translateY(0%)' : 'translateY(115%)',
+                    transitionDelay: prefersReducedMotion ? '0ms' : `${i * 65}ms`,
+                    ...(isItalic ? { display: 'inline-block', paddingRight: '0.15em', paddingBottom: '0.1em' } : {}),
+                  }}
+                >
+                  {cleanWord}
+                </span>
               </span>
-            </span>
+            </React.Fragment>
           );
         })}
       </h2>

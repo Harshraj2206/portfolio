@@ -28,7 +28,7 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
   }[size];
 
   const variantClasses = {
-    primary: 'apple-button-primary',
+    primary: 'apple-button-primary text-[#0A0A0C]',
     secondary: 'apple-button-secondary',
     ghost: 'bg-transparent text-apple-gray-600 dark:text-apple-gray-400 hover:text-apple-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10',
   }[variant];

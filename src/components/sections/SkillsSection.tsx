@@ -48,6 +48,12 @@ const TECH_ICONS: Record<string, React.ReactNode> = {
       />
     </svg>
   ),
+  github: (
+    <svg role="img" viewBox="0 0 24 24" fill="currentColor" className="w-[26px] h-[26px]">
+      <title>GitHub</title>
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  ),
 };
 
 // Mini chip icons (14x14)
@@ -79,6 +85,11 @@ const MINI_ICONS: Record<string, React.ReactNode> = {
         d="M15.2 8.2c-.85-.6-1.9-.95-3.05-.95-2.9 0-5.2 2.1-5.2 4.75s2.3 4.75 5.2 4.75c1.15 0 2.2-.35 3.05-.95l-.65-1.25c-.65.45-1.45.7-2.4.7-2.05 0-3.65-1.5-3.65-3.25s1.6-3.25 3.65-3.25c.95 0 1.75.25 2.4.7l.65-1.25z"
         fill="currentColor"
       />
+    </svg>
+  ),
+  github: (
+    <svg role="img" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
     </svg>
   ),
 };
@@ -114,45 +125,91 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
     return () => observer.disconnect();
   }, [prefersReducedMotion]);
 
-  // Aggregate all skills
-  const allSkills = categories.flatMap((cat) => cat.skills);
+  // Extract categories by matching category names, with reliable fallbacks
+  const languages = categories.find((c) =>
+    c.categoryName.toLowerCase().includes('language')
+  )?.skills || [
+    { name: 'Python' },
+    { name: 'Java' },
+    { name: 'C' },
+    { name: 'HTML' },
+    { name: 'CSS' },
+  ];
 
-  // Group by level strictly according to source of truth
-  const workingKnowledge = allSkills.filter(
-    (s) => !s.isCurrentlyLearning && s.level?.toLowerCase().includes('working')
-  );
-  const intermediate = allSkills.filter(
-    (s) => !s.isCurrentlyLearning && s.level?.toLowerCase().includes('intermediate')
-  );
-  const basics = allSkills.filter(
-    (s) => !s.isCurrentlyLearning && s.level?.toLowerCase().includes('basic')
-  );
-  const learningNow = allSkills.filter(
-    (s) => s.isCurrentlyLearning || s.level?.toLowerCase().includes('learning')
-  );
+  const webAndApis = categories.find((c) =>
+    c.categoryName.toLowerCase().includes('web')
+  )?.skills || [
+    { name: 'React' },
+    { name: 'FastAPI' },
+    { name: 'REST APIs' },
+    { name: 'Tailwind CSS' },
+    { name: 'Vite' },
+  ];
 
-  // Marquee items: matching tiles exactly (HTML and CSS, not HTML5 or CSS3)
+  const mlAndGis = categories.find((c) =>
+    c.categoryName.toLowerCase().includes('machine') ||
+    c.categoryName.toLowerCase().includes('gis')
+  )?.skills || [
+    { name: 'scikit-learn' },
+    { name: 'OSMnx' },
+    { name: 'Leaflet' },
+  ];
+
+  const tools = categories.find((c) =>
+    c.categoryName.toLowerCase().includes('tool')
+  )?.skills || [
+    { name: 'Git' },
+    { name: 'GitHub' },
+    { name: 'Vercel' },
+  ];
+
+  const learningNow = categories.find((c) =>
+    c.categoryName.toLowerCase() === 'learning now' ||
+    (c.categoryName.toLowerCase().includes('learning') && c.categoryName.toLowerCase().includes('now'))
+  )?.skills || [
+    { name: 'Advanced Python', isCurrentlyLearning: true },
+    { name: 'Prompt engineering', isCurrentlyLearning: true },
+  ];
+
+  // Marquee items: All skills from the first four groups (16 skills)
   const marqueeItems = [
+    // Languages
     { name: 'Python', key: 'python' },
     { name: 'Java', key: 'java' },
+    { name: 'C', key: 'c' },
     { name: 'HTML', key: 'html' },
     { name: 'CSS', key: 'css' },
-    { name: 'C', key: 'c' },
+    // Web and APIs
+    { name: 'React', key: 'react' },
+    { name: 'FastAPI', key: 'fastapi' },
+    { name: 'REST APIs', key: 'rest-apis' },
+    { name: 'Tailwind CSS', key: 'tailwind-css' },
+    { name: 'Vite', key: 'vite' },
+    // Machine Learning and GIS
+    { name: 'scikit-learn', key: 'scikit-learn' },
+    { name: 'OSMnx', key: 'osmnx' },
+    { name: 'Leaflet', key: 'leaflet' },
+    // Tools
+    { name: 'Git', key: 'git' },
+    { name: 'GitHub', key: 'github' },
+    { name: 'Vercel', key: 'vercel' },
   ];
 
   const renderSkillChip = (name: string) => {
     const key = name.toLowerCase();
     const icon =
-      key === 'python' || key.includes('python')
+      key === 'python' || key === 'advanced python'
         ? MINI_ICONS.python
-        : key === 'java' || key.includes('java')
+        : key === 'java'
         ? MINI_ICONS.java
-        : key === 'html' || key.includes('html')
+        : key === 'html'
         ? MINI_ICONS.html
-        : key === 'css' || key.includes('css')
+        : key === 'css'
         ? MINI_ICONS.css
         : key === 'c'
         ? MINI_ICONS.c
+        : key === 'github'
+        ? MINI_ICONS.github
         : key.includes('prompt')
         ? <Terminal className="w-3.5 h-3.5 text-white/80 shrink-0" />
         : null;
@@ -169,7 +226,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       id="skills"
       ref={containerRef}
       aria-label="Skills"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-24 ${className}`}
     >
       {/* 03 "Core *skills*" */}
       <SectionHeading
@@ -180,29 +237,29 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
       />
 
       <div className="space-y-8">
-        {/* TECH_MARQUEE: 60s loop scrolling row of monochrome logos in 40px box, color #B4B4BA, opacity 0.9 (1 on hover), 15px label */}
+        {/* TECH_MARQUEE: 60s loop scrolling row of monochrome logos / chips */}
         {TECH_MARQUEE && (
           <div
-            className="group group-marquee relative w-full overflow-hidden py-6 rounded-[28px] glass-card border border-white/10"
+            className="group group-marquee relative w-full overflow-hidden py-5 sm:py-6 rounded-[28px] glass-card border border-white/10"
             style={{
               maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
               WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
             }}
           >
-            <div className="flex w-max items-center animate-marquee gap-16 select-none">
+            <div className="flex w-max items-center animate-marquee gap-10 sm:gap-14 select-none">
               {/* Track 1 */}
-              <div className="flex items-center gap-16">
+              <div className="flex items-center gap-10 sm:gap-14">
                 {marqueeItems.concat(marqueeItems).map((item, idx) => (
                   <div
                     key={`track1-${idx}`}
-                    className="flex items-center gap-3.5 text-[#B4B4BA] opacity-90 hover:opacity-100 transition-opacity duration-180"
+                    className="flex items-center gap-3 text-[#B4B4BA] opacity-90 hover:opacity-100 transition-opacity duration-180 shrink-0"
                   >
-                    <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-                      {TECH_ICONS[item.key] || (
-                        <span className="font-sans text-sm tracking-wide text-[#B4B4BA]">{item.name}</span>
-                      )}
-                    </div>
-                    <span className="text-[15px] font-sans font-medium text-[#B4B4BA]">
+                    {TECH_ICONS[item.key] ? (
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
+                        {TECH_ICONS[item.key]}
+                      </div>
+                    ) : null}
+                    <span className="text-[14px] sm:text-[15px] font-sans font-medium text-[#B4B4BA] whitespace-nowrap">
                       {item.name}
                     </span>
                   </div>
@@ -210,18 +267,18 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
               </div>
 
               {/* Track 2 (duplicated, aria-hidden for seamless loop) */}
-              <div className="flex items-center gap-16" aria-hidden="true">
+              <div className="flex items-center gap-10 sm:gap-14" aria-hidden="true">
                 {marqueeItems.concat(marqueeItems).map((item, idx) => (
                   <div
                     key={`track2-${idx}`}
-                    className="flex items-center gap-3.5 text-[#B4B4BA] opacity-90 hover:opacity-100 transition-opacity duration-180"
+                    className="flex items-center gap-3 text-[#B4B4BA] opacity-90 hover:opacity-100 transition-opacity duration-180 shrink-0"
                   >
-                    <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-                      {TECH_ICONS[item.key] || (
-                        <span className="font-sans text-sm tracking-wide text-[#B4B4BA]">{item.name}</span>
-                      )}
-                    </div>
-                    <span className="text-[15px] font-sans font-medium text-[#B4B4BA]">
+                    {TECH_ICONS[item.key] ? (
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
+                        {TECH_ICONS[item.key]}
+                      </div>
+                    ) : null}
+                    <span className="text-[14px] sm:text-[15px] font-sans font-medium text-[#B4B4BA] whitespace-nowrap">
                       {item.name}
                     </span>
                   </div>
@@ -231,11 +288,11 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
           </div>
         )}
 
-        {/* Bento Row: stack into one column on phones & tablets, 4-col on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.35fr_0.9fr_1.75fr] gap-4 items-start">
-          {/* 1. Working Knowledge */}
+        {/* Bento Grid: stack cleanly on phones (390px) into 1 col with zero overflow, 2-col on tablets, 12-col on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-stretch">
+          {/* 1. Languages */}
           <div
-            className="transition-all duration-700 ease-out"
+            className="lg:col-span-4 transition-all duration-700 ease-out"
             style={{
               opacity: prefersReducedMotion || inView ? 1 : 0,
               transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
@@ -245,21 +302,21 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
             <GlassCard
               variant="default"
               radius="small"
-              className="flex flex-col !p-6 space-y-3.5"
+              className="flex flex-col h-full !p-5 sm:!p-6 space-y-3.5"
             >
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
                 <Code2 className="w-3.5 h-3.5 text-[#C9C9CF] shrink-0" />
-                <span>Working knowledge</span>
+                <span>Languages</span>
               </div>
               <div className="flex flex-wrap gap-2 pt-1">
-                {workingKnowledge.map((s) => renderSkillChip(s.name))}
+                {languages.map((s) => renderSkillChip(s.name))}
               </div>
             </GlassCard>
           </div>
 
-          {/* 2. Intermediate */}
+          {/* 2. Web and APIs */}
           <div
-            className="transition-all duration-700 ease-out"
+            className="lg:col-span-4 transition-all duration-700 ease-out"
             style={{
               opacity: prefersReducedMotion || inView ? 1 : 0,
               transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
@@ -269,21 +326,21 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
             <GlassCard
               variant="default"
               radius="small"
-              className="flex flex-col !p-6 space-y-3.5"
+              className="flex flex-col h-full !p-5 sm:!p-6 space-y-3.5"
             >
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
                 <Layers className="w-3.5 h-3.5 text-[#C9C9CF] shrink-0" />
-                <span>Intermediate</span>
+                <span>Web and APIs</span>
               </div>
               <div className="flex flex-wrap gap-2 pt-1">
-                {intermediate.map((s) => renderSkillChip(s.name))}
+                {webAndApis.map((s) => renderSkillChip(s.name))}
               </div>
             </GlassCard>
           </div>
 
-          {/* 3. Basics */}
+          {/* 3. Machine Learning and GIS */}
           <div
-            className="transition-all duration-700 ease-out"
+            className="lg:col-span-4 transition-all duration-700 ease-out"
             style={{
               opacity: prefersReducedMotion || inView ? 1 : 0,
               transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
@@ -293,21 +350,21 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
             <GlassCard
               variant="default"
               radius="small"
-              className="flex flex-col !p-6 space-y-3.5"
+              className="flex flex-col h-full !p-5 sm:!p-6 space-y-3.5"
             >
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
                 <Cpu className="w-3.5 h-3.5 text-[#C9C9CF] shrink-0" />
-                <span>Basics</span>
+                <span>Machine Learning and GIS</span>
               </div>
               <div className="flex flex-wrap gap-2 pt-1">
-                {basics.map((s) => renderSkillChip(s.name))}
+                {mlAndGis.map((s) => renderSkillChip(s.name))}
               </div>
             </GlassCard>
           </div>
 
-          {/* 4. Learning Now (highlighted tile without heavier font weight) */}
+          {/* 4. Tools */}
           <div
-            className="transition-all duration-700 ease-out"
+            className="lg:col-span-6 transition-all duration-700 ease-out"
             style={{
               opacity: prefersReducedMotion || inView ? 1 : 0,
               transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
@@ -317,7 +374,31 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({
             <GlassCard
               variant="default"
               radius="small"
-              className="flex flex-col !p-6 space-y-3.5 glass-card-dashed"
+              className="flex flex-col h-full !p-5 sm:!p-6 space-y-3.5"
+            >
+              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                <Terminal className="w-3.5 h-3.5 text-[#C9C9CF] shrink-0" />
+                <span>Tools</span>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {tools.map((s) => renderSkillChip(s.name))}
+              </div>
+            </GlassCard>
+          </div>
+
+          {/* 5. Learning now (highlighted tile with glass-card-dashed, kept as is) */}
+          <div
+            className="md:col-span-2 lg:col-span-6 transition-all duration-700 ease-out"
+            style={{
+              opacity: prefersReducedMotion || inView ? 1 : 0,
+              transform: prefersReducedMotion || inView ? 'translateY(0)' : 'translateY(24px)',
+              transitionDelay: prefersReducedMotion ? '0ms' : '400ms',
+            }}
+          >
+            <GlassCard
+              variant="default"
+              radius="small"
+              className="flex flex-col h-full !p-5 sm:!p-6 space-y-3.5 glass-card-dashed"
             >
               <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
                 <Sparkles className="w-3.5 h-3.5 text-[#C9C9CF] shrink-0" />

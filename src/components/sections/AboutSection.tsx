@@ -75,7 +75,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       id="about"
       ref={containerRef}
       aria-label="About me"
-      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-20 ${className}`}
+      className={`w-full max-w-[1200px] [@media(min-width:1600px)]:max-w-[min(1360px,88vw)] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 lg:py-24 scroll-mt-24 ${className}`}
     >
       {/* 01 "About *me*" */}
       <SectionHeading

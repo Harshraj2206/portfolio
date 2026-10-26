@@ -71,7 +71,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       {/* Top Compact Mobile Bar with Quick Reachable Resume Button */}
       <header
         data-sound-group="nav"
-        className="fixed top-3 left-2.5 right-2.5 sm:left-4 sm:right-4 z-50 md:hidden pointer-events-auto flex items-center justify-between px-3 sm:px-4 py-1.5 sm:py-2 rounded-pill glass-nav shadow-lg"
+        className="fixed top-3 left-2.5 right-[64px] sm:left-4 sm:right-[68px] z-50 md:hidden pointer-events-auto flex items-center justify-between px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-pill glass-nav shadow-lg"
       >
         <a
           href="#hero"

@@ -70,9 +70,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         const coveredDistance = cardBottom - nextRect.top;
         const coverProgress = Math.max(0, Math.min(1, coveredDistance / totalCoverDistance));
 
-        // Required scroll-linked formula: opacity = 1 - clamp((coverProgress - 0.05) / 0.25, 0, 1)
-        const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
-        const newOpacity = 1 - clamp((coverProgress - 0.05) / 0.25, 0, 1);
+        // Sticky stacking: keep card content visible (only slightly dimmed to ~0.8 and scaled to 0.96)
+        const newOpacity = 1 - coverProgress * 0.2;
         setContentOpacity(newOpacity);
 
         // Smooth scale down to 0.96 as card gets covered
@@ -191,7 +190,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               }}
             >
               <WindowFrame
-                title={`${project.id}.app`}
+                title={project.id === 'landsafe' ? 'si-h-2026.vercel.app' : `${project.id}.app`}
                 className="w-full"
               >
                 <ProjectMockup project={project} parallaxY={parallaxY} />
@@ -288,30 +287,28 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
               {/* Secondary: Read case study (only if project has real role, context, or challenges data) */}
               {hasRealCaseStudy && (
-                <Chip
-                  variant="button"
-                  as={Link}
+                <Link
                   to={`/projects/${project.id}`}
                   aria-label={`Read case study for ${project.title}`}
+                  className="apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-[#F2F2F4] text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <span>Read case study</span>
                   <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-                </Chip>
+                </Link>
               )}
 
-              {/* Code link */}
+              {/* Code link: Matches View live site size and layout, GitHub icon and Code on one line */}
               {githubUrl && githubUrl.trim().length > 0 && (
-                <Chip
-                  variant="button"
-                  as="a"
+                <a
                   href={githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`View source code for ${project.title}`}
+                  className="apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-[#F2F2F4] text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <Github className="w-3.5 h-3.5 shrink-0" />
                   <span>Code</span>
-                </Chip>
+                </a>
               )}
             </div>
           </div>
