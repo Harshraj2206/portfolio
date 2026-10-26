@@ -11,61 +11,53 @@ export function useScrollSpy(sectionIds: string[], offset = 120) {
     const computeActiveSection = () => {
       if (isClickScrollRef.current) return;
 
-      // 1. If at top of page or About is still below the upper-middle threshold, Hero is active
-      const aboutEl = document.getElementById('about');
-      if (aboutEl) {
-        const aboutRect = aboutEl.getBoundingClientRect();
-        // If the top of the About section hasn't reached the 40% mark of viewport height
-        if (aboutRect.top > window.innerHeight * 0.4 || window.scrollY < 120) {
-          if (sectionIds.includes('hero')) {
-            setActiveSection('hero');
-            return;
-          }
-        }
-      } else if (window.scrollY < 120 && sectionIds.length > 0) {
-        setActiveSection(sectionIds[0]);
-        return;
-      }
+      const threshold = window.innerHeight * 0.4;
 
-      // 2. Bottom of page check
+      // 1. Bottom of page check (activate last section when reaching page bottom)
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
         if (sectionIds.length > 0) {
-          setActiveSection(sectionIds[sectionIds.length - 1]);
+          const lastId = sectionIds[sectionIds.length - 1];
+          setActiveSection(lastId);
           return;
         }
       }
 
-      // 3. Find the section that covers the target line just below the navbar (~140px from top)
-      const targetY = 140;
-      let matchedSection = '';
+      // 2. If at top of page or first content section hasn't reached the 40% mark, Hero is active
+      const firstContentId = sectionIds.find((id) => id !== 'hero');
+      if (firstContentId) {
+        const firstEl = document.getElementById(firstContentId);
+        if (firstEl) {
+          const rect = firstEl.getBoundingClientRect();
+          if (rect.top > threshold || window.scrollY < 100) {
+            if (sectionIds.includes('hero')) {
+              setActiveSection('hero');
+              return;
+            }
+          }
+        }
+      } else if (window.scrollY < 100 && sectionIds.includes('hero')) {
+        setActiveSection('hero');
+        return;
+      }
 
-      for (const id of sectionIds) {
+      // 3. Mark a section active when its top crosses about 40% of the viewport height
+      let matchedSection = '';
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const id = sectionIds[i];
         if (id === 'hero') continue;
         const el = document.getElementById(id);
         if (!el) continue;
         const rect = el.getBoundingClientRect();
-        if (rect.top <= targetY && rect.bottom > targetY) {
+        if (rect.top <= threshold) {
           matchedSection = id;
           break;
         }
       }
 
-      if (!matchedSection) {
-        let maxTop = -Infinity;
-        for (const id of sectionIds) {
-          if (id === 'hero') continue;
-          const el = document.getElementById(id);
-          if (!el) continue;
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= targetY && rect.top > maxTop) {
-            maxTop = rect.top;
-            matchedSection = id;
-          }
-        }
-      }
-
       if (matchedSection) {
         setActiveSection(matchedSection);
+      } else if (sectionIds.includes('hero')) {
+        setActiveSection('hero');
       }
     };
 

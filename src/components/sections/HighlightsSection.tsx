@@ -231,15 +231,21 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                     >
                       <div className="space-y-3.5">
                         <div className="flex items-center justify-between gap-3">
-                          <span className="inline-flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
-                            <Building className="w-3.5 h-3.5 text-white/60" />
-                            <span>{item.eventOrOrg}</span>
-                          </span>
+                          {item.eventOrOrg ? (
+                            <span className="inline-flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                              <Building className="w-3.5 h-3.5 text-white/60" />
+                              <span>{item.eventOrOrg}</span>
+                            </span>
+                          ) : (
+                            <span />
+                          )}
                           <div className="flex items-center gap-2">
                             {item.isDemo && <DemoChip />}
-                            <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
-                              {item.year}
-                            </span>
+                            {item.year && (
+                              <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
+                                {item.year}
+                              </span>
+                            )}
                           </div>
                         </div>
 
@@ -254,13 +260,14 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                         )}
                       </div>
 
-                      {/* Result badge: strict monochrome with white dot */}
-                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                        <span className="text-[14px] font-medium text-white/90 flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.7)]" />
-                          <span>{item.result}</span>
-                        </span>
-                      </div>
+                      {/* Result badge: status chip */}
+                      {item.result && (
+                        <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                          <Chip variant="status" status="in-development">
+                            {item.result}
+                          </Chip>
+                        </div>
+                      )}
                     </GlassCard>
                   ))}
                 </div>

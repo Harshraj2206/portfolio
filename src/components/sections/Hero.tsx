@@ -7,6 +7,7 @@ import { WebglParticleEngine } from './hero/webglPortrait';
 import { soundEngine } from '../../audio/soundEngine';
 import { introSound } from '../../audio/introSound';
 import { markPortraitDone } from '../../utils/introState';
+import { scrollToSection } from '../../utils/scroll';
 import {
   INTRO_TIMING,
   DOT_MODE,
@@ -1332,16 +1333,8 @@ export const Hero: React.FC<HeroProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   onSelectSection?.('projects');
-                  const el = document.getElementById('projects');
-                  if (el) {
-                    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, options?: { offset: number }) => void } }).__lenis;
-                    if (lenis) {
-                      lenis.scrollTo(el, { offset: -96 });
-                    } else {
-                      el.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    window.history.pushState(null, '', '#projects');
-                  }
+                  scrollToSection('projects');
+                  window.history.pushState(null, '', '#projects');
                 }}
                 className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center cursor-pointer"
               >

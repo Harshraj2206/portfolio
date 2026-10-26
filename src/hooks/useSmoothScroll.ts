@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { SMOOTH_SCROLL } from '../config/design';
+import { scrollToSection } from '../utils/scroll';
 
 declare global {
   interface Window {
@@ -39,7 +40,7 @@ export function useSmoothScroll() {
         const el = document.getElementById(id);
         if (el) {
           e.preventDefault();
-          lenis.scrollTo(el, { offset: -96 });
+          scrollToSection(id);
           window.history.pushState(null, '', href);
         }
       }

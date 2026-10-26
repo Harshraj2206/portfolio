@@ -19,7 +19,6 @@ import { AboutSection } from '../components/sections/AboutSection';
 import { ProjectsGrid } from '../components/sections/ProjectsGrid';
 import { SkillsSection } from '../components/sections/SkillsSection';
 import { HighlightsSection } from '../components/sections/HighlightsSection';
-import { SocialDock } from '../components/sections/SocialDock';
 import { BeyondCodeSection } from '../components/sections/BeyondCodeSection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { Footer } from '../components/sections/Footer';
@@ -47,7 +46,6 @@ export const HomePage: React.FC<HomePageProps> = () => {
     now,
     creative,
     social,
-    socialBar,
     contact,
     contactButtons,
     availability,
@@ -293,15 +291,7 @@ export const HomePage: React.FC<HomePageProps> = () => {
 
           <SectionDivider />
 
-          {/* Find me online: Glass Dock Band */}
-          <div className="w-full bg-transparent">
-            <SocialDock
-              social={social}
-              socialBar={socialBar}
-            />
-          </div>
 
-          <SectionDivider />
 
           {/* Section Band 5: Beyond Code (transparent) */}
           <div className="w-full bg-transparent">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FileDown } from 'lucide-react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { scrollToSection } from '../../utils/scroll';
 
 interface NavItem {
   id: string;
@@ -76,7 +77,12 @@ export const PillNav: React.FC<PillNavProps> = ({
         {/* Monogram Brandmark */}
         <a
           href="#hero"
-          onClick={() => onSelectSection?.('hero')}
+          onClick={(e) => {
+            e.preventDefault();
+            onSelectSection?.('hero');
+            scrollToSection('hero');
+            window.history.pushState(null, '', '#hero');
+          }}
           className="flex items-center gap-2 pl-2 pr-2 py-1 text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] rounded-pill hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           aria-label={`${preferredName} home`}
         >
@@ -105,8 +111,11 @@ export const PillNav: React.FC<PillNavProps> = ({
               <a
                 key={item.id}
                 href={item.href}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   onSelectSection?.(item.id);
+                  scrollToSection(item.id);
+                  window.history.pushState(null, '', item.href);
                 }}
                 onMouseEnter={() => setHoveredId(item.id)}
                 onFocus={() => setHoveredId(item.id)}

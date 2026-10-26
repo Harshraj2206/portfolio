@@ -98,18 +98,18 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
             <React.Fragment key={i}>
               {i > 0 && ' '}
               <span
-                className={`inline-block py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
+                className={`inline-block align-baseline py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
               >
                 <span
-                  className={`inline-block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  className={`inline-block align-baseline transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     isItalic
-                      ? 'font-light italic text-[#F5F5F7] tracking-normal pr-[0.15em] pb-[0.1em]'
+                      ? 'font-light italic text-[#F5F5F7] tracking-normal pr-[0.2em]'
                       : 'metallic-text-gradient font-semibold'
                   }`}
                   style={{
                     transform: prefersReducedMotion || isInView ? 'translateY(0%)' : 'translateY(115%)',
                     transitionDelay: prefersReducedMotion ? '0ms' : `${i * 65}ms`,
-                    ...(isItalic ? { display: 'inline-block', paddingRight: '0.15em', paddingBottom: '0.1em' } : {}),
+                    ...(isItalic ? { display: 'inline-block', verticalAlign: 'baseline', paddingRight: '0.2em' } : {}),
                   }}
                 >
                   {cleanWord}

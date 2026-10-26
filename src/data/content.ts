@@ -285,10 +285,10 @@ export const portfolioContent: PortfolioContent = {
     {
       id: "ach-sih-2026",
       title: "Smart India Hackathon 2026",
-      eventOrOrg: "Internal University Hackathon",
+      eventOrOrg: "",
       year: "2026",
-      result: "Round 2 Shortlisted (In progress)",
-      detail: "Cleared Round 1, the university internal hackathon (Sep 2026), with LandSafe. Team shortlisted for Round 2 (in progress).",
+      result: "Round 2 · In progress",
+      detail: "Cleared Round 1, the university internal hackathon (Sep 2026), with LandSafe. Team shortlisted for Round 2.",
     },
   ],
 

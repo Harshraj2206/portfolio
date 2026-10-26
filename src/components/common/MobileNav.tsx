@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { scrollToSection } from '../../utils/scroll';
 import {
   User,
   Layers,
@@ -62,6 +64,39 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     ? activeSection
     : null;
 
+  // Lock page scroll when sheet is open & listen for Esc key
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const lenis = window.__lenis;
+    if (lenis) lenis.stop();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSheetOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      if (lenis) lenis.start();
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [sheetOpen]);
+
+  // Auto-close if resized to desktop viewport width
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && sheetOpen) {
+        setSheetOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sheetOpen]);
+
   const springConfig = prefersReducedMotion
     ? { duration: 0 }
     : { type: 'spring' as const, stiffness: 380, damping: 30 };
@@ -75,7 +110,12 @@ export const MobileNav: React.FC<MobileNavProps> = ({
       >
         <a
           href="#hero"
-          onClick={() => onSelectSection?.('hero')}
+          onClick={(e) => {
+            e.preventDefault();
+            onSelectSection?.('hero');
+            scrollToSection('hero');
+            window.history.pushState(null, '', '#hero');
+          }}
           className="flex items-center gap-2 text-[14px] sm:text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7] min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
           aria-label={`${preferredName} home`}
         >
@@ -100,8 +140,9 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           </a>
 
           <button
-            onClick={() => setSheetOpen(true)}
+            onClick={() => setSheetOpen((prev) => !prev)}
             aria-label="Open navigation menu"
+            aria-expanded={sheetOpen}
             className="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#9A9AA0] hover:text-white hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <MoreHorizontal className="w-5 h-5" />
@@ -123,7 +164,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             return (
               <button
                 key={item.id}
-                onClick={() => setSheetOpen(true)}
+                onClick={() => setSheetOpen((prev) => !prev)}
                 aria-label="Open full menu"
                 aria-expanded={sheetOpen}
                 className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
@@ -151,8 +192,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             <a
               key={item.id}
               href={item.href}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 onSelectSection?.(item.id);
+                scrollToSection(item.id);
+                window.history.pushState(null, '', item.href);
               }}
               aria-current={isActive ? 'true' : undefined}
               className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
@@ -177,83 +221,90 @@ export const MobileNav: React.FC<MobileNavProps> = ({
         })}
       </nav>
 
-      {/* Expandable "More" Glass Sheet Menu */}
-      <AnimatePresence>
-        {sheetOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-md flex flex-col justify-end"
-            onClick={() => setSheetOpen(false)}
-          >
-            <motion.div
-              data-sound-group="nav"
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-              className="bg-[#0A0A0A]/95 backdrop-blur-2xl p-6 rounded-t-[28px] border-t border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <span className="text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7]">
-                  Navigation &amp; Sections
-                </span>
-                <button
-                  onClick={() => setSheetOpen(false)}
-                  className="p-1.5 rounded-full bg-white/10 text-[#9A9AA0] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  aria-label="Close menu"
+      {/* Expandable "More" Glass Sheet Menu mounted in Portal so it isn't trapped in transform/pointer-events container */}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {sheetOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] md:hidden bg-black/70 backdrop-blur-md flex flex-col justify-end pointer-events-auto"
+                onClick={() => setSheetOpen(false)}
+              >
+                <motion.div
+                  data-sound-group="nav"
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+                  className="bg-[#0A0A0A]/95 backdrop-blur-2xl p-6 rounded-t-[28px] border-t border-white/10 shadow-2xl max-h-[85vh] overflow-y-auto pointer-events-auto"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+                  <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                    <span className="text-[15px] font-medium tracking-[-0.01em] text-[#F5F5F7]">
+                      Navigation &amp; Sections
+                    </span>
+                    <button
+                      onClick={() => setSheetOpen(false)}
+                      className="p-2 rounded-full bg-white/10 text-[#9A9AA0] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white min-w-[36px] min-h-[36px] flex items-center justify-center"
+                      aria-label="Close menu"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
 
-              <div className="py-4 space-y-1">
-                {allSections.map((link) => {
-                  const Icon = link.icon;
-                  const isCurrent = activeSection === link.id;
-                  return (
+                  <div className="py-4 space-y-1">
+                    {allSections.map((link) => {
+                      const Icon = link.icon;
+                      const isCurrent = activeSection === link.id;
+                      return (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onSelectSection?.(link.id);
+                            setSheetOpen(false);
+                            scrollToSection(link.id);
+                            window.history.pushState(null, '', link.href);
+                          }}
+                          className={`flex items-center gap-3 px-4 py-3 rounded-card text-[15px] font-medium tracking-[-0.01em] transition-colors ${
+                            isCurrent
+                              ? 'bg-white/15 text-white'
+                              : 'text-[#D1D1D6] hover:bg-white/10 hover:text-white'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4 text-white/70" />
+                          <span>{link.label}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+
+                  <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                     <a
-                      key={link.href}
-                      href={link.href}
+                      href={resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => {
-                        onSelectSection?.(link.id);
+                        onDownloadResume();
                         setSheetOpen(false);
                       }}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-card text-[15px] font-medium tracking-[-0.01em] transition-colors ${
-                        isCurrent
-                          ? 'bg-white/15 text-white'
-                          : 'text-[#D1D1D6] hover:bg-white/10 hover:text-white'
-                      }`}
+                      className="nav-resume-btn group inline-flex items-center justify-center rounded-pill px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer w-full"
+                      aria-label="View Resume"
                     >
-                      <Icon className="w-4 h-4 text-white/70" />
-                      <span>{link.label}</span>
+                      <FileDown className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
+                      <span>Resume (PDF)</span>
                     </a>
-                  );
-                })}
-              </div>
-
-              <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
-                <a
-                  href={resumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => {
-                    onDownloadResume();
-                    setSheetOpen(false);
-                  }}
-                  className="nav-resume-btn group inline-flex items-center justify-center rounded-pill px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer w-full"
-                  aria-label="View Resume"
-                >
-                  <FileDown className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
-                  <span>Resume (PDF)</span>
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 };
