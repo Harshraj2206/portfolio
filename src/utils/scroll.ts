@@ -5,7 +5,7 @@
  * Adjusts and settles accurately even when reveal animations change page height.
  */
 
-export function scrollToSection(sectionId: string) {
+export function scrollToSection(sectionId: string, options: { immediate?: boolean } = {}) {
   const lenis = typeof window !== 'undefined' ? window.__lenis : undefined;
 
   if (sectionId === 'hero') {
@@ -24,12 +24,15 @@ export function scrollToSection(sectionId: string) {
   const target = el.querySelector('h2') || el;
 
   const getOffset = () => {
-    const navEl = document.querySelector('header nav') || document.querySelector('header');
-    const navBottom = navEl
-      ? navEl.getBoundingClientRect().bottom
-      : window.innerWidth < 768
-      ? 60
-      : 72;
+    // Use the bottom of whichever fixed top bar is visible (desktop pill or mobile bar)
+    let navBottom = 0;
+    document.querySelectorAll('header').forEach((h) => {
+      const rect = h.getBoundingClientRect();
+      if (rect.height > 0 && rect.top < 40 && getComputedStyle(h).position === 'fixed') {
+        navBottom = Math.max(navBottom, rect.bottom);
+      }
+    });
+    if (!navBottom) navBottom = window.innerWidth < 768 ? 60 : 72;
     return -(navBottom + 24);
   };
 
@@ -48,6 +51,7 @@ export function scrollToSection(sectionId: string) {
 
     lenis.scrollTo(target, {
       offset,
+      immediate: options.immediate,
       onComplete: settle,
     });
 
@@ -57,6 +61,6 @@ export function scrollToSection(sectionId: string) {
   } else {
     const navOffset = -getOffset();
     const targetY = target.getBoundingClientRect().top + window.scrollY - navOffset;
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
+    window.scrollTo({ top: targetY, behavior: options.immediate ? 'auto' : 'smooth' });
   }
 }

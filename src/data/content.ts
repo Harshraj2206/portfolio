@@ -324,9 +324,9 @@ export const portfolioContent: PortfolioContent = {
   about: {
     headline: "About me",
     storyParagraphs: [
-      "I'm a second-year B.Tech student at Jain University Global Campus, studying Computer Science with a specialization in AI & ML. I'm from Patna, Bihar, and I'm building my foundation in Python while learning Java, HTML, CSS and the basics of C.",
-      "I like building things that solve real, everyday problems. LandSafe, my landslide early-warning system, predicts risk and guides people to safety. NammaRoute, which I'm still building, plans a whole trip across Bengaluru's metro, buses and autos in one place. I'm also learning prompt engineering.",
-      "Away from the screen, I love photography and videography, and I'm part of the Turing Club photography team at my university. I also enjoy art and craft. I'm looking for internships where I can contribute, learn from experienced engineers and keep growing.",
+      "I'm a second-year B.Tech student at Jain University Global Campus, studying Computer Science with a specialization in AI & ML. I'm from Patna, Bihar.",
+      "I build full-stack and machine learning projects with Python, FastAPI and React. LandSafe, my landslide early-warning system for Smart India Hackathon 2026, predicts risk and guides people to safety. NammaRoute, which I'm still building, plans a whole trip across Bengaluru's metro, buses and autos in one place.",
+      "Away from the screen, I'm part of the Turing Club photography team and I enjoy art and craft. I'm looking for internships where I can contribute, learn from experienced engineers and keep growing.",
     ],
   },
 

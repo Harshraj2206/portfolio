@@ -97,8 +97,10 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
           return (
             <React.Fragment key={i}>
               {i > 0 && ' '}
+              {/* align-top: an overflow-hidden inline-block takes its baseline from its bottom edge,
+                  so baseline alignment would push the bold and italic words out of line */}
               <span
-                className={`inline-block align-baseline py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
+                className={`inline-block align-top py-1 ${isItalic ? 'overflow-visible' : 'overflow-hidden'}`}
               >
                 <span
                   className={`inline-block align-baseline transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${

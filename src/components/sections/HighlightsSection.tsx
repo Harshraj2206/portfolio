@@ -221,7 +221,11 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                 </GlassCard>
               ) : (
                 <div className={`grid gap-6 ${getGridClass(achievements.length)}`}>
-                  {achievements.map((item) => (
+                  {achievements.map((item) => {
+                    // With no organisation to show, the year moves down next to the result chip
+                    // instead of sitting alone on its own row
+                    const yearInFooter = Boolean(!item.eventOrOrg && !item.isDemo && item.result && item.year);
+                    return (
                     <GlassCard
                       key={item.id}
                       variant="default"
@@ -230,6 +234,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                       className="p-7 sm:p-8 flex flex-col justify-between space-y-5"
                     >
                       <div className="space-y-3.5">
+                        {!yearInFooter && (
                         <div className="flex items-center justify-between gap-3">
                           {item.eventOrOrg ? (
                             <span className="inline-flex items-center gap-1.5 text-[13px] font-sans font-medium text-[#C9C9CF]">
@@ -248,6 +253,7 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                             )}
                           </div>
                         </div>
+                        )}
 
                         <h3 className="text-xl font-semibold tracking-[-0.02em] text-[#F5F5F7] leading-tight">
                           {item.title}
@@ -266,10 +272,16 @@ export const HighlightsSection: React.FC<HighlightsSectionProps> = ({
                           <Chip variant="status" status="in-development">
                             {item.result}
                           </Chip>
+                          {yearInFooter && (
+                            <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
+                              {item.year}
+                            </span>
+                          )}
                         </div>
                       )}
                     </GlassCard>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </motion.div>

@@ -6,6 +6,7 @@ import { useDocumentHead } from '../hooks/useDocumentHead';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import { getHeroIntroPlayed, markHeroIntroPlayed } from '../utils/introState';
 import { soundEngine } from '../audio/soundEngine';
+import { scrollToSection } from '../utils/scroll';
 
 // Navigation & Common
 import { PillNav } from '../components/common/PillNav';
@@ -164,8 +165,59 @@ export const HomePage: React.FC<HomePageProps> = () => {
     },
   });
 
+  // Section deep link on load (e.g. /#projects): skip the intro and jump to that section
+  const [initialSection] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const id = window.location.hash.slice(1);
+    return ['about', 'projects', 'skills', 'highlights', 'beyond-code', 'contact'].includes(id)
+      ? id
+      : null;
+  });
+
+  useEffect(() => {
+    if (!initialSection) return;
+    // Images and reveal animations above the section can still change the page height
+    // for a few seconds after load, so keep it aligned until the visitor scrolls themselves.
+    let userScrolled = false;
+    const stopAligning = () => {
+      userScrolled = true;
+    };
+    const align = () => {
+      if (!userScrolled) scrollToSection(initialSection, { immediate: true });
+    };
+    const resizeObserver = new ResizeObserver(align);
+    const stopTimer = window.setTimeout(() => resizeObserver.disconnect(), 4000);
+    window.addEventListener('wheel', stopAligning, { passive: true });
+    window.addEventListener('touchstart', stopAligning, { passive: true });
+    window.addEventListener('keydown', stopAligning);
+
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      tries += 1;
+      if (document.getElementById(initialSection) && (window.__lenis || tries > 10)) {
+        window.clearInterval(timer);
+        setActiveSection(initialSection);
+        align();
+        resizeObserver.observe(document.body);
+      } else if (tries > 40) {
+        window.clearInterval(timer);
+      }
+    }, 100);
+    return () => {
+      window.clearInterval(timer);
+      window.clearTimeout(stopTimer);
+      resizeObserver.disconnect();
+      window.removeEventListener('wheel', stopAligning);
+      window.removeEventListener('touchstart', stopAligning);
+      window.removeEventListener('keydown', stopAligning);
+    };
+    // Runs once on mount; setActiveSection only uses stable state and refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSection]);
+
   const [isIntroAlreadyDone] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
+    if (initialSection) return true;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
     return getHeroIntroPlayed();
   });

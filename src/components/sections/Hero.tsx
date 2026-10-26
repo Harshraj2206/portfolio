@@ -142,6 +142,47 @@ export const Hero: React.FC<HeroProps> = ({
   const isSkippingRef = useRef(false);
   const introStartTimeRef = useRef<number>(0);
 
+  // The name/subtitle/buttons block sits inside the word container, so it is scaled up
+  // with PORTFOLIO. Cap its width so that, once scaled, it still fits inside the hero.
+  const limitBottomWidth = useCallback(() => {
+    const hero = containerRef.current;
+    const block = hero?.querySelector<HTMLElement>('[data-hero-bottom]');
+    const m = metricsRef.current;
+    if (!hero || !block || !m) return;
+    const finalScale = m.pSize / m.nSize || 1;
+    const maxW = Math.floor((hero.clientWidth - 32) / finalScale);
+    block.style.maxWidth = finalScale > 1 && maxW < 1050 ? `${maxW}px` : '';
+  }, []);
+
+  // Keep the name/subtitle/buttons block inside the hero on short screens:
+  // if it would run past the hero bottom, nudge the word block up by the overflow.
+  const fitHeroBottom = useCallback(() => {
+    const hero = containerRef.current;
+    const word = wordContainerRef.current;
+    if (!hero || !word) return;
+    const block = hero.querySelector<HTMLElement>('[data-hero-bottom]');
+    if (!block) return;
+    limitBottomWidth();
+    const overflow = block.getBoundingClientRect().bottom - (hero.getBoundingClientRect().bottom - 24);
+    if (overflow <= 1) return;
+    const currentY = Number(gsap.getProperty(word, 'y')) || 0;
+    gsap.to(word, {
+      y: currentY - overflow,
+      duration: 0.35,
+      ease: 'power2.out',
+      onUpdate: () => {
+        if (particleEngineRef.current && containerRef.current && wordContainerRef.current) {
+          const heroRect = containerRef.current.getBoundingClientRect();
+          const wordRect = wordContainerRef.current.getBoundingClientRect();
+          particleEngineRef.current.setWordPosition(
+            wordRect.top - heroRect.top,
+            wordRect.height || metricsRef.current?.pSize || 0
+          );
+        }
+      },
+    });
+  }, [limitBottomWidth]);
+
   // Complete Intro Handler: guarantees instant jump straight to final hero state
   const finishIntro = useCallback(() => {
     if (timelineRef.current) {
@@ -261,7 +302,8 @@ export const Hero: React.FC<HeroProps> = ({
     }
     onNavFadeIn?.();
     onIntroComplete?.();
-  }, [onNavFadeIn, onIntroComplete]);
+    requestAnimationFrame(fitHeroBottom);
+  }, [onNavFadeIn, onIntroComplete, fitHeroBottom]);
 
   // Skip Intro Handler: jump timeline straight to end so every tween reaches final value
   const skipIntro = useCallback(() => {
@@ -341,6 +383,7 @@ export const Hero: React.FC<HeroProps> = ({
       if (nameLineRef.current) {
         nameLineRef.current.style.fontSize = `${metrics.nSize}px`;
       }
+      limitBottomWidth();
 
       // Initialize WebGL Particle Engine
       const engine = new WebglParticleEngine({
@@ -1165,11 +1208,12 @@ export const Hero: React.FC<HeroProps> = ({
       const heroRect = containerRef.current.getBoundingClientRect();
       const wordRect = wordContainerRef.current.getBoundingClientRect();
       particleEngineRef.current.setWordPosition(wordRect.top - heroRect.top, wordRect.height || metrics.pSize);
+      if (!timelineRef.current || !timelineRef.current.isActive()) fitHeroBottom();
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [fitHeroBottom]);
 
   return (
     <section
@@ -1279,6 +1323,7 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Subtitle & Bottom Row (z-index: 3) */}
         <div
+          data-hero-bottom
           className="absolute top-full left-1/2 -translate-x-1/2 w-full max-w-[1050px] px-4 mt-3 sm:mt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6 z-[3] pointer-events-auto"
         >
           {/* Bottom-left block: Name (h1) + Subtitle */}

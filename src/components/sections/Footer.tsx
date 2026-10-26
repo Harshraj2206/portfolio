@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { PortfolioContent, SocialConfig } from '../../data/content.schema';
 import { FOOTER_WORDMARK } from '../../config/design';
 
@@ -22,19 +23,23 @@ const BRAND_SVGS = {
 };
 
 export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUrl, hasHighlights = false }) => {
+  // On other pages (e.g. a case study) section links must go back to the home page
+  const { pathname } = useLocation();
+  const base = pathname === '/' ? '' : '/';
+
   const baseNavLinks = [
-    { label: 'About', href: '#about' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Highlights', href: '#highlights' },
-    { label: 'Beyond Code', href: '#beyond-code' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'About', href: `${base}#about` },
+    { label: 'Projects', href: `${base}#projects` },
+    { label: 'Skills', href: `${base}#skills` },
+    { label: 'Highlights', href: `${base}#highlights` },
+    { label: 'Beyond Code', href: `${base}#beyond-code` },
+    { label: 'Contact', href: `${base}#contact` },
     { label: 'Resume', href: resumeUrl, isExternal: true },
   ];
 
   const navLinks = hasHighlights
     ? baseNavLinks
-    : baseNavLinks.filter((link) => link.href !== '#highlights');
+    : baseNavLinks.filter((link) => link.label !== 'Highlights');
 
   const socialItems = [
     { id: 'github', label: 'GitHub', url: social?.github?.url || 'https://github.com/Harshraj2206', enabled: true, isDemo: false, path: BRAND_SVGS.github },

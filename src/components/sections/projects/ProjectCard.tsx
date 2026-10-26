@@ -130,7 +130,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const isStickyActive = STICKY_PROJECTS && !isMobile && !prefersReducedMotion;
 
   const hasRealCaseStudy = Boolean(
-    project.role?.trim() || project.context?.trim() || project.challenges?.trim()
+    project.caseStudy ||
+      project.role?.trim() ||
+      project.context?.trim() ||
+      project.challenges?.trim()
   );
   const liveUrl = project.liveSiteUrl || project.liveDemoUrl;
   const githubUrl = project.githubUrl;
@@ -285,7 +288,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 </a>
               )}
 
-              {/* Secondary: Read case study (only if project has real role, context, or challenges data) */}
+              {/* Secondary: Read case study (only if the project has case study content) */}
               {hasRealCaseStudy && (
                 <Link
                   to={`/projects/${project.id}`}

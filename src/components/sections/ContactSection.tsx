@@ -248,15 +248,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               </a>
             </div>
 
-            {/* Faint gradient divider with 24px space above and below */}
-            <div className="my-[24px] w-full h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent pointer-events-none" />
-
-            {/* Response Time */}
+            {/* Response Time (with a faint divider above), only when set */}
             {contact.responseTime && (
-              <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
-                <Clock className="w-4 h-4 text-white/70 shrink-0" />
-                <span>{contact.responseTime}</span>
-              </div>
+              <>
+                <div className="my-[24px] w-full h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent pointer-events-none" />
+                <div className="flex items-center gap-2 text-[13px] font-sans font-medium text-[#C9C9CF]">
+                  <Clock className="w-4 h-4 text-white/70 shrink-0" />
+                  <span>{contact.responseTime}</span>
+                </div>
+              </>
             )}
           </GlassCard>
         </div>

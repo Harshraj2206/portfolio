@@ -43,6 +43,7 @@
     }
     </script>
   </head>
+  <body>
     <!-- Critical inline CSS for instant zero-delay first paint -->
     <style>
       html, body {
@@ -82,6 +83,13 @@
     <!-- Inline Critical Vignette & Dot for Zero-Delay First Paint -->
     <div id="initial-intro-vignette" aria-hidden="true"></div>
     <div id="initial-intro-dot" aria-hidden="true"></div>
+    <script>
+      // The intro dot only belongs to the home page intro
+      if (location.pathname !== '/') {
+        document.getElementById('initial-intro-dot').remove();
+        document.getElementById('initial-intro-vignette').remove();
+      }
+    </script>
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

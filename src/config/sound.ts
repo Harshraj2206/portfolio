@@ -9,8 +9,8 @@ export type SoundGroup = 'nav' | 'social' | 'button';
  * Global sound defaults and feature toggles
  */
 export const SOUND_CONFIG = {
-  /** Default sound state ('on' | 'off') */
-  SOUND_DEFAULT: 'on' as 'on' | 'off',
+  /** Default sound state ('on' | 'off'). Off until the visitor turns it on; the choice is remembered. */
+  SOUND_DEFAULT: 'off' as 'on' | 'off',
 
   /** Enable subtle 6ms 1200Hz tick on hover for nav links & social icons on fine pointers */
   HOVER_SOUNDS: true,

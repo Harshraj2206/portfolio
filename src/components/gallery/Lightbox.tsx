@@ -101,7 +101,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       ref={overlayRef}
       role="dialog"
       aria-modal="true"
-      aria-label={`Frame viewer: ${item.title}`}
+      aria-label={`Photo viewer, ${item.index} of ${totalItems}`}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-[#050505]/85 backdrop-blur-2xl select-none"
       onClick={(e) => {
         if (e.target === overlayRef.current) {
@@ -113,9 +113,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       <div className="absolute top-4 sm:top-6 left-4 sm:left-8 right-4 sm:right-8 flex items-center justify-between z-20 pointer-events-auto">
         <div className="flex items-center gap-2 text-[#C9C9CF] text-[13px] font-sans font-medium">
           <Camera className="w-4 h-4 text-white/70" />
-          <span>{item.title}</span>
-          <span className="text-white/40">·</span>
-          <span className="text-white/50">{item.index} of {totalItems}</span>
+          <span>{item.index} / {totalItems}</span>
         </div>
 
         {/* Close Button Capsule */}
@@ -123,7 +121,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
           type="button"
           onClick={onClose}
           data-sound="button"
-          aria-label="Close frame viewer"
+          aria-label="Close photo viewer"
           className="apple-glass-chip apple-glass-chip-default apple-glass-chip-interactive h-9 px-3.5 text-[#F5F5F7] hover:text-white flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"
         >
           <span>Close</span>
@@ -139,7 +137,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
         type="button"
         onClick={onPrev}
         data-sound="button"
-        aria-label="Previous frame"
+        aria-label="Previous photo"
         className="hidden sm:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 apple-glass-chip apple-glass-chip-interactive w-11 h-11 p-0 items-center justify-center rounded-pill text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-xl"
       >
         <ArrowLeft className="w-5 h-5" />
@@ -150,7 +148,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
         type="button"
         onClick={onNext}
         data-sound="button"
-        aria-label="Next frame"
+        aria-label="Next photo"
         className="hidden sm:flex absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 apple-glass-chip apple-glass-chip-interactive w-11 h-11 p-0 items-center justify-center rounded-pill text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white shadow-xl"
       >
         <ArrowRight className="w-5 h-5" />
@@ -180,7 +178,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
           <div className="absolute inset-0 rounded-[28px] overflow-hidden">
             <img
               src={item.url}
-              alt={item.title}
+              alt={`Photograph by Harsh Raj, ${item.index} of ${totalItems}`}
               className="w-full h-full object-cover"
             />
           </div>
@@ -202,14 +200,13 @@ export const Lightbox: React.FC<LightboxProps> = ({
           </div>
         )}
 
-        {/* Bottom Metadata Bar */}
-        <div className="relative z-10 pt-4 mt-auto border-t border-white/10 flex items-center justify-between text-[13px] text-[#C9C9CF]">
-          <div className="flex flex-col">
-            <span className="font-medium text-[#F5F5F7]">{item.title}</span>
-            {item.location && <span className="text-[11px] text-white/50">{item.location}</span>}
+        {/* Bottom Metadata Bar (only when a photo has a location or year) */}
+        {(item.location || item.year) && (
+          <div className="relative z-10 pt-4 mt-auto border-t border-white/10 flex items-center justify-between text-[13px] text-[#C9C9CF]">
+            <span className="text-[11px] text-white/50">{item.location}</span>
+            {item.year && <span className="text-[12px] text-white/60 font-sans">{item.year}</span>}
           </div>
-          {item.year && <span className="text-[12px] text-white/60 font-sans">{item.year}</span>}
-        </div>
+        )}
       </div>
     </div>
   );

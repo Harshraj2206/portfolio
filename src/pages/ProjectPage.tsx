@@ -25,7 +25,8 @@ import {
 
 export const ProjectPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { projects, personal, meta } = resolvedPortfolioContent;
+  const { projects, personal, meta, achievements, certifications, activities, recommendations } =
+    resolvedPortfolioContent;
   const { trackProjectClick } = useAnalytics(meta.analyticsId);
 
   // Scroll to top on route change & play state sound
@@ -35,6 +36,11 @@ export const ProjectPage: React.FC = () => {
   }, [slug]);
 
   const activeProjects = projects.filter((p) => !p.comingSoon);
+  const hasHighlights =
+    achievements.length > 0 ||
+    certifications.length > 0 ||
+    activities.length > 0 ||
+    recommendations.length > 0;
   const currentIndex = activeProjects.findIndex((p) => p.id === slug);
   const project = currentIndex !== -1 ? activeProjects[currentIndex] : null;
 
@@ -50,7 +56,7 @@ export const ProjectPage: React.FC = () => {
   // SEO tags
   useDocumentHead({
     title: project
-      ? `${project.title} — Case Study | ${personal.preferredName}`
+      ? `${project.title} — ${personal.fullName}`
       : 'Project Not Found',
     description: project
       ? project.oneLiner || project.outcome || ''
@@ -167,17 +173,16 @@ export const ProjectPage: React.FC = () => {
             )}
 
             {githubUrl && githubUrl.trim().length > 0 && (
-              <Chip
-                variant="button"
-                as={DemoAction}
+              <DemoAction
                 isDemo={isGithubDemo}
                 href={githubUrl}
                 onClick={() => trackProjectClick(project.id, 'github')}
+                className="apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-pill text-[#F2F2F4] text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 ariaLabel={`View source code for ${project.title}`}
               >
-                <Github className="w-4 h-4" />
+                <Github className="w-4 h-4 shrink-0" />
                 <span>View source</span>
-              </Chip>
+              </DemoAction>
             )}
           </div>
         </div>
@@ -384,11 +389,12 @@ export const ProjectPage: React.FC = () => {
         )}
 
         {/* Next / Previous Project Navigation */}
-        {prevProject && nextProject && (
+        {prevProject && nextProject && activeProjects.length > 1 && (
           <nav
             aria-label="Next or Previous Case Study"
             className="pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
           >
+            {activeProjects.length > 2 && (
             <Link
               to={`/projects/${prevProject.id}`}
               className="w-full sm:w-auto p-5 rounded-[20px] glass-surface hover:border-white/25 flex items-center gap-3 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -403,10 +409,11 @@ export const ProjectPage: React.FC = () => {
                 </span>
               </div>
             </Link>
+            )}
 
             <Link
               to={`/projects/${nextProject.id}`}
-              className="w-full sm:w-auto p-5 rounded-[20px] glass-surface hover:border-white/25 flex items-center justify-between sm:justify-end gap-3 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="w-full sm:w-auto sm:ml-auto p-5 rounded-[20px] glass-surface hover:border-white/25 flex items-center justify-between sm:justify-end gap-3 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <div className="text-right">
                 <span className="text-[13px] text-[#C9C9CF] block font-sans font-medium">
@@ -427,6 +434,7 @@ export const ProjectPage: React.FC = () => {
         personal={personal}
         meta={meta}
         resumeUrl="/resume.pdf"
+        hasHighlights={hasHighlights}
       />
     </div>
   );

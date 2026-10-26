@@ -25,8 +25,15 @@ export const Card: React.FC<CardProps> = ({
   cardRef,
 }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    // Ignore the click that ends a drag of the ring
+    const start = pointerStartRef.current;
+    pointerStartRef.current = null;
+    if (start && e.detail > 0 && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 6) {
+      return;
+    }
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       onSelect(item, rect);
@@ -54,6 +61,9 @@ export const Card: React.FC<CardProps> = ({
         role="button"
         aria-label={`Open photo ${item.index} of ${totalItems}`}
         data-sound="button"
+        onPointerDown={(e) => {
+          pointerStartRef.current = { x: e.clientX, y: e.clientY };
+        }}
         onClick={handleClick}
         onFocus={() => onFocus(slotIndex)}
         onMouseEnter={onMouseEnter}
@@ -72,7 +82,7 @@ export const Card: React.FC<CardProps> = ({
           <div className="absolute inset-0 rounded-[20px] overflow-hidden pointer-events-none">
             <img
               src={item.url}
-              alt={item.title || `Photo frame ${item.index}`}
+              alt={`Photograph by Harsh Raj, ${item.index} of ${totalItems}`}
               loading={slotIndex < 4 ? 'eager' : 'lazy'}
               decoding={slotIndex < 4 ? 'sync' : 'async'}
               fetchPriority={slotIndex < 4 ? 'high' : 'auto'}

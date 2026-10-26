@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useSound } from '../../audio/useSound';
 import { soundEngine } from '../../audio/soundEngine';
@@ -15,8 +15,6 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ isIntroActive: isIntro
   const location = useLocation();
   const { isSoundEnabled, setSoundEnabled } = useSound();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showCaption, setShowCaption] = useState(false);
-  const hasShownCaptionRef = useRef(false);
 
   const [introRunning, setIntroRunning] = useState<boolean>(() => {
     if (isIntroActiveProp !== undefined) return isIntroActiveProp;
@@ -86,18 +84,6 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ isIntroActive: isIntro
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isSoundEnabled, activeIntro]);
 
-  // Show caption for 3 seconds once after intro finishes
-  useEffect(() => {
-    if (!activeIntro && !hasShownCaptionRef.current && isSoundEnabled) {
-      hasShownCaptionRef.current = true;
-      setShowCaption(true);
-      const timer = setTimeout(() => {
-        setShowCaption(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [activeIntro, isSoundEnabled]);
-
   return (
     <div
       className={`fixed z-[60] flex items-center transition-all duration-500 ease-out ${
@@ -112,19 +98,9 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ isIntroActive: isIntro
       }}
       data-sound="none"
     >
-      {/* 3-Second Post-Intro Caption: Anchored safely below the navbar on mobile */}
-      {showCaption && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="absolute top-[calc(100%+20px)] right-0 md:top-auto md:static md:mr-3 px-3.5 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap shadow-xl pointer-events-none animate-in fade-in slide-in-from-top-2 md:slide-in-from-right-3 duration-300 z-50"
-        >
-          <span>Sound effects on. Tap to mute.</span>
-        </div>
-      )}
 
       {/* Hover & Focus Tooltip */}
-      {showTooltip && !showCaption && (
+      {showTooltip && (
         <div
           role="tooltip"
           className="hidden md:block absolute right-full mr-2.5 px-3 py-1.5 rounded-pill apple-glass-chip text-[13px] font-medium text-[#F2F2F4] whitespace-nowrap pointer-events-none animate-in fade-in duration-150"
