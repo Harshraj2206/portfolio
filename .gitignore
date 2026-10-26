@@ -33,3 +33,10 @@ lh-*.json
 lighthouse-report.json
 
 public/Downloads/
+
+# Art & craft source images (keep .gitkeep only)
+src/assets/art/*
+!src/assets/art/.gitkeep
+
+# Converted demo artworks (development only)
+public/images/artcraft/demo-*

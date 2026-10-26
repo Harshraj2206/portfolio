@@ -296,6 +296,7 @@ export const portfolioContent: PortfolioContent = {
       url: "/art-craft",
       ready: false,
       iconName: "palette",
+      items: [],
     },
   },
 

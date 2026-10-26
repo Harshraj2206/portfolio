@@ -127,6 +127,7 @@ export const Hero: React.FC<HeroProps> = ({
   const [showSkipBtn, setShowSkipBtn] = useState(false);
   const [dotRemoved, setDotRemoved] = useState(isIntroAlreadyDone);
 
+  const isSkippingRef = useRef(false);
   const introStartTimeRef = useRef<number>(0);
 
   // Complete Intro Handler: guarantees instant jump straight to final hero state
@@ -188,7 +189,9 @@ export const Hero: React.FC<HeroProps> = ({
             s.style.width = '0px';
             s.style.overflow = 'hidden';
           } else {
-            (span as HTMLElement).style.display = 'block';
+            const s = span as HTMLElement;
+            s.style.display = 'block';
+            s.style.visibility = 'visible';
           }
         });
         gsap.set(reelEl, {
@@ -203,6 +206,13 @@ export const Hero: React.FC<HeroProps> = ({
         });
       }
     });
+
+    const extraGlyphs = nameLineRef.current?.querySelectorAll('.reel-extra-glyph');
+    if (extraGlyphs) {
+      extraGlyphs.forEach((el) => {
+        (el as HTMLElement).style.visibility = 'visible';
+      });
+    }
 
     if (subtitleRef.current) {
       const words = subtitleRef.current.querySelectorAll('.pop-word');
@@ -233,10 +243,16 @@ export const Hero: React.FC<HeroProps> = ({
     onIntroComplete?.();
   }, [onNavFadeIn, onIntroComplete]);
 
-  // Skip Intro Handler: play state sound at 60%, cleanly jump straight to final hero state
+  // Skip Intro Handler: jump timeline straight to end so every tween reaches final value
   const skipIntro = useCallback(() => {
     soundEngine.play('state', { gain: 0.60 });
-    finishIntro();
+    introSound.stopAll(0);
+    isSkippingRef.current = true;
+    if (timelineRef.current) {
+      timelineRef.current.progress(1);
+    } else {
+      finishIntro();
+    }
   }, [finishIntro]);
 
   // Keyboard (Esc), Scroll, and Touch Skip Listeners (only Escape/wheel/touchmove skip)
@@ -998,7 +1014,7 @@ export const Hero: React.FC<HeroProps> = ({
       // Hold dust phase if particle targets are not ready yet without delaying anything earlier
       tl.call(
         () => {
-          if (eng && !eng.isReady()) {
+          if (!isSkippingRef.current && eng && !eng.isReady()) {
             tl.pause();
             const readyCheck = setInterval(() => {
               if (eng.isReady()) {

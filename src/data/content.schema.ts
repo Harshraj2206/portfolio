@@ -307,6 +307,14 @@ export interface ContactConfig {
   officeHoursNote?: string;
 }
 
+export interface ArtCraftItem {
+  image: string;
+  title: string;
+  medium: string;
+  year: string | number;
+  description?: string;
+}
+
 export interface CreativeCardConfig {
   title: string;
   description: string;
@@ -319,6 +327,7 @@ export interface CreativeCardConfig {
    */
   ready?: boolean;
   iconName?: string;
+  items?: ArtCraftItem[];
 }
 
 export interface CreativeSectionData {
