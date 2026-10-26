@@ -31,3 +31,5 @@ dist-ssr
 # Audit reports
 lh-*.json
 lighthouse-report.json
+
+public/Downloads/

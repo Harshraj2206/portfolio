@@ -125,7 +125,7 @@ export const BeyondCodeSection: React.FC<BeyondCodeSectionProps> = ({
                   <Link
                     to={card.url}
                     data-sound="button"
-                    className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white text-[#0A0A0C] text-[14px] sm:text-[15px] font-semibold py-[12px] px-[22px] transition-all duration-250 ease-out hover:-translate-y-[2px] hover:bg-[#F5F5F7] hover:shadow-[0_4px_20px_rgba(255,255,255,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A0C]"
+                    className="apple-button-white-3d group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[#0A0A0C] text-[14px] sm:text-[15px] font-semibold py-[12px] px-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     aria-label={card.buttonText}
                   >
                     <span className="whitespace-nowrap">{card.buttonText}</span>

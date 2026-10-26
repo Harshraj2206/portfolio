@@ -200,7 +200,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               <a
                 href="mailto:hraj224488@gmail.com"
                 aria-label="Send email to hraj224488@gmail.com"
-                className="w-full h-[56px] inline-flex items-center justify-center gap-3 px-8 rounded-full bg-white text-black font-semibold text-[16px] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] shadow-[0_4px_20px_rgba(255,255,255,0.15),inset_0_1px_0_0_rgba(255,255,255,0.6)] hover:shadow-[0_6px_24px_rgba(255,255,255,0.25),inset_0_1px_0_0_rgba(255,255,255,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="apple-button-white-3d w-full h-[56px] inline-flex items-center justify-center gap-3 px-8 rounded-full text-black font-semibold text-[16px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 <Mail className="w-5 h-5 text-black shrink-0" />
                 <span>Send an email</span>
@@ -381,7 +381,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 h-[52px] rounded-full bg-white text-black font-semibold text-[15px] tracking-[-0.01em] hover:bg-[#EAEAEA] hover:brightness-105 transition-[background-color,border-color,box-shadow,filter] duration-[180ms] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="apple-button-white-3d w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 h-[52px] rounded-full text-black font-semibold text-[15px] tracking-[-0.01em] disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {status === 'submitting' ? (
                     <>

@@ -65,53 +65,38 @@ export function resolvePortfolioContent(
   real: PortfolioContent = rawContent,
   showDemo: boolean = SHOW_DEMO_DATA
 ): ResolvedPortfolioContent {
-  // 1. Projects Resolution
+  const hasBracketedPlaceholder = (str?: string): boolean => {
+    if (!str) return false;
+    return /\[.*?\]/.test(str);
+  };
+
+  // 1. Projects Resolution: Use real data only, hide any field without real data (no bracketed placeholders)
   const resolvedProjects: ProjectItem[] = real.projects.map((proj) => {
-    const demoPlaceholder = demoProjectPlaceholders[proj.id];
-    const demoFields: Record<string, boolean> = {};
-
-    // Check optional fields: role, techStack, results, context, challenges, githubUrl
     let role = proj.role?.trim();
-    if (!role && demoPlaceholder?.role && showDemo) {
-      role = demoPlaceholder.role;
-      demoFields.role = true;
-    }
+    if (!role || hasBracketedPlaceholder(role)) role = undefined;
 
-    let techStack = proj.techStack && proj.techStack.length > 0 ? proj.techStack : undefined;
-    if ((!techStack || techStack.length === 0) && demoPlaceholder?.techStack && showDemo) {
-      techStack = demoPlaceholder.techStack;
-      demoFields.techStack = true;
-    }
+    let techStack = proj.techStack && proj.techStack.length > 0
+      ? proj.techStack.filter((t) => !hasBracketedPlaceholder(t))
+      : undefined;
 
-    let results = proj.results && proj.results.length > 0 ? proj.results : undefined;
-    if ((!results || results.length === 0) && demoPlaceholder?.results && showDemo) {
-      results = demoPlaceholder.results;
-      demoFields.results = true;
-    }
+    let results = proj.results && proj.results.length > 0
+      ? proj.results.filter((r) => !hasBracketedPlaceholder(r))
+      : undefined;
 
     let context = proj.context?.trim();
-    if (!context && demoPlaceholder?.context && showDemo) {
-      context = demoPlaceholder.context;
-      demoFields.context = true;
-    }
+    if (!context || hasBracketedPlaceholder(context)) context = undefined;
 
     let challenges = proj.challenges?.trim();
-    if (!challenges && demoPlaceholder?.challenges && showDemo) {
-      challenges = demoPlaceholder.challenges;
-      demoFields.challenges = true;
-    }
+    if (!challenges || hasBracketedPlaceholder(challenges)) challenges = undefined;
 
     let githubUrl = proj.githubUrl?.trim();
-    if (!githubUrl && demoPlaceholder?.githubUrl && showDemo) {
-      githubUrl = demoPlaceholder.githubUrl;
-      demoFields.githubUrl = true;
-    }
+    if (!githubUrl || hasBracketedPlaceholder(githubUrl)) githubUrl = undefined;
+
+    let liveSiteUrl = proj.liveSiteUrl?.trim();
+    if (!liveSiteUrl || hasBracketedPlaceholder(liveSiteUrl)) liveSiteUrl = undefined;
 
     let liveDemoUrl = proj.liveDemoUrl?.trim();
-    if (!liveDemoUrl && demoPlaceholder?.liveDemoUrl && showDemo) {
-      liveDemoUrl = demoPlaceholder.liveDemoUrl;
-      demoFields.liveDemoUrl = true;
-    }
+    if (!liveDemoUrl || hasBracketedPlaceholder(liveDemoUrl)) liveDemoUrl = undefined;
 
     return {
       ...proj,
@@ -121,16 +106,12 @@ export function resolvePortfolioContent(
       context: context || undefined,
       challenges: challenges || undefined,
       githubUrl: githubUrl || undefined,
-      liveDemoUrl: liveDemoUrl || proj.liveSiteUrl || undefined,
-      isDemo: false, // The project itself is real (LandSafe / NammaRoute)
-      demoFields: Object.keys(demoFields).length > 0 ? demoFields : undefined,
+      liveSiteUrl: liveSiteUrl || undefined,
+      liveDemoUrl: liveDemoUrl || liveSiteUrl || undefined,
+      isDemo: false,
+      demoFields: undefined,
     };
   });
-
-  const hasBracketedPlaceholder = (str?: string): boolean => {
-    if (!str) return false;
-    return /\[.*?\]/.test(str);
-  };
 
   // 1. Projects: Only include real projects (hide demo third project; preserved in demo.ts)
   // (resolvedProjects contains real projects only)

@@ -224,22 +224,24 @@ export const HomePage: React.FC<HomePageProps> = () => {
       {/* Main Semantic Landmark - z-1 */}
       <main id="main-content" className="relative z-[1]">
         {/* 1. Hero: normal-flow relative 100svh section with absolute canvas & z-index layering */}
-        <Hero
-          personal={personal}
-          availability={availability}
-          resumeUrl={resumeUrl}
-          onDownloadResume={trackResumeDownload}
-          isIntroAlreadyDone={isIntroAlreadyDone}
-          onNavFadeIn={handleNavFadeIn}
-          onIntroComplete={handleIntroComplete}
-        />
+        <div className="relative z-10">
+          <Hero
+            personal={personal}
+            availability={availability}
+            resumeUrl={resumeUrl}
+            onDownloadResume={trackResumeDownload}
+            isIntroAlreadyDone={isIntroAlreadyDone}
+            onNavFadeIn={handleNavFadeIn}
+            onIntroComplete={handleIntroComplete}
+          />
+        </div>
 
         {/* 2. Container for sections below hero */}
         <div className="relative z-[1]">
           {/* Hero Seam: 160px gradient transition at the bottom of hero so it blends with no visible edge */}
           <div
             aria-hidden="true"
-            className="pointer-events-none -mt-40 h-40 w-full bg-gradient-to-b from-transparent via-[#050505]/40 to-transparent relative z-20"
+            className="pointer-events-none -mt-40 h-40 w-full bg-gradient-to-b from-transparent via-[#050505]/40 to-transparent relative z-0"
           />
 
           {/* Section Band 1: About (transparent) */}

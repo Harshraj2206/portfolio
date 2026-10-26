@@ -138,14 +138,15 @@ export const PillNav: React.FC<PillNavProps> = ({
 
         <div className="h-4 w-px bg-white/10 mx-1" />
 
-        {/* Actions: Quiet Glass Resume Button downloading Harsh_Raj_Resume.pdf */}
+        {/* Actions: Quiet Glass Resume Button opening /resume.pdf in new tab */}
         <div className="flex items-center gap-1.5">
           <a
             href={resumeUrl}
-            download="Harsh_Raj_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={onDownloadResume}
             className="nav-resume-btn group inline-flex items-center justify-center rounded-pill px-4 lg:px-[22px] py-2 lg:py-2.5 text-[14px] lg:text-[15px] font-medium tracking-[-0.01em] gap-2 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 cursor-pointer"
-            aria-label="Download Resume"
+            aria-label="View Resume"
           >
             <FileDown className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
             <span>Resume</span>

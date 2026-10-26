@@ -4,8 +4,6 @@ import { ProjectItem } from '../../../data/content.schema';
 import { WindowFrame } from '../../common/WindowFrame';
 import { ProjectMockup } from '../ProjectMockup';
 import { GlassCard } from '../../common/GlassCard';
-import { DemoChip } from '../../common/DemoChip';
-import { DemoAction } from '../../common/DemoAction';
 import { Chip } from '../../common/Chip';
 import { TILT, STICKY_PROJECTS } from '../../../config/design';
 import { useReducedMotion } from '../../../hooks/useReducedMotion';
@@ -132,12 +130,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   const isEven = index % 2 === 0;
   const isStickyActive = STICKY_PROJECTS && !isMobile && !prefersReducedMotion;
 
-  const isDemoProject = Boolean(project.isDemo);
-  const demoFields = project.demoFields || {};
+  const hasRealCaseStudy = Boolean(
+    project.role?.trim() || project.context?.trim() || project.challenges?.trim()
+  );
   const liveUrl = project.liveSiteUrl || project.liveDemoUrl;
-  const isLiveUrlDemo = isDemoProject || Boolean(demoFields.liveDemoUrl);
   const githubUrl = project.githubUrl;
-  const isGithubDemo = isDemoProject || Boolean(demoFields.githubUrl);
 
   const displayChips = project.featureChips
     ? project.featureChips
@@ -208,13 +205,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               isEven ? 'lg:order-2' : 'lg:order-1'
             }`}
           >
-            {/* Status Chip & Demo Badge */}
+            {/* Status Chip */}
             <div className="flex items-center gap-2.5 flex-wrap">
               <Chip variant="status">
                 {project.status}
               </Chip>
-
-              {isDemoProject && <DemoChip />}
             </div>
 
             {/* Title & One-liner in AA Contrast */}
@@ -234,7 +229,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
                     Tech stack
                   </span>
-                  {demoFields.techStack && <DemoChip />}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {project.techStack.map((tech) => (
@@ -264,7 +258,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   <span className="text-[13px] font-sans font-medium text-[#C9C9CF]">
                     Key results
                   </span>
-                  {demoFields.results && <DemoChip />}
                 </div>
                 <ul className="space-y-1.5">
                   {project.results.slice(0, 3).map((res, i) => (
@@ -279,38 +272,42 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
             {/* Action Buttons: Capsule, no transform, only 180ms hover */}
             <div className="pt-2 flex flex-wrap items-center gap-3">
-              {/* Primary: View live demo (white primary button keeps current style) */}
+              {/* Primary: View live site (only shown when deployed) */}
               {liveUrl && liveUrl.trim().length > 0 && (
-                <DemoAction
-                  isDemo={isLiveUrlDemo}
+                <a
                   href={liveUrl}
-                  ariaLabel={`View live site for ${project.title}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-[14px] font-medium tracking-[-0.01em] hover:bg-[#EAEAEA] hover:brightness-105 hover:shadow-[0_4px_16px_rgba(255,255,255,0.2)] transition-[background-color,border-color,box-shadow,filter] duration-[180ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View live site for ${project.title}`}
+                  className="apple-button-white-3d inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-black text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <span>View live site</span>
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-                </DemoAction>
+                </a>
               )}
 
-              {/* Secondary: Read case study */}
-              <Chip
-                variant="button"
-                as={Link}
-                to={`/projects/${project.id}`}
-                aria-label={`Read case study for ${project.title}`}
-              >
-                <span>Read case study</span>
-                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
-              </Chip>
+              {/* Secondary: Read case study (only if project has real role, context, or challenges data) */}
+              {hasRealCaseStudy && (
+                <Chip
+                  variant="button"
+                  as={Link}
+                  to={`/projects/${project.id}`}
+                  aria-label={`Read case study for ${project.title}`}
+                >
+                  <span>Read case study</span>
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                </Chip>
+              )}
 
               {/* Code link */}
               {githubUrl && githubUrl.trim().length > 0 && (
                 <Chip
                   variant="button"
-                  as={DemoAction}
-                  isDemo={isGithubDemo}
+                  as="a"
                   href={githubUrl}
-                  ariaLabel={`View source code for ${project.title}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View source code for ${project.title}`}
                 >
                   <Github className="w-3.5 h-3.5 shrink-0" />
                   <span>Code</span>

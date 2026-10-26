@@ -129,18 +129,54 @@ export const Hero: React.FC<HeroProps> = ({
 
   const introStartTimeRef = useRef<number>(0);
 
-  // Complete Intro Handler
+  // Complete Intro Handler: guarantees instant jump straight to final hero state
   const finishIntro = useCallback(() => {
-    introSound.stopAll(100);
+    if (timelineRef.current) {
+      timelineRef.current.kill();
+    }
+    introSound.stopAll(0);
     setIsIntroActive(false);
     setShowSkipBtn(false);
     setDotRemoved(true);
     document.body.style.overflow = '';
 
+    const initialDot = document.getElementById('initial-intro-dot');
+    const initialVignette = document.getElementById('initial-intro-vignette');
+    if (initialDot) initialDot.remove();
+    if (initialVignette) initialVignette.remove();
+
+    if (dotRef.current) {
+      gsap.killTweensOf(dotRef.current);
+      gsap.set(dotRef.current, { opacity: 0, scale: 0 });
+    }
+
+    if (wordContainerRef.current && containerRef.current) {
+      gsap.killTweensOf(wordContainerRef.current);
+      const heroH = containerRef.current.clientHeight || window.innerHeight;
+      const heroW = containerRef.current.clientWidth || window.innerWidth;
+      const metrics = metricsRef.current || computeSizesAndWidths(heroW);
+      const finalScale = metrics.pSize / metrics.nSize;
+      gsap.set(wordContainerRef.current, {
+        opacity: 1,
+        y: heroH * 0.26,
+        scale: finalScale,
+        filter: 'blur(0px)',
+      });
+
+      if (particleEngineRef.current) {
+        const heroRect = containerRef.current.getBoundingClientRect();
+        const wordRect = wordContainerRef.current.getBoundingClientRect();
+        particleEngineRef.current.setWordPosition(wordRect.top - heroRect.top, wordRect.height || metrics.pSize);
+      }
+    }
+
     slotRefs.current.forEach((slot, idx) => {
       if (slot) {
-        slot.style.width = 'auto';
-        slot.style.overflow = 'hidden';
+        gsap.killTweensOf(slot);
+        gsap.set(slot, {
+          width: 'auto',
+          overflow: 'hidden',
+        });
       }
       const reelEl = reelRefs.current[idx];
       if (reelEl) {
@@ -168,6 +204,23 @@ export const Hero: React.FC<HeroProps> = ({
       }
     });
 
+    if (subtitleRef.current) {
+      const words = subtitleRef.current.querySelectorAll('.pop-word');
+      gsap.killTweensOf(words);
+      gsap.set(words, { y: '0%', opacity: 1 });
+    }
+
+    if (bottomRowRef.current) {
+      const items = bottomRowRef.current.querySelectorAll('.pop-item');
+      gsap.killTweensOf(items);
+      gsap.set(items, { y: '0%', opacity: 1 });
+    }
+
+    if (scrollCueRef.current) {
+      gsap.killTweensOf(scrollCueRef.current);
+      gsap.set(scrollCueRef.current, { opacity: 1 });
+    }
+
     if (particleEngineRef.current) {
       particleEngineRef.current.jumpToFinal();
     }
@@ -180,17 +233,9 @@ export const Hero: React.FC<HeroProps> = ({
     onIntroComplete?.();
   }, [onNavFadeIn, onIntroComplete]);
 
-  // Skip Intro Handler: fade intro bus to 0 over 120ms, play state sound at 60%
+  // Skip Intro Handler: play state sound at 60%, cleanly jump straight to final hero state
   const skipIntro = useCallback(() => {
-    markPortraitDone();
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('hero:portraitDone'));
-    }
-    introSound.stopAll(120);
     soundEngine.play('state', { gain: 0.60 });
-    if (timelineRef.current) {
-      timelineRef.current.progress(1);
-    }
     finishIntro();
   }, [finishIntro]);
 
@@ -1116,7 +1161,7 @@ export const Hero: React.FC<HeroProps> = ({
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full pointer-events-auto z-[1]"
+        className="absolute inset-0 w-full h-full pointer-events-none z-[1]"
       />
 
       {/* Word Container (z-index: 2, in front of lower torso) */}
@@ -1244,7 +1289,11 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="overflow-hidden inline-flex">
               <a
                 href="#projects"
-                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center cursor-pointer"
               >
                 View my work
               </a>
@@ -1254,9 +1303,10 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="overflow-hidden inline-flex">
               <a
                 href={resumeUrl}
-                download="Harsh_Raj_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={onDownloadResume}
-                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center"
+                className="pop-item text-[#D1D1D6] hover:text-white transition-colors duration-200 underline-offset-4 hover:underline hover:decoration-1 font-medium text-[14px] sm:text-[15px] py-2 sm:py-1.5 min-h-[44px] inline-flex items-center cursor-pointer"
               >
                 Resume
               </a>
@@ -1280,12 +1330,13 @@ export const Hero: React.FC<HeroProps> = ({
         <button
           ref={skipBtnRef}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             skipIntro();
           }}
           data-sound="state"
           aria-label="Skip introductory animation"
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 md:bottom-8 md:right-8 md:left-auto md:translate-x-0 z-[100] pointer-events-auto apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive min-h-[44px] px-5 text-[#F5F5F7] hover:text-white text-[14px] font-medium tracking-[-0.01em] shadow-2xl flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 md:bottom-8 md:right-8 md:left-auto md:translate-x-0 z-[100] pointer-events-auto apple-glass-chip apple-glass-chip-button apple-glass-chip-interactive min-h-[44px] px-5 text-[#F5F5F7] hover:text-white text-[14px] font-medium tracking-[-0.01em] shadow-2xl flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none cursor-pointer"
         >
           <span>Skip intro</span>
           <ArrowRight className="w-4 h-4 text-white/80" />

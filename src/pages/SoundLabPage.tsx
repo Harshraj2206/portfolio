@@ -445,7 +445,7 @@ export const SOUND_PARAMETERS = {
                   ) : (
                     <button
                       onClick={playFullSoundscape}
-                      className="px-5 py-2.5 rounded-pill bg-white text-black hover:bg-[#E5E5EA] text-[14px] font-medium flex items-center gap-2 transition-all shadow-lg"
+                      className="apple-button-white-3d px-5 py-2.5 rounded-pill text-black text-[14px] font-medium flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                     >
                       <Play className="w-4 h-4 fill-black" />
                       <span>Play full intro soundscape</span>
@@ -573,7 +573,7 @@ export const SOUND_PARAMETERS = {
                 </div>
                 <button
                   onClick={playCustomThock}
-                  className="px-5 py-2.5 rounded-pill bg-white text-black hover:bg-[#E5E5EA] text-[14px] font-semibold flex items-center gap-2 transition-all shadow-md cursor-pointer"
+                  className="apple-button-white-3d px-5 py-2.5 rounded-pill text-black text-[14px] font-semibold flex items-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <Play className="w-3.5 h-3.5 fill-black" />
                   <span>Audition Thock</span>
@@ -904,7 +904,7 @@ export const SOUND_PARAMETERS = {
                 </button>
                 <button
                   onClick={copyParameters}
-                  className="px-4 py-2.5 rounded-pill bg-white text-black hover:bg-[#E5E5EA] text-[14px] font-medium flex items-center gap-2 transition-all shadow-lg"
+                  className="apple-button-white-3d px-4 py-2.5 rounded-pill text-black text-[14px] font-medium flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 >
                   {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                   <span>{copied ? 'Copied parameters!' : 'Copy parameters'}</span>

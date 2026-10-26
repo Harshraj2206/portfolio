@@ -7,20 +7,16 @@
  * - Closes and reopens browser/tab: new session, intro plays once.
  */
 
-const SESSION_STORAGE_KEY = 'hero_intro_played';
-
 let hasHeroIntroPlayed = false;
 let hasPortraitDone = false;
 
+// Remove any residual sessionStorage item from previous sessions
 try {
   if (typeof window !== 'undefined' && window.sessionStorage) {
-    hasHeroIntroPlayed = window.sessionStorage.getItem(SESSION_STORAGE_KEY) === 'true';
-    if (hasHeroIntroPlayed) {
-      hasPortraitDone = true;
-    }
+    window.sessionStorage.removeItem('hero_intro_played');
   }
 } catch {
-  // Gracefully fallback to in-memory state if sessionStorage is restricted (e.g. private mode)
+  // Gracefully handle environments with restricted storage
 }
 
 type IntroListener = (played: boolean) => void;
@@ -30,35 +26,16 @@ const listeners = new Set<IntroListener>();
 const portraitDoneListeners = new Set<PortraitDoneListener>();
 
 export const getHeroIntroPlayed = (): boolean => {
-  if (hasHeroIntroPlayed) return true;
-  try {
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-      if (window.sessionStorage.getItem(SESSION_STORAGE_KEY) === 'true') {
-        hasHeroIntroPlayed = true;
-        hasPortraitDone = true;
-        return true;
-      }
-    }
-  } catch {
-    // In environments where sessionStorage is blocked
-  }
   return hasHeroIntroPlayed;
 };
 
 export const getPortraitDone = (): boolean => {
-  return hasPortraitDone || getHeroIntroPlayed();
+  return hasPortraitDone || hasHeroIntroPlayed;
 };
 
 export const markHeroIntroPlayed = (): void => {
   hasHeroIntroPlayed = true;
   hasPortraitDone = true;
-  try {
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-      window.sessionStorage.setItem(SESSION_STORAGE_KEY, 'true');
-    }
-  } catch {
-    // Gracefully handle quota/private browsing errors
-  }
   portraitDoneListeners.forEach((fn) => fn());
   listeners.forEach((fn) => fn(true));
 };

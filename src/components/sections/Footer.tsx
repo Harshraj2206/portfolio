@@ -29,7 +29,7 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
     { label: 'Highlights', href: '#highlights' },
     { label: 'Beyond Code', href: '#beyond-code' },
     { label: 'Contact', href: '#contact' },
-    { label: 'Resume', href: resumeUrl, isExternal: true, download: 'Harsh_Raj_Resume.pdf' },
+    { label: 'Resume', href: resumeUrl, isExternal: true },
   ];
 
   const navLinks = hasHighlights
@@ -89,7 +89,6 @@ export const Footer: React.FC<FooterProps> = ({ personal, meta, social, resumeUr
             <a
               key={link.label}
               href={link.href}
-              download={link.download}
               target={link.isExternal ? '_blank' : undefined}
               rel={link.isExternal ? 'noopener noreferrer' : undefined}
               className="hover:text-white transition-colors py-1.5 sm:py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-pill"

@@ -114,7 +114,7 @@ export const ProjectPage: React.FC = () => {
                 isDemo={isLiveDemo}
                 href={liveUrl}
                 onClick={() => trackProjectClick(project.id, 'demo')}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill bg-white text-black text-[14px] font-medium tracking-[-0.01em] hover:bg-[#E5E5EA] transition-all"
+                className="apple-button-white-3d inline-flex items-center gap-1.5 px-4 py-1.5 rounded-pill text-black text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 ariaLabel={`View live site for ${project.title}`}
               >
                 <span>Live demo</span>
@@ -158,7 +158,7 @@ export const ProjectPage: React.FC = () => {
                 isDemo={isLiveDemo}
                 href={liveUrl}
                 onClick={() => trackProjectClick(project.id, 'demo')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-pill bg-white text-black text-[14px] font-medium tracking-[-0.01em] hover:bg-[#E5E5EA] transition-all"
+                className="apple-button-white-3d inline-flex items-center gap-2 px-5 py-2.5 rounded-pill text-black text-[14px] font-medium tracking-[-0.01em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 ariaLabel={`View live demo for ${project.title}`}
               >
                 <span>View live demo</span>

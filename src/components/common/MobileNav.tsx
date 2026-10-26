@@ -89,10 +89,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           {/* Quick Reachable Resume Button */}
           <a
             href={resumeUrl}
-            download="Harsh_Raj_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={onDownloadResume}
-            className="nav-resume-btn flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[14px] font-medium tracking-[-0.01em] min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none"
-            aria-label="Download Resume"
+            className="nav-resume-btn flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[14px] font-medium tracking-[-0.01em] min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white select-none cursor-pointer"
+            aria-label="View Resume"
           >
             <FileDown className="w-3.5 h-3.5 shrink-0" />
             <span>Resume</span>
@@ -236,13 +237,14 @@ export const MobileNav: React.FC<MobileNavProps> = ({
               <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                 <a
                   href={resumeUrl}
-                  download="Harsh_Raj_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => {
                     onDownloadResume();
                     setSheetOpen(false);
                   }}
                   className="nav-resume-btn group inline-flex items-center justify-center rounded-pill px-[22px] py-3 text-[15px] font-medium tracking-[-0.01em] gap-2 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white cursor-pointer w-full"
-                  aria-label="Download Resume"
+                  aria-label="View Resume"
                 >
                   <FileDown className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
                   <span>Resume (PDF)</span>
