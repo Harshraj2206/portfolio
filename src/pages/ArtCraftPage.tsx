@@ -49,12 +49,6 @@ export const ArtCraftPage: React.FC = () => {
     ? rawArtCraft.items
     : [];
 
-  useDocumentHead({
-    title: 'Art & craft — Harsh Raj',
-    description: 'A curated archive of handmade artwork, sketches, and physical crafts.',
-    canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/art-craft',
-  });
-
   // In development, preview with demo items if real items are empty.
   // In production builds (import.meta.env.DEV is false), only realItems is used.
   const items: ArtCraftItem[] =
@@ -107,7 +101,7 @@ export const ArtCraftPage: React.FC = () => {
   useDocumentHead({
     title: 'Art & craft — Harsh Raj',
     description: 'Paintings and handmade pieces by Harsh Raj.',
-    canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/art-craft',
+    canonicalUrl: 'https://harssshraj-portfolio.vercel.app/art-craft',
   });
 
   // Scroll to top on initial page mount
@@ -532,7 +526,7 @@ export const ArtCraftPage: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="relative z-10 w-full flex-1 flex flex-col justify-between overflow-x-hidden">
+      <main id="main-content" className="relative z-10 w-full flex-1 flex flex-col justify-between overflow-x-hidden">
         {/* Section Heading & Subline: inside exact 1200px container */}
         <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 pt-2 sm:pt-4 text-left">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.035em] leading-tight text-white flex flex-wrap items-baseline gap-x-2">

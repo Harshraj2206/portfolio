@@ -1,19 +1,19 @@
 /**
- * Module-level state with sessionStorage persistence for the cinematic hero intro.
+ * In-memory state for the cinematic hero intro (nothing is persisted).
  *
  * Behavior:
- * - First visit in a browsing session: intro plays.
- * - Refresh or client-side navigation within the same session: intro does NOT replay.
- * - Closes and reopens browser/tab: new session, intro plays once.
+ * - Every full page load (first visit or refresh): intro plays.
+ * - Client-side navigation back to the home page: intro does NOT replay.
  */
 
 let hasHeroIntroPlayed = false;
 let hasPortraitDone = false;
 
-// Remove any residual sessionStorage item from previous sessions
+// Remove leftover flags saved by older versions of the site
 try {
   if (typeof window !== 'undefined' && window.sessionStorage) {
     window.sessionStorage.removeItem('hero_intro_played');
+    window.sessionStorage.removeItem('portfolio_intro_done');
   }
 } catch {
   // Gracefully handle environments with restricted storage

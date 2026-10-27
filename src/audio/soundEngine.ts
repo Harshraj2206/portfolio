@@ -20,6 +20,8 @@ class SoundEngine {
   private compressorNode: DynamicsCompressorNode | null = null;
 
   private isEnabled: boolean = SOUND_CONFIG.SOUND_DEFAULT === 'on';
+  // Browsers block audio until the visitor clicks or presses a key, so no context is created before that
+  private unlocked = false;
   private listeners = new Set<(enabled: boolean) => void>();
 
   // Polyphony and rate-limiting trackers
@@ -61,6 +63,10 @@ class SoundEngine {
     // First user gesture triggers context creation & unlock
     const unlockGestures = ['pointerdown', 'keydown', 'touchend'];
     const unlockHandler = () => {
+      // Some keys (e.g. Esc) don't count as a user gesture; wait for one that does
+      const activation = (navigator as Navigator & { userActivation?: { isActive: boolean } }).userActivation;
+      if (activation && !activation.isActive) return;
+      this.unlocked = true;
       this.ensureContext();
       unlockGestures.forEach((evt) => {
         window.removeEventListener(evt, unlockHandler, { capture: true });
@@ -90,6 +96,7 @@ class SoundEngine {
     if (typeof window === 'undefined') return null;
 
     if (!this.ctx) {
+      if (!this.unlocked) return null;
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;

@@ -295,6 +295,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </label>
                   <input
                     id="contact-name"
+                    autoComplete="name"
                     type="text"
                     required
                     aria-invalid={errors.name ? 'true' : 'false'}
@@ -323,6 +324,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </label>
                   <input
                     id="contact-email"
+                    autoComplete="email"
                     type="email"
                     required
                     aria-invalid={errors.email ? 'true' : 'false'}

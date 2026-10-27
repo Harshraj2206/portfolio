@@ -30,7 +30,7 @@ export const Photography: React.FC = () => {
   useDocumentHead({
     title: 'Photography & videography — Harsh Raj',
     description: 'Frames from my camera and everyday moments. Drag or scroll to explore.',
-    canonicalUrl: 'https://portfolio-five-smoky-5uetdazjey.vercel.app/photography',
+    canonicalUrl: 'https://harssshraj-portfolio.vercel.app/photography',
   });
 
   // Remove top-center home-page intro dot on the photography page
@@ -171,7 +171,7 @@ export const Photography: React.FC = () => {
       />
 
       {/* 3D Ring Gallery Canvas */}
-      <main className="relative z-10 w-full h-full">
+      <main id="main-content" className="relative z-10 w-full h-full">
         <Ring
           items={items}
           isSettled={isSettled}

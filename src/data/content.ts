@@ -84,7 +84,7 @@ export const portfolioContent: PortfolioContent = {
   seo: {
     siteTitle: "Harsh Raj - CSE (AI & ML) Student Portfolio",
     siteDescription: "Portfolio of Harsh Raj, a 2nd-year CSE (AI & ML) student at Jain University Global Campus. Projects: LandSafe and NammaRoute.",
-    canonicalUrl: "https://portfolio-five-smoky-5uetdazjey.vercel.app",
+    canonicalUrl: "https://harssshraj-portfolio.vercel.app",
     keywords: [
       "Harsh Raj",
       "LandSafe",
@@ -175,7 +175,7 @@ export const portfolioContent: PortfolioContent = {
       image: "/images/projects/landsafe.webp",
       imageAlt: "LandSafe real-time landslide risk prediction dashboard showing GIS hazard map, ML model assessment, and active threat advisories",
       liveSiteUrl: "https://si-h-2026.vercel.app/",
-      role: "",
+      role: "Built the full web app, fixed bugs and tested the end-to-end workflow",
       team: "",
       techStack: [
         "Python",
@@ -235,10 +235,10 @@ export const portfolioContent: PortfolioContent = {
         "~77,000 places",
       ],
       extraChip: "Made for students and newcomers",
-      image: null, // null triggers dashed macOS placeholder
-      imageAlt: "NammaRoute screenshot placeholder",
+      image: "/images/projects/nammaroute.webp",
+      imageAlt: "NammaRoute planning a trip across Bengaluru, comparing auto, cab, metro and bus options on the map",
       liveSiteUrl: "",
-      role: "",
+      role: "Solo project: designed and built the whole app",
       team: "",
       techStack: [
         "React",

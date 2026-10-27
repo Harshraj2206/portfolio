@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { scrollToSection } from '../../utils/scroll';
 import {
   User,
@@ -33,7 +32,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({
   hasHighlights = false,
 }) => {
   const [sheetOpen, setSheetOpen] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
 
   // All navigation sections
   const allSections = [
@@ -44,25 +42,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     { id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code', icon: Sparkles },
     { id: 'contact', label: 'Contact', href: '#contact', icon: Mail },
   ];
-
-  // Mobile Bottom Bar shows 5 items: 4 primary sections + "More"
-  const bottomBarItems = [
-    { id: 'about', label: 'About', href: '#about', icon: User },
-    { id: 'projects', label: 'Projects', href: '#projects', icon: Briefcase },
-    { id: 'skills', label: 'Skills', href: '#skills', icon: Layers },
-    ...(hasHighlights
-      ? [{ id: 'highlights', label: 'Highlights', href: '#highlights', icon: Award }]
-      : [{ id: 'beyond-code', label: 'Beyond Code', href: '#beyond-code', icon: Sparkles }]),
-    { id: 'more', label: 'More', href: '#more', icon: MoreHorizontal, isDrawerTrigger: true },
-  ];
-
-  // Determine which bottom bar item is active
-  const isUnderMore = !bottomBarItems.some((item) => item.id === activeSection) && activeSection !== 'hero';
-  const activeNavId = isUnderMore
-    ? 'more'
-    : bottomBarItems.some((item) => item.id === activeSection)
-    ? activeSection
-    : null;
 
   // Lock page scroll when sheet is open & listen for Esc key
   useEffect(() => {
@@ -96,10 +75,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [sheetOpen]);
-
-  const springConfig = prefersReducedMotion
-    ? { duration: 0 }
-    : { type: 'spring' as const, stiffness: 380, damping: 30 };
 
   return (
     <>
@@ -149,77 +124,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({
           </button>
         </div>
       </header>
-
-      {/* Bottom Floating Glass Tab Bar with 5 items (min-h-[44px] touch target) */}
-      <nav
-        data-sound-group="nav"
-        aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-3 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-50 md:hidden pointer-events-auto flex items-center justify-between p-1 rounded-pill glass-nav shadow-2xl"
-      >
-        {bottomBarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeNavId === item.id;
-
-          if (item.isDrawerTrigger) {
-            return (
-              <button
-                key={item.id}
-                onClick={() => setSheetOpen((prev) => !prev)}
-                aria-label="Open full menu"
-                aria-expanded={sheetOpen}
-                className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                  isActive
-                    ? 'text-[#F5F5F7]'
-                    : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="mobileSlidingNavBubble"
-                    className="absolute inset-0 nav-glass-bubble-active rounded-pill pointer-events-none"
-                    transition={springConfig}
-                  />
-                )}
-                <Icon className="w-4 h-4 relative z-10" />
-                <span className="text-[11px] font-medium tracking-[-0.01em] mt-0.5 relative z-10">
-                  {item.label}
-                </span>
-              </button>
-            );
-          }
-
-          return (
-            <a
-              key={item.id}
-              href={item.href}
-              onClick={(e) => {
-                e.preventDefault();
-                onSelectSection?.(item.id);
-                scrollToSection(item.id);
-                window.history.pushState(null, '', item.href);
-              }}
-              aria-current={isActive ? 'true' : undefined}
-              className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-pill min-h-[44px] transition-colors duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                isActive
-                  ? 'text-[#F5F5F7]'
-                  : 'text-[#9A9AA0] hover:text-[#F5F5F7]'
-              }`}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="mobileSlidingNavBubble"
-                  className="absolute inset-0 nav-glass-bubble-active rounded-pill pointer-events-none"
-                  transition={springConfig}
-                />
-              )}
-              <Icon className="w-4 h-4 relative z-10" />
-              <span className="text-[11px] font-medium tracking-[-0.01em] mt-0.5 relative z-10">
-                {item.label}
-              </span>
-            </a>
-          );
-        })}
-      </nav>
 
       {/* Expandable "More" Glass Sheet Menu mounted in Portal so it isn't trapped in transform/pointer-events container */}
       {typeof document !== 'undefined' &&

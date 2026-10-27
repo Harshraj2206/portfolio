@@ -4,7 +4,7 @@ import { useEffect } from 'react';
  * Privacy-preserving analytics utility.
  * Supports Plausible or Umami without cookies or personal data tracking.
  * Configured via environment variables:
- * - VITE_PLAUSIBLE_DOMAIN (e.g. portfolio-five-smoky-5uetdazjey.vercel.app)
+ * - VITE_PLAUSIBLE_DOMAIN (e.g. harssshraj-portfolio.vercel.app)
  * - VITE_PLAUSIBLE_API_HOST (optional custom host, defaults to https://plausible.io)
  * - VITE_UMAMI_WEBSITE_ID (UUID)
  * - VITE_UMAMI_SRC (defaults to https://analytics.umami.is/script.js)

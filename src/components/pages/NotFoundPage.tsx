@@ -10,6 +10,7 @@ export const NotFoundPage: React.FC = () => {
   useDocumentHead({
     title: '404 — Page Not Found | Harsh Raj Portfolio',
     description: "The page or case study you were looking for doesn't exist or has moved.",
+    noindex: true,
   });
 
   // Remove top-center home-page intro dot on the 404 page
@@ -26,7 +27,7 @@ export const NotFoundPage: React.FC = () => {
         <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-white/[0.04] blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-md w-full">
+      <main id="main-content" className="relative z-10 max-w-md w-full">
         <WindowFrame title="Terminal — 404 Not Found">
           <div className="p-6 sm:p-10 text-center space-y-6">
             <div className="w-14 h-14 rounded-full bg-white/10 text-white flex items-center justify-center mx-auto shadow-inner border border-white/15">
@@ -84,7 +85,7 @@ export const NotFoundPage: React.FC = () => {
             </div>
           </div>
         </WindowFrame>
-      </div>
+      </main>
     </div>
   );
 };

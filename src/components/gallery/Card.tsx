@@ -85,7 +85,8 @@ export const Card: React.FC<CardProps> = ({
               alt={`Photograph by Harsh Raj, ${item.index} of ${totalItems}`}
               loading={slotIndex < 4 ? 'eager' : 'lazy'}
               decoding={slotIndex < 4 ? 'sync' : 'async'}
-              fetchPriority={slotIndex < 4 ? 'high' : 'auto'}
+              // lowercase attribute: React 18 warns on the camelCase prop
+              {...{ fetchpriority: slotIndex < 4 ? 'high' : 'auto' }}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>

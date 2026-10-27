@@ -126,14 +126,9 @@ export const Hero: React.FC<HeroProps> = ({
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const metricsRef = useRef<FontAndSlotMetrics | null>(null);
 
-  const isSessionDone = typeof window !== 'undefined' && (() => {
-    try {
-      return sessionStorage.getItem('portfolio_intro_done') === 'true';
-    } catch {
-      return false;
-    }
-  })();
-  const effectiveIntroDone = isIntroAlreadyDone || Boolean(isSessionDone);
+  // Every full page load (first visit or refresh) plays the intro; in-app navigation back
+  // to the home page skips it via isIntroAlreadyDone (in-memory flag in introState).
+  const effectiveIntroDone = isIntroAlreadyDone;
 
   const [isIntroActive, setIsIntroActive] = useState(!effectiveIntroDone);
   const [showSkipBtn, setShowSkipBtn] = useState(false);
@@ -286,14 +281,6 @@ export const Hero: React.FC<HeroProps> = ({
 
     if (particleEngineRef.current) {
       particleEngineRef.current.jumpToFinal();
-    }
-
-    try {
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('portfolio_intro_done', 'true');
-      }
-    } catch {
-      // Ignore storage errors
     }
 
     markPortraitDone();
